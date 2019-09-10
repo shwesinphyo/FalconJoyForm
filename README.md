@@ -4,27 +4,16 @@
  
 [![Build Status](https://travis-ci.org/GwtMaterialDesign/gwt-material-demo.svg?branch=master)](https://travis-ci.org/GwtMaterialDesign/gwt-material-demo)
 
-Demo application to show the features of the [gwt-material](https://github.com/GwtMaterialDesign/gwt-material) library.
+Prototype application to show the features of the falcon joyform library.
 
-### Release 2.1.1 Demo
-[http://gwtmaterialdesign.github.io/gwt-material-demo](http://gwtmaterialdesign.github.io/gwt-material-demo)
-```xml
+### Snapshot 1.0.0
 <dependency>
-    <groupId>com.github.gwtmaterialdesign</groupId>
-    <artifactId>gwt-material-demo</artifactId>
-    <version>2.1.1</version>
+    <groupId>com.falconit</groupId>
+    <artifactId>joyform</artifactId>
+    <version>1.0-SNAPSHOT</version>
 </dependency>
-```
 
-### 2.2 Snapshot Demo
-[http://gwtmaterialdesign.github.io/gwt-material-demo/snapshot](http://gwtmaterialdesign.github.io/gwt-material-demo/snapshot)
-```xml
-<dependency>
-    <groupId>com.github.gwtmaterialdesign</groupId>
-    <artifactId>gwt-material-demo</artifactId>
-    <version>2.2-SNAPSHOT</version>
-</dependency>
-```
+
 
 ### Javadocs
 [GWT Material](http://gwtmaterialdesign.github.io/gwt-material-demo/apidocs/) <br/>
