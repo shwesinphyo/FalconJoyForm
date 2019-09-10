@@ -22,6 +22,7 @@
              xmlns:m="urn:import:gwt.material.design.client.ui"
              xmlns:ma="urn:import:gwt.material.design.addins.client"
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:combobox="urn:import:gwt.material.design.addins.client.combobox"
              xmlns:m.table="urn:import:gwt.material.design.client.ui.table">
     <m:MaterialRow>
         <m:MaterialColumn grid="s12">
@@ -29,6 +30,11 @@
                 <!--
                 <m:MaterialTitle scrollspy="data_pager" title="Pager" description="We developed a pager embeded component to data table to provide a better pagination into your data set." />
                 -->
+                <combobox:MaterialComboBox multiple="true">
+                    <m:html.Option value="1" text="Sample 1"/>
+                    <m:html.Option value="2" text="Sample 2"/>
+                    <m:html.Option value="3" text="Sample 3"/>
+               </combobox:MaterialComboBox>
                 <m:MaterialButton text="Add New" ui:field="btnGotoFirstPage" marginRight="12" iconType="ADD"/>
                 <m.table:MaterialDataTable shadow="0" marginTop="20" ui:field="table"
                                            height="calc(100vh - 131px)"
