@@ -30,7 +30,7 @@
                 <!--
                 <m:MaterialTitle scrollspy="data_pager" title="Pager" description="We developed a pager embeded component to data table to provide a better pagination into your data set." />
                 -->
-                <combobox:MaterialComboBox ui:field="cbostatus" multiple="true" label="Task status">
+                <combobox:MaterialComboBox ui:field="cbostatus" multiple="true" placeholder="Task status">
                     <m:html.Option value="Created" text="Created"/>
                     <m:html.Option value="Ready" text="Ready"/>
                     <m:html.Option value="Reserved" text="Reserved"/>

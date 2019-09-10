@@ -21,33 +21,33 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:m="urn:import:gwt.material.design.client.ui"
              xmlns:m.addins="urn:import:gwt.material.design.addins.client"
+             xmlns:combobox="urn:import:gwt.material.design.addins.client.combobox"
              xmlns:demo="urn:import:com.falconit.joyform.client.ui">
     <m:MaterialPanel>
+
+            <m:MaterialRow addStyleNames="code" grid="l12 m12 s12">
+                <m:MaterialTextBox ui:field="txtid"  placeholder="Field Id" allowBlank="false" autoValidate="true"/>
+                <m:MaterialTextBox ui:field="txtname" placeholder="Name" allowBlank="false" autoValidate="true"/>
+                <m:MaterialTextBox ui:field="txtlabel" placeholder="Label" allowBlank="false" autoValidate="true"/>
+                <m:MaterialTextBox ui:field="txtplaceholder"  placeholder="Place holder" allowBlank="false" autoValidate="true"/>
+                                
+                <combobox:MaterialComboBox ui:field="cbofield" multiple="false" placeholder="Input field type">
+                    <m:html.Option value="textbox" text="Text box"/>
+                    <m:html.Option value="textarea" text="Text area"/>
+                    <m:html.Option value="textboxrich" text="Rich text box"/>
+                    <m:html.Option value="textboxnumber" text="Number box"/>
+                    <m:html.Option value="checkbox" text="Check box"/>
+                    <m:html.Option value="combo" text="Combo box"/>
+                    <m:html.Option value="datetime" text="Date time"/>
+               </combobox:MaterialComboBox>
+               <m:MaterialButton ui:field="btnAdd" text="Add" textColor="WHITE" waves="DEFAULT"/>
+            </m:MaterialRow>
         
         <m:MaterialRow addStyleNames="code">
-            <m:MaterialTitle title="Dropzone" />
-            <m:MaterialRow ui:field="dropzoneContainer" backgroundColor="GREY_LIGHTEN_1" padding="10">
-                <m:MaterialColumn ui:field="holder" grid="l12 m12 s12">
-                    <!--
-                    <m:MaterialPanel addStyleNames="test" ui:field="item1" title="item1" backgroundColor="WHITE" shadow="1" grid="s12" padding="8" margin="4">
-                        <m:MaterialLink text="Option 1" />
-                    </m:MaterialPanel>
-                    <m:MaterialPanel addStyleNames="test" ui:field="item2" title="item2" backgroundColor="WHITE" shadow="1" grid="s12" padding="8" margin="4">
-                        <m:MaterialLink text="Option 2" />
-                    </m:MaterialPanel>
-                    <m:MaterialPanel addStyleNames="test" ui:field="item3" title="item3" backgroundColor="WHITE" shadow="1" grid="s12" padding="8" margin="4">
-                        <m:MaterialLink text="Option 3" />
-                    </m:MaterialPanel>
-                    <m:MaterialPanel addStyleNames="test" ui:field="item4" title="item4" backgroundColor="WHITE" shadow="1" grid="s12" padding="8" margin="4">
-                        <m:MaterialLink text="Option 4" />
-                    </m:MaterialPanel>
-                    -->
-                </m:MaterialColumn>
-                <!--
-                <m:MaterialColumn ui:field="placeContainer" grid="s6" addStyleNames="grey lighten-3" padding="20">
-                    <m:MaterialLabel text="Drop here" />
-                </m:MaterialColumn>
-                -->
+            <m:MaterialTitle title="Dynamic form" />
+            <m:MaterialRow ui:field="dropzoneContainer" padding="10">
+                <m:MaterialPanel ui:field="holder" grid="l12 m12 s12">
+                </m:MaterialPanel>
             </m:MaterialRow>
 
         </m:MaterialRow>

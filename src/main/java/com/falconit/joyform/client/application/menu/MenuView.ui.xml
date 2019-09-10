@@ -94,7 +94,7 @@
                                             <m.html:UnorderedList>
                                                     <m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" text="Create Apps" waves="DEFAULT"/>
                                                     <m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" text="Mamagement Apps" waves="DEFAULT"/>
-                                                    <m:MaterialLink targetHistoryToken="{tokens.getFormeditor}" text="Create Form" waves="DEFAULT"/>
+                                                    <m:MaterialLink targetHistoryToken="{tokens.getFormeditor}" text="Create Form" iconType="ASSIGNMENT" waves="DEFAULT"/>
                                             </m.html:UnorderedList>
                                     </m:MaterialCollapsibleBody>
                             </m:MaterialCollapsibleItem>
