@@ -10,7 +10,7 @@ Prototype application to show the features of the falcon joyform library.
 <dependency>
     <groupId>com.falconit</groupId>
     <artifactId>joyform</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 </dependency>
 
 
