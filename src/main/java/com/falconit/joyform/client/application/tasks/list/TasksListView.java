@@ -2,62 +2,36 @@ package com.falconit.joyform.client.application.tasks.list;
 
 
 
-import com.falconit.joyform.client.application.util.Constants;
-import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.APIHelper;
-import com.falconit.joyform.client.application.util.jbpmclient.HumanTaskHelper;
-import com.falconit.joyform.client.resources.MyLang;
-import com.falconit.joyform.client.ui.CustomRenderer;
 import com.falconit.joyform.client.ui.NavigatedView;
-import com.falconit.joyform.client.ui.PersonRowFactory;
-import com.falconit.joyform.shared.entity.Users;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import gwt.material.design.addins.client.combobox.MaterialComboBox;
 import gwt.material.design.client.base.MaterialWidget;
 import gwt.material.design.client.base.viewport.Resolution;
 import gwt.material.design.client.base.viewport.ViewPort;
-import gwt.material.design.client.constants.ButtonType;
 import gwt.material.design.client.constants.Color;
 import gwt.material.design.client.constants.Display;
-import gwt.material.design.client.constants.HideOn;
-import gwt.material.design.client.constants.IconType;
 import gwt.material.design.client.constants.TextAlign;
-import gwt.material.design.client.constants.WavesType;
 import gwt.material.design.client.data.ListDataSource;
 import gwt.material.design.client.data.component.RowComponent;
-import gwt.material.design.client.data.events.RowExpandedEvent;
-import gwt.material.design.client.data.events.RowExpandedHandler;
-import gwt.material.design.client.data.events.RowExpandingEvent;
-import gwt.material.design.client.data.events.RowExpandingHandler;
 import gwt.material.design.client.ui.MaterialBadge;
-import gwt.material.design.client.ui.MaterialButton;
-import gwt.material.design.client.ui.MaterialCheckBox;
-import gwt.material.design.client.ui.MaterialIcon;
-import gwt.material.design.client.ui.MaterialImage;
 import gwt.material.design.client.ui.MaterialLabel;
 import gwt.material.design.client.ui.MaterialLoader;
-import gwt.material.design.client.ui.MaterialTextBox;
 import gwt.material.design.client.ui.pager.MaterialDataPager;
-import gwt.material.design.client.ui.pager.actions.PageListBox;
 import gwt.material.design.client.ui.table.MaterialDataTable;
 import gwt.material.design.client.ui.table.cell.TextColumn;
 import gwt.material.design.client.ui.table.cell.WidgetColumn;
-import gwt.material.design.incubator.client.loadingstate.constants.State;
 import gwt.material.design.jquery.client.api.JQueryElement;
 
 import javax.inject.Inject;
@@ -73,21 +47,20 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
 
     @UiField
     MaterialDataTable<java.util.Map<String, Object[]>> table;
-
+    @UiField
+    MaterialComboBox cbostatus;
+    
     private MaterialDataPager<java.util.Map<String, Object[]>> pager = new MaterialDataPager<>();
+    private ListDataSource<java.util.Map<String, Object[]>> dataSource;
     
     private List<java.util.Map<String, Object[]>> lstTasks = new ArrayList<>();
 
-    private ListDataSource<java.util.Map<String, Object[]>> dataSource;
 
     @Inject
     TasksListView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
-
-        // Generate 20 categories
-        int rowIndex = 1;
-        table.getTableTitle().setText("Inbox");
         
+        table.getTableTitle().setText("Inbox");
         /*
         table.addColumn(new WidgetColumn<java.util.Map<String, Object[]>, MaterialImage>() {
             @Override
@@ -114,46 +87,29 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                 return object.get("task-name")[1].toString();
             }
         }, "Task name");
-/*
+
         table.addColumn(new TextColumn<java.util.Map<String, Object[]>>() {
             @Override
             public Comparator<? super RowComponent<java.util.Map<String, Object[]>>> sortComparator() {
-                return (o1, o2) -> o1.getData().get("task-description")[1].toString().compareToIgnoreCase(o2.getData().get("task-description")[1].toString());
+                return (o1, o2) -> o1.getData().get("task-subject")[1].toString().compareToIgnoreCase(o2.getData().get("task-subject")[1].toString());
             }
             @Override
             public String getValue(java.util.Map<String, Object[]> object) {
-                return object.get("task-description")[1].toString();
+                return object.get("task-subject")[1].toString();
             }
-        }, "Description");
-*/
-              
-        // Example of a widget column!
-        // You can add any handler to the column cells widget.
-        table.addColumn(new WidgetColumn<java.util.Map<String, Object[]>, MaterialBadge>() {
+        }, "Subject");
+        
+        table.addColumn(new TextColumn<java.util.Map<String, Object[]>>() {
             @Override
-            public TextAlign textAlign() {
-                return TextAlign.CENTER;
+            public Comparator<? super RowComponent<java.util.Map<String, Object[]>>> sortComparator() {
+                return (o1, o2) -> (int) ( (long)o1.getData().get("task-created-on")[1] - (long) o2.getData().get("task-created-on")[1] );
             }
             @Override
-            public MaterialBadge getValue(java.util.Map<String, Object[]> object) {
-                MaterialBadge badge = new MaterialBadge();
-                badge.setText(object.get("task-status")[1].toString());
-                /*
-                if( object.getLevel() == 1){
-                    badge.setText("Admin");
-                    badge.setBackgroundColor(Color.RED);
-                }else if( object.getLevel() == 2){
-                    badge.setText("Channel");
-                    badge.setBackgroundColor(Color.BLUE);
-                }else{
-                    badge.setText("User");
-                    badge.setBackgroundColor(Color.GREY);
-                }
-                */
-                badge.setLayoutPosition(Style.Position.RELATIVE);
-                return badge;
+            public String getValue(java.util.Map<String, Object[]> object) {
+                DateTimeFormat dtfd = DateTimeFormat.getFormat("dd/MM/yyyy hh:mm a");
+                return dtfd.format(new java.util.Date( (long) object.get("task-created-on")[1] ));
             }
-        }, "Status");
+        }, "Created On");
         
         table.addColumn(new TextColumn<java.util.Map<String, Object[]>>() {
 //            @Override
@@ -173,21 +129,39 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                 return object.get("task-priority")[1].toString();
             }
         }, "Priority");
-
-        
-
-        table.addColumn(new TextColumn<java.util.Map<String, Object[]>>() {
+     
+        table.addColumn(new WidgetColumn<java.util.Map<String, Object[]>, MaterialBadge>() {
             @Override
-            public Comparator<? super RowComponent<java.util.Map<String, Object[]>>> sortComparator() {
-                return (o1, o2) -> (int) ( (long)o1.getData().get("task-created-on")[1] - (long) o2.getData().get("task-created-on")[1] );
+            public TextAlign textAlign() {
+                return TextAlign.CENTER;
             }
             @Override
-            public String getValue(java.util.Map<String, Object[]> object) {
-                DateTimeFormat dtfd = DateTimeFormat.getFormat("dd/MM/yyyy hh:mm a");
-                return dtfd.format(new java.util.Date( (long) object.get("task-created-on")[1] ));
+            public MaterialBadge getValue(java.util.Map<String, Object[]> object) {
+                MaterialBadge badge = new MaterialBadge();
+                String status = object.get("task-status")[1].toString();
+                badge.setText( status );
+                
+                if( status.equalsIgnoreCase(APIHelper.STATUS_CREATED) 
+                        || status.equalsIgnoreCase(APIHelper.STATUS_READY)
+                        || status.equalsIgnoreCase(APIHelper.STATUS_INPROGRESS)
+                        || status.equalsIgnoreCase(APIHelper.STATUS_RESERVED)){
+                    badge.setBackgroundColor(Color.GREEN);
+                }else if( status.equalsIgnoreCase(APIHelper.STATUS_COMPLETED) ){
+                    badge.setBackgroundColor(Color.BLUE);
+                }else if( status.equalsIgnoreCase(APIHelper.STATUS_ERROR) || status.equalsIgnoreCase(APIHelper.STATUS_FAILED) ){
+                    badge.setBackgroundColor(Color.RED);
+                }else if( status.equalsIgnoreCase(APIHelper.STATUS_EXITED) || status.equalsIgnoreCase(APIHelper.STATUS_SUSPENDED) ){
+                    badge.setBackgroundColor(Color.RED);
+                }else if( status.equalsIgnoreCase(APIHelper.STATUS_OBSOLETE) ){
+                    badge.setBackgroundColor(Color.BROWN);
+                }else{
+                    badge.setBackgroundColor(Color.GREY);
+                }
+                
+                badge.setLayoutPosition(Style.Position.RELATIVE);
+                return badge;
             }
-        }, "Created On");
-
+        }, "Status");
            
         /*
         table.addColumn(new WidgetColumn<java.util.Map<String, Object[]>, MaterialCheckBox>() {
@@ -211,22 +185,11 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
             }
         }, MyLang.LANG.active());
         */
-                
-//        table.addColumn(new TextColumn<Users>() {
-//            @Override
-//            public Comparator<? super RowComponent<Users>> sortComparator() {
-//                return (o1, o2) -> (int) ( o1.getData().getId() - o2.getData().getId() );
-//            }
-//
-//            @Override
-//            public String getValue(Users object) {
-//                return object.getId() + ")";
-//            }
-//        }, MyLang.LANG.email());
 
 
         // Here we are adding a row expansion handler.
         // This is invoked when a row is expanded.
+        /*
         table.addRowExpandingHandler(event -> {
             JQueryElement section = event.getExpansion().getOverlay();
 
@@ -255,7 +218,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                 }
             }.schedule(50);
         });
-
+*/
         // Add a row select handler, called when a user selects a row.
         table.addRowSelectHandler(event -> {
         });
@@ -302,10 +265,20 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
             return false;
         });
         
-        load();
+        java.util.List<String> selectedItems = new java.util.ArrayList<>();
+        selectedItems.add( APIHelper.STATUS_READY );
+        selectedItems.add( APIHelper.STATUS_RESERVED );
+        selectedItems.add( APIHelper.STATUS_INPROGRESS );
+        cbostatus.setValues(selectedItems, true);
+        cbostatus.addValueChangeHandler( handler ->{
+            load( );
+        });
+        
+        load( );
     }
 
     private void load(){
+        lstTasks.clear();
         MaterialLoader.loading( true );
         APIHelper helper = new APIHelper();
         helper.setListener(new APIHelper.APIHelperListener() {
@@ -319,7 +292,6 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                 if( tasks == null || tasks.size() == 0 ){
                     
                 }else{
-                                        
                     for( int i=0; i < tasks.size(); i++){
                         JSONObject task = tasks.get(i).isObject();
                         
@@ -333,14 +305,13 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                         }
                     }
                     
+                    //pager.set
                     dataSource = new ListDataSource<>();
                     dataSource.add(0, lstTasks );
-
-                    /* Uncomment to make use of listbox page selection instead of integerbox */
-                    /*pager.setPageSelection(new PageListBox());*/
                     pager.setTable(table);
-                    pager.setDataSource(dataSource);
+                    pager.setDataSource(dataSource); 
                     table.add(pager);
+                    
                 }
             }
 
@@ -350,17 +321,26 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
               MaterialLoader.loading( false );
             }
         });
+        String arrStatus[] = new String[cbostatus.getSelectedValues().size()];
+        for ( int i=0; i < cbostatus.getSelectedValues().size(); i++){
+            arrStatus[i] = (String) cbostatus.getSelectedValues().get(i);
+            //Window.alert( arrStatus[i] );
+        }
+        
         
         helper.tasksList( 
-                new String[]{APIHelper.STATUS_READY,APIHelper.STATUS_RESERVED, APIHelper.STATUS_INPROGRESS },
+                //new String[]{APIHelper.STATUS_READY,APIHelper.STATUS_RESERVED, APIHelper.STATUS_INPROGRESS },
+                arrStatus,
                 0, 20, null, null, true);
         //helper.query( Constants.containerId, "355");
     }
     
-    
+  /*  
     @UiHandler("btnGotoFirstPage")
     void onGotoFirstPage(ClickEvent e) {
         pager.firstPage();
     }
-
+*/
+    
+    
 }

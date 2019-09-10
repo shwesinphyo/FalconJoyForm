@@ -10,6 +10,7 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Window;
 
 /**
  *
@@ -44,7 +45,7 @@ public class APIHelper {
         
         StringBuilder sb = new StringBuilder();
         for( String s : status ){
-            sb.append( sb.toString().isEmpty()? "" : "&" + "status=" + s );
+            sb.append( sb.toString().isEmpty()? "status=" + s : "&status=" + s );
         }
         if( user != null )
             sb.append("&user=" + user );
@@ -52,10 +53,10 @@ public class APIHelper {
         sb.append("&page=" + first );
         sb.append("&pageSize=" + max );
         sb.append("&sortOrder=" + asc );
-        
-        
+        String url = Constants.url+ "queries/tasks/instances/admins?" + sb.toString();
+        //Window.alert(url);
         RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, 
-                Constants.url+ "queries/tasks/instances/admins?" + sb.toString() );
+                url );
         //Window.alert(Constants.url + "containers/" + containerId + "/tasks/" + taskId + "/contents/input");
         
         builder.setHeader( "Content-Type", Constants.contentType );
