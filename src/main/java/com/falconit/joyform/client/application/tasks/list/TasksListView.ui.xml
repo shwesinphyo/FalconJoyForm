@@ -30,12 +30,18 @@
                 <!--
                 <m:MaterialTitle scrollspy="data_pager" title="Pager" description="We developed a pager embeded component to data table to provide a better pagination into your data set." />
                 -->
-                <combobox:MaterialComboBox multiple="true">
-                    <m:html.Option value="1" text="Sample 1"/>
-                    <m:html.Option value="2" text="Sample 2"/>
-                    <m:html.Option value="3" text="Sample 3"/>
+                <combobox:MaterialComboBox ui:field="cbostatus" multiple="true" label="Task status">
+                    <m:html.Option value="Created" text="Created"/>
+                    <m:html.Option value="Ready" text="Ready"/>
+                    <m:html.Option value="Reserved" text="Reserved"/>
+                    <m:html.Option value="InProgress" text="InProgress"/>
+                    <m:html.Option value="Completed" text="Completed"/>
+                    <m:html.Option value="Failed" text="Failed"/>
+                    <m:html.Option value="Error" text="Error"/>
+                    <m:html.Option value="Exited" text="Exited"/>
+                    <m:html.Option value="Obsolete" text="Obsolete"/>
                </combobox:MaterialComboBox>
-                <m:MaterialButton text="Add New" ui:field="btnGotoFirstPage" marginRight="12" iconType="ADD"/>
+               
                 <m.table:MaterialDataTable shadow="0" marginTop="20" ui:field="table"
                                            height="calc(100vh - 131px)"
                                            useStickyHeader="true"
