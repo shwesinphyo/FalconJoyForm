@@ -1,0 +1,113 @@
+<!--
+  #%L
+  GwtMaterial
+  %%
+  Copyright (C) 2015 - 2016 GwtMaterialDesign
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
+       xmlns:g="urn:import:com.google.gwt.user.client.ui"
+       xmlns:m="urn:import:gwt.material.design.client.ui"
+       xmlns:m.html="urn:import:gwt.material.design.client.ui.html"
+       xmlns:ma="urn:import:gwt.material.design.addins.client"
+       xmlns:demo="urn:import:com.falconit.joyform.client.ui">
+
+    <ui:with field="i18n" type="com.falconit.joyform.client.resources.MyLang"/>
+  <ui:with field="tokens" type="com.falconit.joyform.client.place.NameTokens"/>
+  <ui:with field="res" type="com.falconit.joyform.client.resources.MaterialResources"/>
+
+  <ui:style>
+              
+      @font-face {
+            font-family: 'Roboto';
+            src: url('http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300ita‌​lic,400italic,500,500italic,700,700italic,900italic,900');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body, header, main, footer {font-family: 'Roboto';}
+      
+      .panel {
+          padding-left: 5%;
+          width: 100%;
+          padding: 10px 20px 150px 20px;
+          background: #FFF;
+          box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+      }
+      .footer {
+          margin-top: -50px !important;
+      }
+      .gplus{
+        display: block;
+        margin-top: 20px;
+      }
+  </ui:style>
+
+  <g:HTMLPanel>
+
+    <g:HTMLPanel ui:field="menu" />
+
+    <m:MaterialContainer>
+        
+        <m:MaterialPanel ui:field="titlePanel" backgroundColor="WHITE" textColor="BLACK"  marginTop="56" padding="25" shadow="0">
+            <m:MaterialPanel ui:field="panel">
+                <m:MaterialLabel ui:field="title" text="" fontSize="1.3em"/>
+            </m:MaterialPanel>
+        </m:MaterialPanel>
+        
+      <g:HTMLPanel ui:field="main" addStyleNames="{style.panel} panel" />
+
+      <m:MaterialPanel>
+        <g:HTMLPanel>
+          <input type="hidden" name="IL_IN_TAG" value="1"/>
+        </g:HTMLPanel>
+      </m:MaterialPanel>
+    </m:MaterialContainer>
+
+    <demo:InstallBannerFallbackOverlay ui:field="installAppOverlay"/>
+
+    <m:MaterialFooter ui:field="footer" addStyleNames="{style.footer}">
+     
+        <m:MaterialRow>
+
+        <m:MaterialColumn grid="s12 m6 l6">
+          <m:MaterialTitle textColor="WHITE" title="Join us"
+                           description="TEL: +95 1 230 5530, SALES: +95 9 440 400 123, GENERAL: INFO@FALCONBREEZE.COM"/>
+          <m:MaterialAnchorButton href="https://www.falconbreeze.com/" target="_blank" text="CHAT" waves="LIGHT" textColor="WHITE"/>
+        </m:MaterialColumn>
+        <m:MaterialColumn grid="s12 m6 l6">
+          <m:MaterialTitle textColor="WHITE" title="Address"
+                           description="A1-407 HIGHWAY COMPLEX, HANTHAWADDY ROAD, KAMAYUT TOWNSHIP, YANGON, MYANMAR"/>
+          <m:MaterialAnchorButton href="https://www.falconbreeze.com/" target="_blank" text="Visit" waves="LIGHT" textColor="WHITE"/>
+          <!--
+          <m:MaterialTooltip text="Visit our Community" position="RIGHT">
+            <ma:webp.MaterialWebpImage ui:field="imgGPlus" url="https://gwtmaterialdesign.github.io/gwt-material-demo/images/gplus.webp" fallbackExtension="png" addStyleNames="{style.gplus}"/>
+          </m:MaterialTooltip>
+          -->
+        </m:MaterialColumn>
+      </m:MaterialRow>
+
+      <m:MaterialFooterCopyright ui:field="footerCopyRight" addStyleNames="footer-copyright">
+        <m:MaterialLabel ui:field="footerCopyRightLabel"/>
+      </m:MaterialFooterCopyright>
+    </m:MaterialFooter>
+
+    <!-- Gitter -->
+    <!--
+    <demo:GitterWidget/>
+    -->
+  </g:HTMLPanel>
+</ui:UiBinder>
