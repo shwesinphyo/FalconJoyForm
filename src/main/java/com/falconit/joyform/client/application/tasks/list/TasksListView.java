@@ -120,10 +120,10 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
 //            public HideOn hideOn() {
 //                return HideOn.HIDE_ON_MED_DOWN;
 //            }
-//            @Override
-//            public Comparator<? super RowComponent<Users>> sortComparator() {
-//                return (o1, o2) -> o1.getData().getEmail().compareToIgnoreCase(o2.getData().getEmail());
-//            }
+            @Override
+            public Comparator<? super RowComponent<java.util.Map<String, Object[]>>> sortComparator() {
+                return (o1, o2) -> (int) ( (long)o1.getData().get("task-priority")[1] - (long) o2.getData().get("task-priority")[1] );
+            }
             @Override
             public String getValue(java.util.Map<String, Object[]> object) {
                 return object.get("task-priority")[1].toString();
@@ -305,12 +305,13 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                         }
                     }
                     
-                    //pager.set
+                    pager.setLimit(20);
                     dataSource = new ListDataSource<>();
                     dataSource.add(0, lstTasks );
                     pager.setTable(table);
                     pager.setDataSource(dataSource); 
-                    table.add(pager);
+                    table.add(pager); //pager.updateRowsPerPage(20);
+                    
                     
                 }
             }

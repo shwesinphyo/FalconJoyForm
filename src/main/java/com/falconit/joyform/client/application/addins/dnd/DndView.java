@@ -660,6 +660,7 @@ public class DndView extends ViewImpl implements DndPresenter.MyView {
         
         
         public void fromJSON( JSONObject json ) throws Exception{
+            
             setId( json.get(JSON_FIELD_ID).isString().stringValue());
             setId( json.get(JSON_FIELD_LABEL).isString().stringValue());
             setValue( ( json.get(JSON_FIELD_VALUE).isString() == null ? JSONNull.getInstance() : json.get(JSON_FIELD_VALUE).isString().stringValue() ));
@@ -671,33 +672,34 @@ public class DndView extends ViewImpl implements DndPresenter.MyView {
             setWidgetType( json.get(JSON_FIELD_WIDGET_NAME).isString().stringValue());
             setHide( json.get(JSON_FIELD_HIDE).isBoolean().booleanValue() );
 
+            setPlaceHolder( json.get(JSON_FIELD_PLACE_HOLDER).isString().stringValue());
+            setHelperText( json.get(JSON_FIELD_HELPER_TEXT).isString().stringValue() );
+            setValidate( json.get(JSON_FIELD_VALIDATE).isBoolean().booleanValue());
+            setAllowBlank( json.get(JSON_FIELD_ALLOW_BLANK).isBoolean().booleanValue());
+            setReadOnly( json.get(JSON_FIELD_READ_ONLY).isBoolean().booleanValue());
+            setIconType( IconType.valueOf( json.get(JSON_FIELD_ICON_TYPE).isString().stringValue()) );
+            setWaves( WavesType.valueOf( json.get(JSON_FIELD_WAVES).isString().stringValue() ));
+            setInputType( InputType.valueOf( json.get(JSON_FIELD_INPUT_TYPE).isString().stringValue()) );
             
-            json.put( JSON_FIELD_PLACE_HOLDER, new JSONString(getPlaceHolder()) );
-            json.put( JSON_FIELD_HELPER_TEXT, new JSONString(getHelperText()) );
-            json.put( JSON_FIELD_VALIDATE, JSONBoolean.getInstance( isValidate() ) );
-            json.put( JSON_FIELD_ALLOW_BLANK, JSONBoolean.getInstance(isAllowBlank()) );
-            json.put( JSON_FIELD_READ_ONLY, JSONBoolean.getInstance(isReadOnly()) );
-            json.put( JSON_FIELD_ICON_TYPE, new JSONString(getIconType().name()) );
-            json.put( JSON_FIELD_WAVES, new JSONString(getWaves().name()) );
-            json.put( JSON_FIELD_INPUT_TYPE, new JSONString(getInputType().name()) );
-        
-            json.put( JSON_FIELD_HEIGHT, new JSONString(getHeight()) );
-            json.put( JSON_FIELD_WIDTH, new JSONString(getWidth()) );
-            json.put( JSON_FIELD_MARGIN, new JSONString( getMargin() ) );
-            json.put( JSON_FIELD_MARGIN_TOP, new JSONString(getMarginTop()) );
-            json.put( JSON_FIELD_MARGIN_RIGHT, new JSONString(getMarginRight()) );
-            json.put( JSON_FIELD_MARGIN_BOTTOM, new JSONString(getMarginBottom()) );
-            json.put( JSON_FIELD_MARGIN_LEFT, new JSONString(getMarginLeft()) );
-            json.put( JSON_FIELD_PADDING, new JSONNumber(getPadding()) );
-            json.put( JSON_FIELD_PADDING_TOP, new JSONNumber( getPaddingTop() ) );
-            json.put( JSON_FIELD_PADDING_RIGHT, new JSONNumber(getPaddingRight()) );
-            json.put( JSON_FIELD_PADDING_BOTTOM, new JSONNumber(getPaddingBottom()) );
-            json.put( JSON_FIELD_PADDING_LEFT, new JSONNumber(getPaddingLeft()) );
-            json.put( JSON_FIELD_FONT_SIZE, new JSONString(getFontSize()) );
-            json.put( JSON_FIELD_GRID, new JSONString(getGrid()) );
-            json.put( JSON_FIELD_BACKGROUND_COLOR, new JSONString(getBackgroundColor().name()) );
-            json.put( JSON_FIELD_TEXT_COLOR, new JSONString(getTextColor().name()) );
-            json.put( JSON_FIELD_TEXT_ALIGN, new JSONString(getTextAlign().name()) );
+            
+            setHeight( json.get(JSON_FIELD_HEIGHT).isString().stringValue());
+            setWidth( json.get(JSON_FIELD_WIDTH).isString().stringValue() );
+            setMargin( json.get(JSON_FIELD_MARGIN).isString().stringValue());
+            setMarginTop( json.get(JSON_FIELD_MARGIN_TOP).isString().stringValue());
+            setMarginRight( json.get(JSON_FIELD_MARGIN_RIGHT).isString().stringValue());
+            setMarginBottom( json.get(JSON_FIELD_MARGIN_BOTTOM).isString().stringValue() );
+            setMarginLeft( json.get(JSON_FIELD_MARGIN_LEFT).isString().stringValue() );
+            setPadding( json.get(JSON_FIELD_PADDING).isNumber().doubleValue() );
+            
+            setPaddingTop( json.get(JSON_FIELD_PADDING_TOP).isNumber().doubleValue() );
+            setPaddingRight( json.get(JSON_FIELD_PADDING_RIGHT).isNumber().doubleValue() );
+            setPaddingBottom( json.get(JSON_FIELD_PADDING_BOTTOM).isNumber().doubleValue() );
+            setPaddingLeft( json.get(JSON_FIELD_PADDING_LEFT).isNumber().doubleValue());
+            setFontSize( json.get(JSON_FIELD_FONT_SIZE).isString().stringValue());
+            setGrid( json.get(JSON_FIELD_GRID).isString().stringValue() );
+            setBackgroundColor( Color.valueOf( json.get(JSON_FIELD_BACKGROUND_COLOR).isString().stringValue()) );
+            setTextColor( Color.valueOf(json.get(JSON_FIELD_TEXT_COLOR).isString().stringValue()) );
+            setTextAlign( TextAlign.valueOf(json.get(JSON_FIELD_TEXT_ALIGN).isString().stringValue()) );
             
             if( !children.isEmpty()){
                 JSONArray group = new JSONArray();

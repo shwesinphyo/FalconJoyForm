@@ -108,7 +108,7 @@
 			</m.html:ListItem>
                         <m.html:ListItem waves="DEFAULT">
 				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" iconPosition="LEFT" iconType="INBOX" text="Task inbox" separator="true" layoutPosition="RELATIVE">
-                                        <m:MaterialBadge backgroundColor="RED" text="6 avtive" textColor="WHITE" />
+                                        <m:MaterialBadge backgroundColor="RED" text="6 actives" textColor="WHITE" />
                                 </m:MaterialLink>
 			</m.html:ListItem>
                         <m.html:ListItem waves="DEFAULT">
