@@ -1,4 +1,4 @@
-package com.falconit.joyform.client.application.addins.dnd;
+package com.falconit.joyform.client.application.form.editor;
 
 /*
  * #%L
@@ -47,8 +47,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class DndView extends ViewImpl implements DndPresenter.MyView {
-    interface Binder extends UiBinder<Widget, DndView> {
+public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyView {
+    interface Binder extends UiBinder<Widget, FormEditorView> {
     }
 
     private java.util.List<Field> lstItem = new java.util.ArrayList<>();
@@ -64,7 +64,7 @@ public class DndView extends ViewImpl implements DndPresenter.MyView {
     //MaterialTextArea txtbrief;
 
     @Inject
-    DndView(Binder uiBinder) {
+    FormEditorView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi( this ) );
 
         for( int i=1; i<=4; i++ ){
