@@ -26,12 +26,12 @@
     <m:MaterialPanel>
 
             <m:MaterialRow addStyleNames="code" grid="l12 m12 s12">
-                <m:MaterialTextBox ui:field="txtid"  placeholder="Field Id" allowBlank="false" autoValidate="true"/>
-                <m:MaterialTextBox ui:field="txtname" placeholder="Name" allowBlank="false" autoValidate="true"/>
-                <m:MaterialTextBox ui:field="txtlabel" placeholder="Label" allowBlank="false" autoValidate="true"/>
-                <m:MaterialTextBox ui:field="txtplaceholder"  placeholder="Place holder" allowBlank="false" autoValidate="true"/>
+                <m:MaterialTextBox ui:field="txtid" placeholder="Field Id" allowBlank="false" autoValidate="true" grid="l14 m14 s12"/>
+                <m:MaterialTextBox ui:field="txtname" placeholder="Name" allowBlank="false" autoValidate="true" grid="l14 m14 s12"/>
+                <m:MaterialTextBox ui:field="txtlabel" placeholder="Label" allowBlank="false" autoValidate="true" grid="l14 m14 s12"/>
+                <m:MaterialTextBox ui:field="txtplaceholder" placeholder="Place holder" allowBlank="false" autoValidate="true" grid="l14 m14 s12"/>
                                 
-                <combobox:MaterialComboBox ui:field="cbofield" multiple="false" placeholder="Input field type">
+                <combobox:MaterialComboBox ui:field="cbofield" multiple="false" placeholder="Input field type" grid="l14 m14 s12">
                     <m:html.Option value="textbox" text="Text box"/>
                     <m:html.Option value="textarea" text="Text area"/>
                     <m:html.Option value="textboxrich" text="Rich text box"/>
@@ -52,7 +52,13 @@
 
         </m:MaterialRow>
         <m:MaterialRow>
-            <m:MaterialTextArea ui:field="txtbrief" grid="l12 m12 s12" placeholder="Brief about your campaign" resizeRule="AUTO" />
+            <m:MaterialButton ui:field="btnToJSON" text="To JSON" textColor="WHITE" waves="DEFAULT"/>
+            <m:MaterialTextArea ui:field="txtbrief" grid="l12 m12 s12" placeholder="to json result" resizeRule="FOCUS" />
+        </m:MaterialRow>
+        <m:MaterialRow>
+            <m:MaterialButton ui:field="btnFromJSON" text="From JSON" textColor="WHITE" waves="DEFAULT"/>
+            <m:MaterialPanel ui:field="holder1" grid="l12 m12 s12">
+            </m:MaterialPanel>
         </m:MaterialRow>
     </m:MaterialPanel>
 </ui:UiBinder>

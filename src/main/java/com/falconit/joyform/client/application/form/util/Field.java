@@ -12,6 +12,7 @@ import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.user.client.Window;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
 import gwt.material.design.addins.client.richeditor.MaterialRichEditor;
 import gwt.material.design.client.constants.Color;
@@ -478,10 +479,14 @@ import java.util.List;
         
         
         public void fromJSON( JSONObject json ) throws Exception{
-            
             setId( json.get(JSON_FIELD_ID).isString().stringValue());
+            //Window.alert(json.toString());
+            
             setLabel( json.get(JSON_FIELD_LABEL).isString().stringValue());
-            setValue( ( json.get(JSON_FIELD_VALUE).isString() == null ? null : json.get(JSON_FIELD_VALUE).isString().stringValue() ));
+            if( json.get(JSON_FIELD_VALUE).isNull() != null )
+                setValue( null );
+            else
+                setValue( ( json.get(JSON_FIELD_VALUE).isString() == null ? null : json.get(JSON_FIELD_VALUE).isString().stringValue() ));
             setName( json.get(JSON_FIELD_NAME).isString().stringValue());
             setTop( (int) json.get(JSON_FIELD_TOP).isNumber().doubleValue() );
             setLeft((int) json.get(JSON_FIELD_LEFT).isNumber().doubleValue());
@@ -492,6 +497,7 @@ import java.util.List;
 
             setPlaceHolder( json.get(JSON_FIELD_PLACE_HOLDER).isString().stringValue());
             setHelperText( json.get(JSON_FIELD_HELPER_TEXT).isString().stringValue() );
+            
             setValidate( json.get(JSON_FIELD_VALIDATE).isBoolean().booleanValue());
             setAllowBlank( json.get(JSON_FIELD_ALLOW_BLANK).isBoolean().booleanValue());
             setReadOnly( json.get(JSON_FIELD_READ_ONLY).isBoolean().booleanValue());
@@ -521,14 +527,21 @@ import java.util.List;
             setMin( json.get(JSON_FIELD_MIN).isNumber().doubleValue() );
             setMax( json.get(JSON_FIELD_MAX).isNumber().doubleValue() );
             
-            if( json.get(JSON_FIELD_CHILDREN).isArray() != null ){
-                JSONArray group = json.get(JSON_FIELD_CHILDREN).isArray();
-                for( int i=0; i < group.size(); i++){
-                    JSONObject child = group.get(i).isObject();
-                    Field f = new Field();
-                    f.fromJSON(child);
-                    children.add(f);
+            if( json.get(JSON_FIELD_CHILDREN) != null ){
+                //Window.alert("Child exist");
+                if( json.get(JSON_FIELD_CHILDREN).isArray() != null ){
+                    JSONArray group = json.get(JSON_FIELD_CHILDREN).isArray();
+                    //Window.alert("Child Size=" + group.size());
+                    for( int i=0; i < group.size(); i++){
+                        JSONObject child = group.get(i).isObject();
+                        Field f = new Field();
+                        f.fromJSON(child);
+                        children.add(f);
+                        //Window.alert("Child added in Field=" + children.size() );
+                    }
                 }
+            }else{
+                //Window.alert("No more child");
             }
         }
     
@@ -579,7 +592,7 @@ import java.util.List;
             json.put( JSON_FIELD_MIN, new JSONNumber(getMin()) );
             json.put( JSON_FIELD_MAX, new JSONNumber(getMax()) );
             
-            if( !children.isEmpty()){
+            if( children!= null && !children.isEmpty()){
                 JSONArray group = new JSONArray();
                 int count=0;
                 for( Field f : children){

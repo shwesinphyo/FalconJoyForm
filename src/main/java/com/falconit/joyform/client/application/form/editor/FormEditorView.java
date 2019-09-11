@@ -21,24 +21,20 @@ package com.falconit.joyform.client.application.form.editor;
  */
 
 import com.falconit.joyform.client.application.form.util.Field;
-import com.falconit.joyform.client.application.form.util.WidgetGenerator;
+import com.falconit.joyform.client.application.form.util.Form;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
-import gwt.material.design.addins.client.dnd.MaterialDnd;
-import gwt.material.design.addins.client.dnd.js.JsDragOptions;
-import gwt.material.design.client.base.MaterialWidget;
-import gwt.material.design.client.constants.Axis;
-import gwt.material.design.client.constants.Color;
+import gwt.material.design.client.constants.InputType;
 import gwt.material.design.client.ui.*;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,14 +42,16 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
     interface Binder extends UiBinder<Widget, FormEditorView> {
     }
 
+    private Form myForm = new Form("Test name","test container", "test process", "test task");
     private java.util.List<Field> lstItem = new java.util.ArrayList<>();
+    JSONObject json;
     //MaterialPanel items[];
 
     @UiField
     MaterialRow dropzoneContainer;
 
     @UiField
-    MaterialPanel holder;
+    MaterialPanel holder, holder1;
     @UiField
     MaterialTextBox txtid, txtname, txtlabel, txtplaceholder;
     @UiField 
@@ -61,16 +59,19 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
     @UiField 
     MaterialButton btnAdd;
     
-    //@UiField
-    //MaterialTextArea txtbrief;
+    @UiField
+    MaterialTextArea txtbrief;
 
     @Inject
     FormEditorView(Binder uiBinder) {
         
         initWidget( uiBinder.createAndBindUi( this ) );
 
+        myForm.setChild(lstItem);
+        
         String ww[] = new String[]{Field.WIDGET_TEXT_BOX, Field.WIDGET_TEXT_AREA, Field.WIDGET_CHECK_BOX, Field.WIDGET_DATE_TIME };
         for( int i=1; i<=4; i++ ){
+            /*
             Field f = new Field("RowId " + i, "Item " + i, "Option " + i);
             //f.setBackgroundColor(Color.WHITE);
             Field child = new Field("ColumnId " + i, "Item " + i, "Option " + i);
@@ -79,7 +80,11 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
             child.setLabel( "Item " + i );
             f.getChildren().add( child );
             lstItem.add( f );
+            */
+            addTestItem( ww[i-1], "RowId " + i, "Item " + i, "Option " + i, "Item " + i );
         }
+        addTestItem( Field.WIDGET_COMBO_BOX, "RowId 7", "Item 7", "Option 7", "Option 7" );
+        
         /*
         lstItem.add( new Field( "RowId 5", "Item 5", "Option 5" ) );
         Field f = new Field("RowId " + 6, "Item " + 6, "Option " + 6);
@@ -87,7 +92,9 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
         f.getChildren().add( new Field("RowId " + 7, "Item " + 7, "Option " + 7, "test group") );
         lstItem.add( f );
         */
-        layout( );
+        
+        myForm.render(holder);
+        
         /*
         Window.alert("Remove from group testing");
         lstItem.get( lstItem.size() - 1).getChildren().get( lstItem.get( lstItem.size() - 1).getChildren().size() - 1 ).setGroup("");
@@ -100,155 +107,73 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
         */
     }
     
-    private Field remove( String id ){
-        for ( int i=0; i < lstItem.size(); i++)
-            if( lstItem.get(i).getId().equals( id ))
-                return lstItem.remove(i);
+    private void addTestItem( String type, String id, 
+            String name, String label, String placeHolder ){
         
-        return null;
-    }
-    
-    private void verticalMove( MaterialWidget widget ){
-        if( lstItem.size() < 2) return;
-        
-        try{
-            Field field = remove( widget.getId());
-            int tmpDistance = 100000;
-            int position = -1;
-            int topDif = 10000;
-            int leftDif = 10000;
-            for ( int i=0; i < lstItem.size(); i++ ){
-                if( lstItem.get(i).getTop() > field.getTop() && lstItem.get(i).getTop() < tmpDistance ){
-                    tmpDistance = lstItem.get(i).getTop();
-                    position = i;
-                    topDif = lstItem.get(i).getTop() - field.getTop();
-                    leftDif = lstItem.get(i).getLeft() - field.getLeft();
-                }
-                
-            }
-        
-            //if( topDif < 15 && leftDif >=7 ){
-                //Window.alert("Column movement top=" + topDif +", left=" + leftDif);
-            //}
+        if( type.equals(Field.WIDGET_COMBO_BOX)){
+            // Combo box testing
+            Field f = new Field( id, label, name );
             
-            if( position >= 0 ){
-                lstItem.add( position, field );
-            }else{
-                lstItem.add( field );
-            }
-            
-            layout( );
-        }catch(Exception ex){Window.alert(ex.getMessage());}
-    }
-    
-    private void layout( ){
-        
-        //Collections.sort( lstItem, new Sortbyroll() );
-        holder.clear( );
-        //txtbrief.setText( txtbrief.getText() + "\n\n" );
-        
-        for( int i=0; i < lstItem.size(); i++ ){
-            Field f = lstItem.get(i);
-            if( f.getChildren().isEmpty()){
-                --i;
-                lstItem.remove(f); continue;
-            }
-            MaterialRow row;
-            WidgetGenerator generator = new WidgetGenerator();
-            try {
-                row = generator.getWidget( f );
-                MaterialDnd.draggable( row, JsDragOptions.create( Axis.VERTICAL ) );
-                generator.createWidget(f, row);
-                            
-                row.addDragEndHandler(event -> {
-                MaterialToast.fireToast("Added " );
-                //txtbrief.setText( "" );
-                int count = 0; 
-                for ( Widget w : holder.getChildrenList() ){
-                    lstItem.get( count ).setTop( w.getAbsoluteTop() );
-                    lstItem.get( count ).setLeft( w.getAbsoluteLeft() );
-                    //txtbrief.setText( txtbrief.getText() +"Event ->"+ w.getTitle() + ", top=" + w.getAbsoluteTop() + ", left=" + w.getAbsoluteLeft() + "\n" );
-                    count++;
-                }
-                //txtbrief.setText( txtbrief.getText() + "\n\n" );
-                verticalMove( row );
+            Field child = new Field( id, label, name );
+            child.setWidgetType( Field.WIDGET_COMBO_BOX );
 
-               });
-                            
-                holder.add( row );
-                f.setTop( row.getAbsoluteTop() );
-                f.setLeft( row.getAbsoluteLeft() );
-                
-            } catch (Exception ex) {
-                Window.alert(ex.getMessage());
-                Logger.getLogger(FormEditorView.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+            child.setPlaceHolder( placeHolder );
+            child.setLabel( label );
 
-    }
-    /**
-     * grouping the components. Before call this method, the group name must be added to related component
-     * e.g. lstItem.get(index).getChildren().get(index).setGroup(groupName);
-     * @param groupName 
-     */
-    private void addGroup( ){
-        for( int i=0; i < lstItem.size(); i++ ){
-            Field f = lstItem.get( i );
-            if( !f.getChildren().isEmpty() ){
-                // pickup the first child column
-                Field child = f.getChildren().get( 0 );
-                // check the group name
-                if( child.getGroup() != null && !child.getGroup().isEmpty()){
-                    boolean found = false;
-                    // find the related group name
-                    for( int j=i +1; j < lstItem.size(); j++ ){
-                        Field relative_child = lstItem.get( j ).getChildren().get( 0 );
-                        if( relative_child.getGroup() != null 
-                                && !relative_child.getGroup().isEmpty()
-                                && child.getGroup().trim().equalsIgnoreCase(relative_child.getGroup().trim()) ){
-                            Field r = lstItem.remove( j );
-                            f.getChildren().addAll( r.getChildren() );
-                            j--;
-                            found = true;
-                        }
-                    }
-                    // remove from group name for single component
-                    if( !found && f.getChildren().size() == 1){
-                        child.setGroup("");
-                    }
-                }
-                
-                // sorting by index
-                Collections.sort(lstItem, new SortByIndex());
+            child.setValue( "value 3" );// default selection
+            f.getChildren().add( child );
+
+            // Items
+            String comboData[] = new String[]{"value 1","value 2","value 3","value 4","value 5","value 6","value 7"};
+            for( String s : comboData){
+                Field comboItem = new Field();
+                comboItem.setValue( s );
+                comboItem.setLabel("Item " + s);
+                child.getChildren().add( comboItem );
             }
+            lstItem.add( f );
+        }else{
+            Field f = new Field( id, label, name );
+            //f.setBackgroundColor(Color.WHITE);
+            Field child = new Field( id, label, name );
+            child.setWidgetType( type );
+            child.setPlaceHolder( label );
+            child.setLabel( label );
+            child.setInputType(InputType.NUMBER);
+            f.getChildren().add( child );
+            lstItem.add( f );
         }
-        layout( );
     }
     
-    private void removeGroup( int rowIndex, int columnIndex ){
-        
-        if( rowIndex < 0 || columnIndex < 0 || rowIndex > lstItem.size() - 1) return;
-        
-        Field row = lstItem.get( rowIndex );
-        if( row.getChildren( ).size() <= 1 || columnIndex > row.getChildren( ).size() - 1) return;
-        
-        if( columnIndex == row.getChildren().size() - 1){
-            rowIndex++;
-        }
-        Field col = row.getChildren( ).remove( columnIndex );
-        
-        Field f = new Field( col.getId( ), col.getLabel( ), col.getName( ) );
-        f.getChildren( ).add( col );
-        lstItem.add( rowIndex, f );
-        
-        layout( );
+
+
+    @UiHandler("btnAdd")
+    void onGotoFirstPage(ClickEvent e) {
+        //txtid, txtname, txtlabel, txtplaceholder;
+        addTestItem( cbofield.getSingleValue().toString(), txtid.getText(), txtname.getText(), txtlabel.getText(), txtplaceholder.getText() );
+        myForm.render(holder);
     }
     
-    class SortByIndex implements Comparator<Field> {
-        @Override
-        public int compare(Field a, Field b) {
-            return a.getIndex() - b.getIndex(); 
-        } 
-    } 
-    
+    @UiHandler("btnToJSON")
+    void onToJSON(ClickEvent e) {
+        try {
+            json = myForm.toJSON();
+            txtbrief.setText( json.toString() );
+        } catch (Exception ex) {
+            Window.alert( ex.getMessage() );
+            Logger.getLogger( FormEditorView.class.getName()).log(Level.SEVERE, null, ex );
+        }
+    }
+        
+    @UiHandler("btnFromJSON")
+    void onFromJSON(ClickEvent e) {
+        try {
+            Form form1 = new Form( );
+            form1.setDraggable( false );
+            form1.fromJSON( json, holder1 );
+        } catch (Exception ex) {
+            Window.alert( ex.getMessage() );
+            Logger.getLogger( FormEditorView.class.getName()).log(Level.SEVERE, null, ex );
+        }
+    }
 }
