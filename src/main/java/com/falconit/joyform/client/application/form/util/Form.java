@@ -6,6 +6,7 @@
 package com.falconit.joyform.client.application.form.util;
 
 import com.falconit.joyform.client.application.form.editor.FormEditorView;
+import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -47,7 +48,7 @@ public class Form implements java.io.Serializable{
         private String process;
         private String task;
         private String mode;
-        private boolean draggable;
+        private boolean draggable = true;
         private java.util.List<Field> child;
 
     public Form() {
@@ -151,7 +152,10 @@ public class Form implements java.io.Serializable{
         this.child = child;
     }
     
-        
+    /**
+     * Render the form with related fields and widgets
+     * @param holder container widget to draw the form
+     */    
     public void render( MaterialPanel holder ){
         
         if( child == null ) return;
@@ -195,7 +199,12 @@ public class Form implements java.io.Serializable{
         }
 
     }
-        
+    
+    /**
+     * handling drag and drop movement
+     * @param widget moving widget
+     * @param holder parent widget of form
+     */
     private void verticalMove( MaterialWidget widget, MaterialPanel holder ){
         if( child.size() < 2) return;
         
@@ -230,7 +239,7 @@ public class Form implements java.io.Serializable{
     }
     
         
-    public Field remove( String id ){
+    private Field remove( String id ){
         for ( int i=0; i < child.size(); i++)
             if( child.get(i).getId().equals( id ))
                 return child.remove(i);
@@ -241,7 +250,7 @@ public class Form implements java.io.Serializable{
     /**
      * grouping the components. Before call this method, the group name must be added to related component
      * e.g. lstItem.get(index).getChildren().get(index).setGroup(groupName);
-     * @param holder 
+     * @param holder parent container widget of form
      */
     public void addGroup( MaterialPanel holder ){
         for( int i=0; i < child.size(); i++ ){
@@ -303,11 +312,22 @@ public class Form implements java.io.Serializable{
         } 
     } 
     
+    /**
+     * Form design generating from JSON object
+     * @param json object of form design
+     * @param holder container type widget to draw the form
+     * @throws Exception 
+     */
     public void fromJSON( JSONObject json, MaterialPanel holder) throws Exception {
         fromJSON( json );
         render ( holder );
     }
-      public void fromJSON( JSONObject json )throws Exception{
+      /**
+       * Form design generating from JSON object
+       * @param json object of form design
+       * @throws Exception 
+       */
+    public void fromJSON( JSONObject json )throws Exception{
         
           if( json.get(JSON_FORM_ID)!= null && json.get(JSON_FORM_ID).isNumber() != null )
             setId( (long) json.get(JSON_FORM_ID).isNumber().doubleValue());
@@ -333,8 +353,13 @@ public class Form implements java.io.Serializable{
             Window.alert("Child size after reading=" + child.size());
             
       }
-      
-      public JSONObject toJSON() throws Exception{
+
+    /**
+     * Form design to converting JSON object
+     * @return JSON object
+     * @throws Exception 
+     */
+    public JSONObject toJSON() throws Exception{
           JSONObject json = new JSONObject( );
           
           if( getId() != null )
@@ -357,4 +382,41 @@ public class Form implements java.io.Serializable{
           
           return json;
       }
+      
+    /**
+     * Picking up form field values and convert to JSON object for data processing in KIE server via API
+     * @return JSON object for KIE server for data processing
+     * @throws Exception 
+     */
+    public JSONObject getOutputDataForTask() throws Exception{
+          java.util.Map<String, Object[]> maps = new java.util.HashMap<>();
+          
+          for( Field child : child ){
+              for ( Field children : child.getChildren()){
+                  maps.put( children.getName(), children.getBindValue());
+              }
+          }
+          
+          return new ObjectConverter().toJSON(maps);
+      }
+      
+    /**
+     * Filling data from Task Instance of KIE server
+     * @param json Task JSON object from KIE server
+     * @throws Exception 
+     */
+    public void bindWithTaskData( JSONObject json )throws Exception{
+        java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( json );
+        
+        for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
+            Outer: for( Field child : child ){
+              for ( Field children : child.getChildren()){
+                  if( children.getName().equals(entry.getKey())){
+                      children.setValue( entry.getValue()[1] );
+                      break Outer;
+                  }
+              }
+            }
+        }
+    }
 }

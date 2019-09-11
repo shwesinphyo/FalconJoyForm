@@ -476,8 +476,7 @@ import java.util.List;
         public void setMax(double max) {
             this.max = max;
         }
-        
-        
+ 
         public void fromJSON( JSONObject json ) throws Exception{
             setId( json.get(JSON_FIELD_ID).isString().stringValue());
             //Window.alert(json.toString());
@@ -544,8 +543,7 @@ import java.util.List;
                 //Window.alert("No more child");
             }
         }
-    
-        
+ 
         public JSONObject toJSON() throws Exception{
             
             JSONObject json = new JSONObject( );
