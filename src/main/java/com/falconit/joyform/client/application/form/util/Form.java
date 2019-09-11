@@ -350,7 +350,7 @@ public class Form implements java.io.Serializable{
                 //Window.alert("Child added=" + child.size() );
                 
             }
-            Window.alert("Child size after reading=" + child.size());
+            //Window.alert("Child size after reading=" + child.size());
             
       }
 
