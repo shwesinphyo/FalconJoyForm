@@ -164,7 +164,7 @@ public class Form implements java.io.Serializable{
         for( int i=0; i < child.size(); i++ ){
             Field f = child.get(i);
             if( f.getChildren().isEmpty()){
-                --i;
+                --i; 
                 child.remove(f); continue;
             }
             MaterialRow row;

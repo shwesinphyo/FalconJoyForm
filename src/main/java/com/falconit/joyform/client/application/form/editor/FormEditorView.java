@@ -93,7 +93,7 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
         lstItem.add( f );
         */
         
-        myForm.render(holder);
+        myForm.render( holder );
         
         /*
         Window.alert("Remove from group testing");
