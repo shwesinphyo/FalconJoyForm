@@ -22,6 +22,7 @@ import gwt.material.design.client.ui.MaterialRow;
 import gwt.material.design.client.ui.MaterialToast;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +38,12 @@ public class Form implements java.io.Serializable{
         public static final String JSON_FORM_CONTAINER_ID = "container";
         public static final String JSON_PROCESS_ID = "process";
         public static final String JSON_TASK_ID = "task";
+        public static final String JSON_FORM_DATA = "formdata";
+        public static final String JSON_FORM_CREATED = "created";
+        public static final String JSON_FORM_UPDATED = "updated";
+        public static final String JSON_FORM_PERMISSION_ACTORS = "actors";
+        public static final String JSON_FORM_PERMISSION_GROUPS = "groups";
+        
         
         public static final String DISPLAY_MODE_READ_ONLY = "readonly";
         public static final String DISPLAY_MODE_FILL_UP = "fillup";
@@ -48,8 +55,15 @@ public class Form implements java.io.Serializable{
         private String process;
         private String task;
         private String mode;
+        private java.util.Date created;
+        private java.util.Date updated;
+        private String[] actors;
+        private String[] groups;
+        
+        
         private boolean draggable = true;
         private java.util.List<Field> child;
+        
 
     public Form() {
     }
@@ -126,6 +140,38 @@ public class Form implements java.io.Serializable{
 
     public void setTask(String task) {
         this.task = task;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
+    public String[] getActors() {
+        return actors;
+    }
+
+    public void setActors(String[] actors) {
+        this.actors = actors;
+    }
+
+    public String[] getGroups() {
+        return groups;
+    }
+
+    public void setGroups(String[] groups) {
+        this.groups = groups;
     }
 
     public String getMode() {
@@ -237,8 +283,7 @@ public class Form implements java.io.Serializable{
             render( holder );
         }catch(Exception ex){Window.alert(ex.getMessage());}
     }
-    
-        
+       
     private Field remove( String id ){
         for ( int i=0; i < child.size(); i++)
             if( child.get(i).getId().equals( id ))
