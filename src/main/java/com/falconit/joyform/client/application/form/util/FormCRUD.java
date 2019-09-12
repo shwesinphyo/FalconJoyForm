@@ -19,7 +19,11 @@ import com.google.gwt.json.client.JSONString;
  * @author User
  */
 public class FormCRUD {
-    
+    /**
+     * 
+     * @param form created form object to save or update
+     * @param isSave true for saving (don't add Id allow it null)
+     */
     public void saveUpdate( Form form, boolean isSave ){
         try{
             
@@ -65,18 +69,41 @@ public class FormCRUD {
         }catch(Exception ex){ex.printStackTrace();}
     }
 
+    /**
+     * Extract with container name
+     * @param contaner  container name
+     */
     public void getBy(String contaner ){
         getBy( contaner, null, null, -1, 0 );
     }
     
+    /**
+     * Extract with container name and process name
+     * @param contaner container name
+     * @param process process name
+     */
     public void getBy(String contaner, String process){
         getBy( contaner, process, null, -1, 0 );
     }
     
+    /**
+     * Extract with container name, process name and task name
+     * @param contaner container name
+     * @param process process name
+     * @param task task name
+     */
     public void getBy(String contaner, String process, String task ){
         getBy( contaner, process, task, -1, 0 );
     }
     
+    /**
+     * Extract with container name, process name and task with limit and offset
+     * @param contaner container name or null for all forms
+     * @param process process name, use null when container name was null
+     * @param task task name, use null when container name and process name null
+     * @param first offset value
+     * @param max limit value
+     */
     public void getBy(String contaner, String process, String task, int first, int max  ){
         java.util.List<Form> lst = new java.util.ArrayList<>();
         
