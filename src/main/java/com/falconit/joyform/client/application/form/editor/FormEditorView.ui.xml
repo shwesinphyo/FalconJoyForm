@@ -1,0 +1,64 @@
+<!--
+  #%L
+  GwtMaterial
+  %%
+  Copyright (C) 2015 - 2016 GwtMaterialDesign
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:m="urn:import:gwt.material.design.client.ui"
+             xmlns:m.addins="urn:import:gwt.material.design.addins.client"
+             xmlns:combobox="urn:import:gwt.material.design.addins.client.combobox"
+             xmlns:demo="urn:import:com.falconit.joyform.client.ui">
+    <m:MaterialPanel>
+
+            <m:MaterialRow addStyleNames="code" grid="l12 m12 s12">
+                <m:MaterialTextBox ui:field="txtid" placeholder="Field Id" allowBlank="false" autoValidate="true" grid="l14 m14 s12"/>
+                <m:MaterialTextBox ui:field="txtname" placeholder="Name" allowBlank="false" autoValidate="true" grid="l14 m14 s12"/>
+                <m:MaterialTextBox ui:field="txtlabel" placeholder="Label" allowBlank="false" autoValidate="true" grid="l14 m14 s12"/>
+                <m:MaterialTextBox ui:field="txtplaceholder" placeholder="Place holder" allowBlank="false" autoValidate="true" grid="l14 m14 s12"/>
+                                
+                <combobox:MaterialComboBox ui:field="cbofield" multiple="false" placeholder="Input field type" grid="l14 m14 s12">
+                    <m:html.Option value="textbox" text="Text box"/>
+                    <m:html.Option value="textarea" text="Text area"/>
+                    <m:html.Option value="textboxrich" text="Rich text box"/>
+                    <m:html.Option value="textboxnumber" text="Number box"/>
+                    <m:html.Option value="checkbox" text="Check box"/>
+                    <m:html.Option value="combo" text="Combo box"/>
+                    <m:html.Option value="datetime" text="Date time"/>
+               </combobox:MaterialComboBox>
+               <m:MaterialButton ui:field="btnAdd" text="Add" textColor="WHITE" waves="DEFAULT"/>
+            </m:MaterialRow>
+        
+        <m:MaterialRow addStyleNames="code">
+            <m:MaterialTitle title="Dynamic form" />
+            <m:MaterialRow ui:field="dropzoneContainer" padding="10">
+                <m:MaterialPanel ui:field="holder" grid="l12 m12 s12">
+                </m:MaterialPanel>
+            </m:MaterialRow>
+
+        </m:MaterialRow>
+        <m:MaterialRow>
+            <m:MaterialButton ui:field="btnToJSON" text="To JSON" textColor="WHITE" waves="DEFAULT"/>
+            <m:MaterialTextArea ui:field="txtbrief" grid="l12 m12 s12" placeholder="to json result" resizeRule="FOCUS" />
+        </m:MaterialRow>
+        <m:MaterialRow>
+            <m:MaterialButton ui:field="btnFromJSON" text="From JSON" textColor="WHITE" waves="DEFAULT"/>
+            <m:MaterialPanel ui:field="holder1" grid="l12 m12 s12">
+            </m:MaterialPanel>
+        </m:MaterialRow>
+    </m:MaterialPanel>
+</ui:UiBinder>

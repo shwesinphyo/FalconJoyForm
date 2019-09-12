@@ -30,7 +30,7 @@
                 <!--
                 <m:MaterialTitle scrollspy="data_pager" title="Pager" description="We developed a pager embeded component to data table to provide a better pagination into your data set." />
                 -->
-                <combobox:MaterialComboBox ui:field="cbostatus" multiple="true" label="Task status">
+                <combobox:MaterialComboBox ui:field="cbostatus" multiple="true" placeholder="Task status">
                     <m:html.Option value="Created" text="Created"/>
                     <m:html.Option value="Ready" text="Ready"/>
                     <m:html.Option value="Reserved" text="Reserved"/>
@@ -44,7 +44,7 @@
                
                 <m.table:MaterialDataTable shadow="0" marginTop="20" ui:field="table"
                                            height="calc(100vh - 131px)"
-                                           useStickyHeader="true"
+                                           useStickyHeader="false"
                                            useCategories="false"
                                            useRowExpansion="false"
                                            selectionType="SINGLE"/>
