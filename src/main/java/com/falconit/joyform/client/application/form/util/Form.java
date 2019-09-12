@@ -39,10 +39,13 @@ public class Form implements java.io.Serializable{
         public static final String JSON_PROCESS_ID = "process";
         public static final String JSON_TASK_ID = "task";
         public static final String JSON_FORM_DATA = "formdata";
-        public static final String JSON_FORM_CREATED = "created";
-        public static final String JSON_FORM_UPDATED = "updated";
         public static final String JSON_FORM_PERMISSION_ACTORS = "actors";
         public static final String JSON_FORM_PERMISSION_GROUPS = "groups";
+        public static final String JSON_FORM_CREATED = "created";
+        public static final String JSON_FORM_UPDATED = "updated";
+        public static final String JSON_FORM_STATUS = "status";
+        public static final String JSON_FORM_OBJECT_NAME = "objectName";
+        public static final String JSON_FORM_FQDN = "fqdn";
         
         
         public static final String DISPLAY_MODE_READ_ONLY = "readonly";
@@ -59,6 +62,9 @@ public class Form implements java.io.Serializable{
         private java.util.Date updated;
         private String[] actors;
         private String[] groups;
+        private int status = 1;
+        private String objectName="";
+        private String fqdn="";
         
         
         private boolean draggable = true;
@@ -172,6 +178,30 @@ public class Form implements java.io.Serializable{
 
     public void setGroups(String[] groups) {
         this.groups = groups;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
+
+    public String getFqdn() {
+        return fqdn;
+    }
+
+    public void setFqdn(String fqdn) {
+        this.fqdn = fqdn;
     }
 
     public String getMode() {
