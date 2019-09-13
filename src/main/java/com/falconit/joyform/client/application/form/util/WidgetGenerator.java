@@ -105,10 +105,10 @@ public class WidgetGenerator {
             btnedit.addClickHandler(handler ->{buttonListener.onEditClick(field, index);});
             
             MaterialAnchorButton btnremove = new MaterialAnchorButton();
-            btnremove.setType(ButtonType.FLOATING);
-            btnremove.setBackgroundColor(Color.RED);
-            btnremove.setIconType(IconType.DELETE);
-            btnremove.setSize(ButtonSize.MEDIUM);
+            btnremove.setType( ButtonType.FLOATING );
+            btnremove.setBackgroundColor( Color.RED );
+            btnremove.setIconType( IconType.DELETE );
+            btnremove.setSize( ButtonSize.MEDIUM );
             btnremove.setFloat(Style.Float.RIGHT);
             btnremove.setTooltip("Remove");
             btnremove.setMarginRight(20);
