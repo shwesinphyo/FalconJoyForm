@@ -94,7 +94,6 @@
                                             <m.html:UnorderedList>
                                                     <m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" text="Create Apps" waves="DEFAULT"/>
                                                     <m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" text="Mamagement Apps" waves="DEFAULT"/>
-                                                    <m:MaterialLink targetHistoryToken="{tokens.getFormeditor}" text="Create Form" iconType="ASSIGNMENT" waves="DEFAULT"/>
                                             </m.html:UnorderedList>
                                     </m:MaterialCollapsibleBody>
                             </m:MaterialCollapsibleItem>
@@ -123,28 +122,20 @@
                         <m.html:ListItem waves="DEFAULT">
 				<m:MaterialLink targetHistoryToken="{tokens.getCharts}" iconPosition="LEFT" iconType="POLL" text="Analytics" separator="true" />       
 			</m.html:ListItem>
-                        
-                        
-                        <!--
+
 			<m:MaterialCollapsible>
 				<m:MaterialCollapsibleItem>
 					<m:MaterialCollapsibleHeader waves="DEFAULT">
-						<m:MaterialLink text="Stats &amp; reportings" iconType="POLL"/>
+						<m:MaterialLink text="For testing only" iconType="POLL"/>
 					</m:MaterialCollapsibleHeader>
 					<m:MaterialCollapsibleBody>
 						<m.html:UnorderedList>
-							<m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" text="Statistics" waves="DEFAULT"/>
-							<m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" text="Reportings" waves="DEFAULT"/>
+                                                    <m:MaterialLink targetHistoryToken="{tokens.getFormeditor}" text="Create Form" iconType="ASSIGNMENT" waves="DEFAULT"/>
 						</m.html:UnorderedList>
 					</m:MaterialCollapsibleBody>
 				</m:MaterialCollapsibleItem>
-
 			</m:MaterialCollapsible>
-
-                        <m.html:ListItem waves="DEFAULT">
-                                <m:MaterialLink targetHistoryToken="{tokens.getDnd}" iconPosition="LEFT" iconType="TUNE" text="Analytics" separator="true"/>       
-                        </m.html:ListItem>
--->
+                        
 		</m:MaterialSideNavPush>
 	</m:MaterialPanel>
 </ui:UiBinder>
