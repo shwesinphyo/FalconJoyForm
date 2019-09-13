@@ -221,7 +221,13 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
 */
         // Add a row select handler, called when a user selects a row.
         table.addRowSelectHandler(event -> {
+            
+              Window.alert("id = " + event.getModel().get("task-id") );  
+ 
+            
+          
         });
+        
 
         // Add a sort column handler, called when a user sorts a column.
         table.addColumnSortHandler(event -> {
@@ -256,7 +262,9 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
         // Add a row short press handler, called when a row is short pressed.
         table.addRowShortPressHandler(event -> {
             //.log("Row Short Pressed: " + model.getId() + ", x:" + mouseEvent.getPageX() + ", y: " + mouseEvent.getPageY());
+           
         });
+      
         
         ViewPort.when(Resolution.ALL_MOBILE).then(param1 -> {
             table.setHeight("60vh");
@@ -298,7 +306,8 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                         try {
                             java.util.Map<String, Object[]> taskMap = new ObjectConverter().fromJSON( task );
                             lstTasks.add( taskMap );
-                            //Window.alert("Task id = "+taskMap.get("task-id")[1].toString() +", Created on=" + (long)taskMap.get("task-created-on")[1]);
+//                            Window.alert("Task id = "+taskMap.get("task-id")[1].toString() +", Created on=" + (long)taskMap.get("task-created-on")[1]);
+                            
                         } catch (Exception ex) {
                             Window.alert(ex.getMessage());
                             Logger.getLogger(TasksListView.class.getName()).log(Level.SEVERE, null, ex);
