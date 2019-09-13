@@ -109,26 +109,7 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
         
         // drawing the form
         myForm.render( holder );
-        
-        /*
-        for( Field field : myForm.getChild( ) ){
-            for( Field child : field.getChildren() ){
-                if( child.getWidget() instanceof MaterialTextBox){
-                    ((MaterialTextBox) child.getWidget()).addClickHandler(handler ->{
-                        child.setLabel(" click name textbox");
-                        Window.alert(child.getLabel());
-                    });
-                }else if( child.getWidget() instanceof MaterialTextArea){
-                    ((MaterialTextArea) child.getWidget()).addClickHandler(handler ->{
-                        child.setLabel(" click name textarea");
-                        Window.alert(child.getLabel());
-                    });
-                }
-            }
-        }
-        */
-        
-        
+
         /*
         // widget remove testing
         Window.alert("Remove from group testing");
