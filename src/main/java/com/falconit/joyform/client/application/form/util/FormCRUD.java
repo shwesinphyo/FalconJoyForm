@@ -27,7 +27,10 @@ public class FormCRUD {
     public void saveUpdate( Form form, boolean isSave ){
         try{
             
+            if( isSave)
+                form.setId( null );
             JSONObject json = new ObjectConverter().toJSON( fillData( form ) );
+            
             HumanTaskHelper helper = new HumanTaskHelper();
             helper.setListener(new HumanTaskHelper.HumanTaskHelperListener() {
                 @Override
@@ -40,6 +43,10 @@ public class FormCRUD {
                     try {
                         if( objForm != null ){
                             listener.success("Success");
+                            if( isSave ){
+                                java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm );
+                                    form.setId( getFormBack( maps ).getId() );
+                            }
                         }else{
                             listener.fail( "Failed to save" );
                         }
@@ -58,10 +65,12 @@ public class FormCRUD {
             objForm.put("Form", json);
 
             JSONObject obj = new JSONObject();
-            if( isSave )
+            if( isSave ){
                 obj.put("action", new JSONString( "create" ));
-            else
+            }
+            else{
                 obj.put("action", new JSONString( "update" ));
+            }
             
             obj.put("object", objForm);
 

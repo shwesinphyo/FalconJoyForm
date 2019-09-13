@@ -144,6 +144,10 @@ import java.util.List;
         
         private Object widget;
 
+    public Object getWidget() {
+        return widget;
+    }
+
         public Field() {
         }
 
