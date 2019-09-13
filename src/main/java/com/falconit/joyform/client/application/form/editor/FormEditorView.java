@@ -31,7 +31,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
-import gwt.material.design.client.constants.InputType;
 import gwt.material.design.client.ui.*;
 
 import javax.inject.Inject;
@@ -67,40 +66,58 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
         
         initWidget( uiBinder.createAndBindUi( this ) );
 
+        // this is form display mode
+        myForm.setMode( Form.DISPLAY_MODE_DESIGNER );
+        myForm.setMouseOverShadow(true);
+        myForm.setItemListener(new Form.FormItemListener(){
+            @Override
+            public void onClick(Field field, int index) {
+                MaterialToast.fireToast("Click on " + field.getName()+", index=" + index );
+            }
+
+            @Override
+            public void mouseEnter(Field field, int index) {
+                //MaterialToast.fireToast("Mouse enter " + field.getName()+", index=" + index );
+            }
+
+            @Override
+            public void mouseExit(Field field, int index) {
+                //MaterialToast.fireToast("Mouse exit " + field.getName()+", index=" + index );
+            }
+
+            @Override
+            public void onEditClick(Field field, int index) {
+                MaterialToast.fireToast("Click on Edit button " + field.getName()+", index=" + index );
+            }
+
+            @Override
+            public void onDeleteClick(Field field, int index) {
+                MaterialToast.fireToast("Click on Delete button " + field.getName()+", index=" + index );
+            }
+        });
+        
+        // adding child widget list to form
         myForm.setChild(lstItem);
         
-        String ww[] = new String[]{Field.WIDGET_TEXT_BOX, Field.WIDGET_TEXT_AREA, Field.WIDGET_CHECK_BOX, Field.WIDGET_DATE_TIME };
+        String ww[] = new String[]{Field.WIDGET_TEXT_BOX, Field.WIDGET_TEXT_BOX_NUMBER, Field.WIDGET_CHECK_BOX, Field.WIDGET_DATE_TIME };
         for( int i=1; i<=4; i++ ){
-            /*
-            Field f = new Field("RowId " + i, "Item " + i, "Option " + i);
-            //f.setBackgroundColor(Color.WHITE);
-            Field child = new Field("ColumnId " + i, "Item " + i, "Option " + i);
-            child.setWidgetType(ww[i-1]);
-            child.setPlaceHolder( "Item " + i );
-            child.setLabel( "Item " + i );
-            f.getChildren().add( child );
-            lstItem.add( f );
-            */
+            // adding widget
             addTestItem( ww[i-1], "RowId " + i, "Item " + i, "Option " + i, "Item " + i );
         }
+        // adding widget
         addTestItem( Field.WIDGET_COMBO_BOX, "RowId 7", "Item 7", "Option 7", "Option 7" );
         
-        /*
-        lstItem.add( new Field( "RowId 5", "Item 5", "Option 5" ) );
-        Field f = new Field("RowId " + 6, "Item " + 6, "Option " + 6);
-        f.getChildren().add( new Field("RowId " + 6, "Item " + 6, "Option " + 6, "test group") );
-        f.getChildren().add( new Field("RowId " + 7, "Item " + 7, "Option " + 7, "test group") );
-        lstItem.add( f );
-        */
-        
+        // drawing the form
         myForm.render( holder );
-        
+
         /*
+        // widget remove testing
         Window.alert("Remove from group testing");
         lstItem.get( lstItem.size() - 1).getChildren().get( lstItem.get( lstItem.size() - 1).getChildren().size() - 1 ).setGroup("");
         removeGroup( lstItem.size() - 1, lstItem.get( lstItem.size() - 1).getChildren().size() - 1 );
         
         Window.alert("Group testing");
+        //widget grouping testing
         lstItem.get( 0 ).getChildren().get(0).setGroup( "g1" );
         lstItem.get( 1 ).getChildren().get(0).setGroup( "g1" );
         addGroup(  );
@@ -134,22 +151,20 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
             lstItem.add( f );
         }else{
             Field f = new Field( id, label, name );
-            //f.setBackgroundColor(Color.WHITE);
             Field child = new Field( id, label, name );
             child.setWidgetType( type );
             child.setPlaceHolder( label );
             child.setLabel( label );
-            child.setInputType(InputType.NUMBER);
+            //child.setReadOnly( true );
+            
             f.getChildren().add( child );
             lstItem.add( f );
         }
     }
     
-
-
+    
     @UiHandler("btnAdd")
-    void onGotoFirstPage(ClickEvent e) {
-        //txtid, txtname, txtlabel, txtplaceholder;
+    void onAdd(ClickEvent e) {
         addTestItem( cbofield.getSingleValue().toString(), txtid.getText(), txtname.getText(), txtlabel.getText(), txtplaceholder.getText() );
         myForm.render(holder);
     }
