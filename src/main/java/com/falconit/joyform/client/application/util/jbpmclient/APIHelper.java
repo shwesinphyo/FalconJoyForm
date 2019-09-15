@@ -79,10 +79,7 @@ public class APIHelper {
             listener.fail("Request error code=" + e.getMessage(), 3);
         }
     }
-    public void taskDetail(){
-        
-    }
-     
+       
     public void setListener(APIHelperListener listener){
         this.listener = listener;
     }

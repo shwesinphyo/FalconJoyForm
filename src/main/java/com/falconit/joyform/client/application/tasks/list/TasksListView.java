@@ -216,11 +216,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
 */
         // Add a row select handler, called when a user selects a row.
         table.addRowSelectHandler(event -> {
-            
-              Window.alert("id = " + event.getModel().get("task-id") );  
- 
-            
-          
+                      
         });
         
 
