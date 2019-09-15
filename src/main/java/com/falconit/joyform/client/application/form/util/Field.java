@@ -637,7 +637,7 @@ import java.util.List;
                 
             }else if( getWidgetType().equals(Field.WIDGET_DATE_TIME) ){
                 java.util.Date value = ((MaterialDatePicker) widget).getDate();
-                return new Object[] { ObjectConverter.JSON_INPUT_FIELD_TIMESTAMP, value.getTime() };
+                return new Object[] { ObjectConverter.TYPE_DATETIME, value.getTime() };
                 
             }else if( getWidgetType().equals(Field.WIDGET_COMBO_BOX) ){
                 java.util.List value = ((MaterialComboBox) widget).getSelectedValues();

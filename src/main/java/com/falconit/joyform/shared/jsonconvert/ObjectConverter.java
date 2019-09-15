@@ -5,12 +5,12 @@
  */
 package com.falconit.joyform.shared.jsonconvert;
 
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.user.client.Window;
 
 /**
  *
@@ -31,14 +31,29 @@ public class ObjectConverter {
     public static final String TYPE_NUMBER = "number";
     public static final String TYPE_BOOLEAN = "boolean";
     public static final String TYPE_NULL = "null";
+    public static final String TYPE_OBJECT = "object";
+    public static final String TYPE_ARRAY = "array";
     
 
-    public java.util.Map<String, Object[]> fromJSON( JSONObject json ) throws Exception{
+    public java.util.Map<String, Object[]> fromJSON( JSONObject json, boolean arrayRecursive, boolean objectRecursive ) throws Exception{
         java.util.Map<String, Object[]> maps = new java.util.HashMap<>();
         
         for( String key : json.keySet()){
-            if( json.get(key).isArray() != null ){
-                
+            if( json.get(key).isArray() != null && arrayRecursive){
+                try{
+                    JSONArray array = json.get(key).isArray();
+                    if( array!= null && array.size() > 0 ){
+
+                        java.util.List<Object[]> mapArray = new java.util.ArrayList<>();
+
+                        for( int i=0; i < array.size(); i++){
+                            JSONObject object = array.get(i).isObject();
+                            java.util.Map<String, Object[]> map =  fromJSON( object, arrayRecursive, objectRecursive );
+                            mapArray.add( new Object[] { ObjectConverter.TYPE_OBJECT, map });
+                        }
+                        maps.put(key, new Object[] { ObjectConverter.TYPE_ARRAY, mapArray });
+                    }
+                }catch(Exception ex){}
             }else if( json.get(key).isObject() != null ){
                 if( json.get(key).isObject().get( ObjectConverter.JSON_INPUT_FIELD_TIMESTAMP ) != null ){
                     maps.put(key, new Object[] {
@@ -50,7 +65,14 @@ public class ObjectConverter {
                         ObjectConverter.JSON_INPUT_FIELD_DATETIME, 
                         (long) json.get(key).isObject().get(ObjectConverter.JSON_INPUT_FIELD_DATETIME).isNumber().doubleValue(),
                     });
-                    //Window.alert( "Date:" + ((long) json.get(key).isObject().get(ObjectConverter.JSON_INPUT_FIELD_DATETIME).isNumber().doubleValue()) );
+                }else{
+                    if( objectRecursive ){
+                        try{
+                            JSONObject object = json.get(key).isObject();
+                            java.util.Map<String, Object[]> map =  fromJSON( object, arrayRecursive, objectRecursive );
+                            maps.put(key, new Object[] { ObjectConverter.TYPE_OBJECT, map });
+                        }catch(Exception ex){}
+                    }
                 }
             }else if( json.get(key).isString() != null ){
                 maps.put(key, new Object[] { ObjectConverter.TYPE_STRING, 
@@ -89,24 +111,6 @@ public class ObjectConverter {
         JSONObject json = new JSONObject( );
         
         for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
-            //for( String key : maps.keySet())
-            
-                        //Window.alert( "Looping" );
-            if( entry == null ){
-                //Window.alert( "Entry is null" ); continue;
-            }
-                        
-            if( entry.getValue() == null ){
-                //Window.alert(entry.getKey()+ " is null" );
-            }
-            if( entry.getValue()[0] == null ){
-                //Window.alert(entry.getKey()+ " zero is null" );
-            }
-                        
-            if( entry.getValue()[1] == null ){
-                //Window.alert(entry.getKey()+ " one is null" );
-            }
-            //Window.alert(entry.getKey()+ "=" + entry.getValue()[0]+","+ entry.getValue()[1] );
             
             if( entry.getValue()[0].toString().equals( ObjectConverter.TYPE_TIMESTAMP )){
                 JSONObject date = new JSONObject();

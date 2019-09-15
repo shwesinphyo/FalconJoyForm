@@ -2,7 +2,10 @@ package com.falconit.joyform.client.application.tasks.list;
 
 
 
+import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
 import com.falconit.joyform.client.application.util.jbpmclient.APIHelper;
+import com.falconit.joyform.client.application.util.jbpmclient.api.task.TaskInputDataReader;
+import com.falconit.joyform.client.application.util.jbpmclient.api.task.TaskInputDataReader.TaskInputDataReaderListener;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.core.client.GWT;
@@ -33,6 +36,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -216,6 +220,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
 */
         // Add a row select handler, called when a user selects a row.
         table.addRowSelectHandler(event -> {
+            taskSelected( event.getModel() );
         });
 
         // Add a sort column handler, called when a user sorts a column.
@@ -291,7 +296,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                         JSONObject task = tasks.get(i).isObject();
                         
                         try {
-                            java.util.Map<String, Object[]> taskMap = new ObjectConverter().fromJSON( task );
+                            java.util.Map<String, Object[]> taskMap = new ObjectConverter().fromJSON( task, false, false );
                             lstTasks.add( taskMap );
                             //Window.alert("Task id = "+taskMap.get("task-id")[1].toString() +", Created on=" + (long)taskMap.get("task-created-on")[1]);
                         } catch (Exception ex) {
@@ -329,6 +334,36 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                 arrStatus,
                 0, 20, null, null, true);
         //helper.query( Constants.containerId, "355");
+    }
+    
+    private void taskSelected( java.util.Map<String, Object[]> map ){
+        String container = map.get("task-container-id")[1].toString();
+        String taskId = map.get("task-id")[1].toString();
+        String processId = map.get("task-proc-def-id")[1].toString();
+        String taskName = map.get("task-name")[1].toString();
+        
+        
+        Window.Location.assign( "?container=" + container 
+                + "&taskId=" + taskId 
+                + "&process" + processId 
+                + "&taskName=" + taskName 
+                + "&display=" + TaskDisplayView.DISPLAY_PROCESS
+                + "#taskdisplay" );
+            
+        /*
+        TaskInputDataReader reader = new TaskInputDataReader();
+        reader.setListener(new TaskInputDataReaderListener(){
+            @Override
+            public void result(String taskName, String nodeName, String Skippable, Map<String, Object[]> maps) {
+                Window.alert("Task name=" + taskName + ", Node name=" + nodeName+", size=" + maps.size());
+            }
+
+            @Override
+            public void fail(String message) {
+            }
+        });
+        reader.read(container, taskId);
+        */
     }
     
   /*  

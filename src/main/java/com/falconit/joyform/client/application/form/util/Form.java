@@ -540,7 +540,16 @@ public class Form implements java.io.Serializable{
               }
           }
           
-          return new ObjectConverter().toJSON(maps);
+          JSONObject json = new ObjectConverter().toJSON( maps );
+          if( getFqdn() != null && !getFqdn().trim().isEmpty() ){
+                JSONObject objFQDN = new JSONObject();
+                objFQDN.put( getFqdn(), json );
+                JSONObject obj = new JSONObject();
+                obj.put( getObjectName(), objFQDN );
+                
+                return obj;
+          }else
+            return json;
       }
       
     /**
@@ -549,7 +558,7 @@ public class Form implements java.io.Serializable{
      * @throws Exception 
      */
     public void bindWithTaskData( JSONObject json )throws Exception{
-        java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( json );
+        java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( json,false,false );
         
         for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
             Outer: for( Field child : child ){

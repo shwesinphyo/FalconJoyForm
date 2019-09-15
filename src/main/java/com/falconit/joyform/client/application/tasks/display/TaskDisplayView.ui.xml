@@ -1,0 +1,90 @@
+<!--
+  #%L
+  GwtMaterial
+  %%
+  Copyright (C) 2015 - 2016 GwtMaterialDesign
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:m="urn:import:gwt.material.design.client.ui"
+             xmlns:ma="urn:import:gwt.material.design.addins.client"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:combobox="urn:import:gwt.material.design.addins.client.combobox"
+             xmlns:m.table="urn:import:gwt.material.design.client.ui.table">
+
+        <m:MaterialRow>
+         
+        <m:MaterialRow ui:field="startup" grid="l8 m10 s12" offset="l2 m1" addStyleNames="code" marginTop="15">
+            <m:MaterialTitle ui:field="txtTitle" textColor="BLACK" textAlign="CENTER" marginTop="15"/>
+            <m:MaterialPanel ui:field="formHolder">
+            </m:MaterialPanel>
+            <m:MaterialRow>
+                <m:MaterialButton ui:field="btnsend" text="Complete" waves="LIGHT" textColor="WHITE" iconType="SEND" iconPosition="LEFT"/>
+            </m:MaterialRow>
+        </m:MaterialRow>
+                     
+        <m:MaterialRow ui:field="processing" marginTop="15">
+            <m:MaterialColumn grid="l8 m10 s12" offset="l2 m1">
+            <m:MaterialTab ui:field="tab" shadow="1" type="ICON" indicatorColor="TEAL_DARKEN_3">
+              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="in">
+                <m:MaterialLink iconType="INPUT" text="Input data" href="#tabReceived" textColor="WHITE"/>
+              </m:MaterialTabItem>
+              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="out">
+                <m:MaterialLink iconType="SEND" text="Reply" href="#tabReply" textColor="WHITE"/>
+              </m:MaterialTabItem>
+              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="comment">
+                  <m:MaterialLink iconType="COMMENT" text="Comments" href="#tabComment" textColor="WHITE">
+                  </m:MaterialLink>
+              </m:MaterialTabItem>
+              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="foward" visible="false">
+                  <m:MaterialLink iconType="FORWARD" text="Forward" href="#tabForward" textColor="WHITE">
+                  </m:MaterialLink>
+              </m:MaterialTabItem>
+            </m:MaterialTab>
+          </m:MaterialColumn>
+                    
+          <m:MaterialColumn m:id="tabReceived" grid="l8 m10 s12" offset="l2 m1">
+            <m:MaterialRow ui:field="holder" addStyleNames="code" >
+            </m:MaterialRow>
+          </m:MaterialColumn>
+                      
+          <m:MaterialColumn m:id="tabReply" grid="l8 m10 s12" offset="l2 m1">
+              <m:MaterialRow addStyleNames="code">
+                <m:MaterialTitle ui:field="txtTitleReply" textColor="BLACK" textAlign="CENTER" marginTop="15"/>
+                <m:MaterialPanel ui:field="fillup">
+                </m:MaterialPanel>
+                <m:MaterialRow>
+                    <m:MaterialButton ui:field="btnreply" text="Complete" waves="LIGHT" textColor="WHITE" iconType="SEND" iconPosition="LEFT"/>
+                </m:MaterialRow>
+            </m:MaterialRow>
+          </m:MaterialColumn>
+                      
+          <m:MaterialColumn m:id="tabComment" grid="l8 m10 s12" offset="l2 m1">
+            <m:MaterialRow ui:field="comments" addStyleNames="code" >
+            </m:MaterialRow>
+          </m:MaterialColumn>
+                      
+          <m:MaterialColumn m:id="tabForward" grid="l8 m10 s12" offset="l2 m1">
+            <m:MaterialRow ui:field="forwards" addStyleNames="code" >
+            </m:MaterialRow>
+          </m:MaterialColumn>
+          
+          </m:MaterialRow>
+          <!--
+        <m:MaterialTextArea ui:field="txtbrief" grid="l12 m12 s12" placeholder="to json result" resizeRule="FOCUS" />
+-->
+        </m:MaterialRow>
+</ui:UiBinder>

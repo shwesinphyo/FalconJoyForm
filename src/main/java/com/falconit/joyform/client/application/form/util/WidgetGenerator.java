@@ -8,7 +8,6 @@ package com.falconit.joyform.client.application.form.util;
 
 import com.google.gwt.dom.client.Style;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
-import gwt.material.design.addins.client.pathanimator.MaterialPathAnimator;
 import gwt.material.design.addins.client.richeditor.MaterialRichEditor;
 import gwt.material.design.client.constants.ButtonSize;
 import gwt.material.design.client.constants.ButtonType;
@@ -100,6 +99,7 @@ public class WidgetGenerator {
             btnedit.setSize(ButtonSize.MEDIUM);
             btnedit.setFloat(Style.Float.RIGHT);
             btnedit.setTooltip("Edit");
+            btnedit.setPadding(5);
             btnedit.setVisibility(Style.Visibility.HIDDEN);
             child.add( btnedit );
             btnedit.addClickHandler(handler ->{buttonListener.onEditClick(field, index);});
@@ -111,6 +111,7 @@ public class WidgetGenerator {
             btnremove.setSize( ButtonSize.MEDIUM );
             btnremove.setFloat(Style.Float.RIGHT);
             btnremove.setTooltip("Remove");
+            btnedit.setPadding(5);
             btnremove.setMarginRight(20);
             btnremove.setVisibility(Style.Visibility.HIDDEN);
             child.add( btnremove );
@@ -196,12 +197,13 @@ public class WidgetGenerator {
                 widget.setAllowBlank( field.isAllowBlank() );
                 widget.setId(field.getId());
                 widget.setName(field.getName());
+                widget.setLabel( field.getLabel() );
                 widget.setPlaceholder(field.getPlaceHolder());
                 widget.setHelperText(field.getHelperText());
                 widget.setReadOnly( field.isReadOnly() );
                 
-                field.bind(widget);
-                child.add(widget);
+                field.bind( widget );
+                child.add( widget );
                 
                 if( clickListener != null && mode.equals(Form.DISPLAY_MODE_DESIGNER) ){
                     widget.addClickHandler(handler ->{
@@ -217,6 +219,7 @@ public class WidgetGenerator {
                 widget.setAllowBlank( field.isAllowBlank() );
                 widget.setId(field.getId());
                 widget.setName(field.getName());
+                widget.setLabel( field.getLabel() );
                 widget.setPlaceholder(field.getPlaceHolder());
                 widget.setHelperText(field.getHelperText());
                 widget.setResizeRule(MaterialTextArea.ResizeRule.AUTO);
@@ -238,6 +241,7 @@ public class WidgetGenerator {
                 widget.setAllowBlank( field.isAllowBlank() );
                 widget.setId(field.getId());
                 widget.setPlaceholder(field.getPlaceHolder());
+                //widget.setLabel( field.getLabel() );
                 widget.setHelperText(field.getHelperText());
                 widget.setHeight( field.getHeight().isEmpty() ? "260px" : field.getHeight() );
                 widget.setEnabled( !field.isReadOnly() );
@@ -256,6 +260,7 @@ public class WidgetGenerator {
                 widget.setText( field.getLabel() );
                 widget.setValue( field.getValue() != null ? (boolean)field.getValue() : false  );
                 widget.setName(field.getName());
+                //widget.setLabel( field.getLabel() );
                 widget.setEnabled( !field.isReadOnly() );
                 
                 field.bind(widget);
@@ -265,6 +270,8 @@ public class WidgetGenerator {
                     widget.addClickHandler(handler ->{
                         clickListener.onClick( field, index );
                     });
+                }else{
+                    child.setBorderBottom("1px solid DarkOliveGreen");
                 }
                 
             }else if( field.getWidgetType().equals(Field.WIDGET_DATE_TIME) ){
@@ -283,6 +290,7 @@ public class WidgetGenerator {
                 widget.setPlaceholder(field.getPlaceHolder());
                 widget.setHelperText(field.getHelperText());
                 widget.setAutoClose(true);
+                //widget.setLabel( field.getLabel() );
                 widget.setSelectionType(MaterialDatePicker.MaterialDatePickerType.YEAR);
                 widget.setReadOnly( field.isReadOnly() );
                 
@@ -304,6 +312,7 @@ public class WidgetGenerator {
                 widget.setPlaceholder(field.getPlaceHolder());
                 widget.setHelperText(field.getHelperText());
                 widget.setLabel(field.getLabel());
+                widget.setLabel( field.getLabel() );
                 widget.setReadOnly( field.isReadOnly() );
                 
                 int count = 0;

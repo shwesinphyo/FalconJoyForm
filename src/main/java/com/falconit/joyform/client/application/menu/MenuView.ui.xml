@@ -93,7 +93,7 @@
                                     <m:MaterialCollapsibleBody>
                                             <m.html:UnorderedList>
                                                     <m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" text="Create Apps" waves="DEFAULT"/>
-                                                    <m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" text="Mamagement Apps" waves="DEFAULT"/>
+                                                    <m:MaterialLink targetHistoryToken="{tokens.getDashboard}" text="Mamagement Apps" waves="DEFAULT"/>
                                             </m.html:UnorderedList>
                                     </m:MaterialCollapsibleBody>
                             </m:MaterialCollapsibleItem>
@@ -112,7 +112,7 @@
                                 </m:MaterialLink>
 			</m.html:ListItem>
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" iconPosition="LEFT" iconType="APPS" text="My Apps" />       
+				<m:MaterialLink targetHistoryToken="{tokens.getPrivateapps}" iconPosition="LEFT" iconType="APPS" text="My Apps" />       
 			</m.html:ListItem>
                         
                         <m.html:ListItem waves="DEFAULT">

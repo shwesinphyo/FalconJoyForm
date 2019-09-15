@@ -150,7 +150,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
                     JSONObject user = users.get( "com.falconit.loyaltymanagement.entity.User" ).isObject();
                     
                     try {
-                        userMap = new ObjectConverter().fromJSON(user);
+                        userMap = new ObjectConverter().fromJSON(user, false, false);
                         //Window.alert( "Created size=" + userMap.size());
                         
                         //Window.alert( new ObjectConverter().toJSON(userMap).toString() );
