@@ -1,4 +1,4 @@
-package com.falconit.joyform.client.application.tasks;
+package com.falconit.joyform.client.application.apps;
 
 /*
  * #%L
@@ -22,19 +22,17 @@ package com.falconit.joyform.client.application.tasks;
 
 
 
-import com.falconit.joyform.client.application.tasks.display.TaskDisplayModule;
-import com.falconit.joyform.client.application.tasks.list.TasksListModule;
+import com.falconit.joyform.client.application.apps.privateapps.PrivateAppsModule;
 import com.google.gwt.inject.client.AbstractGinModule;
 
 
 /**
  * Created by Mark Kevin on 11/30/2015.
  */
-public class TasksModule extends AbstractGinModule {
+public class AppsModule extends AbstractGinModule {
 
     @Override
     protected void configure() {
-        install(new TasksListModule());//
-        install(new TaskDisplayModule());//
+        install(new PrivateAppsModule());//
     }
 }

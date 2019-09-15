@@ -23,8 +23,10 @@ package com.falconit.joyform.client.application;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.falconit.joyform.client.application.about.AboutModule;
 import com.falconit.joyform.client.application.addins.AddinsModule;
+import com.falconit.joyform.client.application.apps.AppsModule;
 import com.falconit.joyform.client.application.charts.ChartsModule;
 import com.falconit.joyform.client.application.form.FormModule;
+import com.falconit.joyform.client.application.home.HomeModule;
 import com.falconit.joyform.client.application.login.LoginModule;
 import com.falconit.joyform.client.application.menu.MenuModule;
 import com.falconit.joyform.client.application.tasks.TasksModule;
@@ -44,5 +46,7 @@ public class ApplicationModule extends AbstractPresenterModule {
         install(new ChartsModule() );
         install(new TasksModule() );
         install(new FormModule() );
+        install(new AppsModule() );
+        install(new HomeModule() );
     }
 }

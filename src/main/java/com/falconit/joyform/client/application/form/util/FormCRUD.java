@@ -13,6 +13,7 @@ import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.user.client.Window;
 
 /**
  *
@@ -29,7 +30,10 @@ public class FormCRUD {
             
             if( isSave)
                 form.setId( null );
-            JSONObject json = new ObjectConverter().toJSON( fillData( form ) );
+            java.util.Map<String, Object[]> maps = fillData( form );
+            Window.alert("Fill ok");
+            JSONObject json = new ObjectConverter().toJSON( maps );
+            Window.alert("Convert ok");
             
             HumanTaskHelper helper = new HumanTaskHelper();
             helper.setListener(new HumanTaskHelper.HumanTaskHelperListener() {
@@ -44,7 +48,7 @@ public class FormCRUD {
                         if( objForm != null ){
                             listener.success("Success");
                             if( isSave ){
-                                java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm );
+                                java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
                                     form.setId( getFormBack( maps ).getId() );
                             }
                         }else{
@@ -74,6 +78,7 @@ public class FormCRUD {
             
             obj.put("object", objForm);
 
+            Window.alert( obj.toString( ) );
             helper.startInstances( Constants.formProcessId, obj.toString( ) );
         }catch(Exception ex){ex.printStackTrace();}
     }
@@ -134,7 +139,10 @@ public class FormCRUD {
                             try {
                                 if( objForm != null ){
                                     listener.success("Success");
-                                    java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm );
+                                    
+                                    //Window.alert("Result=" + objForm.toString());
+                                    java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
+                                    //Window.alert("Map size=" + maps.size());
                                     lst.add( getFormBack( maps ) );
                                 }else{
                                     listener.fail( "Failed to get" );
@@ -160,22 +168,25 @@ public class FormCRUD {
             StringBuffer sb = new StringBuffer();
             sb.append("from Form f");
             if( contaner!=null && !contaner.isEmpty()){
-                sb.append(" where f.container='" + contaner+"'");
+                sb.append(" where f.container='" + contaner + "'");
             }
             
             if( process != null && !process.isEmpty() ){
-                sb.append(" AND f.process='" + process+"'");
+                sb.append(" AND f.process='" + process + "'");
             }
             
             if( task != null && !task.isEmpty() ){
-                sb.append(" AND f.task='" + task+"'");
+                sb.append( " AND f.task='" + task + "'" );
             }
+            
+            obj.put("query", new JSONString( sb.toString() ));
             
             if( max > 0)
                 obj.put("limit", new JSONNumber( max ) );
             if( first > -1)
                 obj.put("offset", new JSONNumber( first ) );
 
+            //Window.alert("Request= " + obj.toString());
             helper.startInstances( Constants.formProcessId, obj.toString( ) );
         }catch(Exception ex){ex.printStackTrace();}
     }
@@ -205,7 +216,7 @@ public class FormCRUD {
                             try {
                                 if( objForm != null ){
                                     listener.success("Success");
-                                    java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm );
+                                    java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
                                     lst.add( getFormBack( maps ) );
                                 }else{
                                     listener.fail( "Failed to get" );
@@ -255,7 +266,7 @@ public class FormCRUD {
                     try {
                         if( objForm != null ){
                             listener.success("Success");
-                            java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm );
+                            java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
                             listener.success( getFormBack( maps ) );
                         }else{
                             listener.fail( "Failed to get" );
@@ -279,7 +290,10 @@ public class FormCRUD {
             obj.put("object", objForm);
 
             helper.startInstances( Constants.formProcessId, obj.toString( ) );
-        }catch(Exception ex){ex.printStackTrace();}
+        }catch(Exception ex){
+            Window.alert(ex.getMessage());
+            ex.printStackTrace();
+        }
     }
     
     private java.util.Map<String, Object[]> fillData( Form form ){
@@ -317,9 +331,9 @@ public class FormCRUD {
             
             maps.put( Form.JSON_FORM_STATUS, new Object[] { ObjectConverter.TYPE_NUMBER, form.getStatus()} );
             
-            maps.put( Form.JSON_FORM_OBJECT_NAME, new Object[] { ObjectConverter.TYPE_NUMBER, form.getObjectName()} );
+            maps.put( Form.JSON_FORM_OBJECT_NAME, new Object[] { ObjectConverter.TYPE_STRING, form.getObjectName()} );
             
-            maps.put( Form.JSON_FORM_FQDN, new Object[] { ObjectConverter.TYPE_NUMBER, form.getFqdn()} );
+            maps.put( Form.JSON_FORM_FQDN, new Object[] { ObjectConverter.TYPE_STRING, form.getFqdn()} );
             
         
         }catch(Exception ex){}
@@ -332,24 +346,34 @@ public class FormCRUD {
         
         try{
             form.setId( (long) maps.get( Form.JSON_FORM_ID )[1] );
+            //Window.alert( maps.get( Form.JSON_FORM_ID )[1].toString() );
             form.setName( (String) maps.get( Form.JSON_FORM_NAME )[1] );
+            //Window.alert( maps.get( Form.JSON_FORM_NAME )[1].toString() );
             form.setContainer( (String) maps.get( Form.JSON_FORM_CONTAINER_ID )[1] );
+            //Window.alert( maps.get( Form.JSON_FORM_CONTAINER_ID )[1].toString() );
             form.setProcess( (String) maps.get( Form.JSON_PROCESS_ID )[1] );
+            //Window.alert( maps.get( Form.JSON_PROCESS_ID )[1].toString() );
             form.setTask( (String) maps.get( Form.JSON_TASK_ID )[1] );
+            //Window.alert( maps.get( Form.JSON_TASK_ID )[1].toString() );
             //form.setContainer( (String) maps.get( Form.JSON_FORM_DATA )[1] );
             
             form.setFqdn( (String) maps.get( Form.JSON_FORM_FQDN )[1] );
+            //Window.alert( maps.get( Form.JSON_FORM_FQDN )[1].toString() );
             form.setObjectName( (String) maps.get( Form.JSON_FORM_OBJECT_NAME )[1] );
+            //Window.alert( maps.get( Form.JSON_FORM_OBJECT_NAME )[1].toString() );
             form.setCreated( new java.util.Date( (long) maps.get( Form.JSON_FORM_CREATED )[1]) );
+            //Window.alert( maps.get( Form.JSON_FORM_CREATED )[1].toString() );
             form.setUpdated(new java.util.Date( (long) maps.get( Form.JSON_FORM_UPDATED )[1] ));
+            //Window.alert( maps.get( Form.JSON_FORM_UPDATED )[1].toString() );
             
             form.setActors( ((String) maps.get( Form.JSON_FORM_PERMISSION_ACTORS )[1]).split(",") );
             form.setGroups( ((String) maps.get( Form.JSON_FORM_PERMISSION_GROUPS )[1]).split(",") );
-            form.setStatus( (int) maps.get( Form.JSON_FORM_STATUS )[1] );
+            form.setStatus( Integer.parseInt( maps.get( Form.JSON_FORM_STATUS )[1].toString()) );
+            //Window.alert( maps.get( Form.JSON_FORM_STATUS )[1].toString() );
             
-            
+            //Window.alert("Attributes OK");
             form.fromJSON( JSONParser.parseStrict( (String) maps.get( Form.JSON_FORM_DATA )[1] ).isObject() );
-            
+             //Window.alert("Pass back OK");
             
         }catch(Exception ex){}
         

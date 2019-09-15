@@ -1,0 +1,6 @@
+
+2 type of starting
+1. embedded {step 1: the user start the process fill data and then step 2: pass to supervision}
+variable: require data only
+2. assign {step 1: initialize by system, 1 step: assign user, step 3: pass to }
+variable: userId or groupId
