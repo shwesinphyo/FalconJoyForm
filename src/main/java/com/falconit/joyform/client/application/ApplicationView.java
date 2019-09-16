@@ -130,7 +130,7 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
 */
         //ThemeManager.register(titlePanel);
 
-        footerCopyRightLabel.setText("© " + getFormat("yyyy").format(new Date()) + " Copyright Falcon Breeze International" );
+        footerCopyRightLabel.setText("© " + getFormat("yyyy").format(new Date()) + " Copyright falconIT" );
     }
 
 /*    

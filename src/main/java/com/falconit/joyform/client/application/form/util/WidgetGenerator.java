@@ -98,8 +98,8 @@ public class WidgetGenerator {
             btnedit.setIconType(IconType.EDIT);
             btnedit.setSize(ButtonSize.MEDIUM);
             btnedit.setFloat(Style.Float.RIGHT);
-            btnedit.setTooltip("Edit");
-            btnedit.setPadding(5);
+            btnedit.setTooltip("More rich");
+            btnedit.setMargin(5);
             btnedit.setVisibility(Style.Visibility.HIDDEN);
             child.add( btnedit );
             btnedit.addClickHandler(handler ->{buttonListener.onEditClick(field, index);});
@@ -111,7 +111,7 @@ public class WidgetGenerator {
             btnremove.setSize( ButtonSize.MEDIUM );
             btnremove.setFloat(Style.Float.RIGHT);
             btnremove.setTooltip("Remove");
-            btnedit.setPadding(5);
+            btnremove.setMargin(5);
             btnremove.setMarginRight(20);
             btnremove.setVisibility(Style.Visibility.HIDDEN);
             child.add( btnremove );

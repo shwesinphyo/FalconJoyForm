@@ -22,6 +22,8 @@ package com.falconit.joyform.client.application.tasks;
 
 
 
+import com.falconit.joyform.client.application.tasks.assign.TaskAssignModule;
+import com.falconit.joyform.client.application.tasks.assignment.TaskAssignmentModule;
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayModule;
 import com.falconit.joyform.client.application.tasks.list.TasksListModule;
 import com.google.gwt.inject.client.AbstractGinModule;
@@ -36,5 +38,7 @@ public class TasksModule extends AbstractGinModule {
     protected void configure() {
         install(new TasksListModule());//
         install(new TaskDisplayModule());//
+        install(new TaskAssignModule());//
+        install(new TaskAssignmentModule());//
     }
 }

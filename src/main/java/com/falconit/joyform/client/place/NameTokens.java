@@ -145,6 +145,21 @@ public class NameTokens {
     public static final String taskdisplay = "taskdisplay";
     public static final String privateapps = "privateapps";
     public static final String dashboard = "dashboard";
+    public static final String formediting = "formediting";
+    public static final String taskassign = "taskassign";
+    public static final String taskassignment = "taskassignment";
+
+    public static String getTaskassignment() {
+        return taskassignment;
+    }
+
+    public static String getTaskassign() {
+        return taskassign;
+    }
+
+    public static String getFormediting() {
+        return formediting;
+    }
 
     public static String getDashboard() {
         return dashboard;

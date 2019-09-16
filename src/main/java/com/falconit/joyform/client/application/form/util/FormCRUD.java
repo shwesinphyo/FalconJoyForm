@@ -28,12 +28,11 @@ public class FormCRUD {
     public void saveUpdate( Form form, boolean isSave ){
         try{
             
-            if( isSave)
+            if( isSave )
                 form.setId( null );
             java.util.Map<String, Object[]> maps = fillData( form );
-            Window.alert("Fill ok");
+            
             JSONObject json = new ObjectConverter().toJSON( maps );
-            Window.alert("Convert ok");
             
             HumanTaskHelper helper = new HumanTaskHelper();
             helper.setListener(new HumanTaskHelper.HumanTaskHelperListener() {
@@ -71,14 +70,12 @@ public class FormCRUD {
             JSONObject obj = new JSONObject();
             if( isSave ){
                 obj.put("action", new JSONString( "create" ));
-            }
-            else{
+            } else{
                 obj.put("action", new JSONString( "update" ));
             }
             
             obj.put("object", objForm);
-
-            Window.alert( obj.toString( ) );
+          
             helper.startInstances( Constants.formProcessId, obj.toString( ) );
         }catch(Exception ex){ex.printStackTrace();}
     }
@@ -178,7 +175,7 @@ public class FormCRUD {
             if( task != null && !task.isEmpty() ){
                 sb.append( " AND f.task='" + task + "'" );
             }
-            
+            //sb.append( " WHERE f.status=1" );
             obj.put("query", new JSONString( sb.toString() ));
             
             if( max > 0)

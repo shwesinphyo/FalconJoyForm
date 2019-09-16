@@ -112,6 +112,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
 
 
     private void loadOutput(){
+        btnreply.setEnabled(false);
         MaterialLoader.loading( true );
         processing.setLayoutPosition(Style.Position.ABSOLUTE);
         processing.setVisibility(Style.Visibility.HIDDEN);
@@ -128,18 +129,25 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
 
             @Override
             public void success(List<Form> result) {
+                //Window.alert("Success ");
                 if( !result.isEmpty() ){
                     form = result.get(0);
                     form.setDraggable( false );
                     
                     txtTitle.setTitle(form.getName());
                     form.render( formHolder );
+                    btnreply.setEnabled( true );
+                }else{
+                    Window.alert("You have no permission to use this Apps");
+                    Window.Location.assign( "#privateapps" );
                 }
                 MaterialLoader.loading( false );
             }
 
             @Override
             public void fail(String message) {
+                Window.alert("You have no permission to use this Apps");
+                Window.Location.assign( "#privateapps" );
                 MaterialLoader.loading( false );
             }
         });
@@ -273,6 +281,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         }
         
     }    
+    
     private void animate( Widget widget ){
         MaterialAnimation animation = new MaterialAnimation();
         animation.setTransition(Transition.BOUNCEOUT);

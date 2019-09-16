@@ -84,7 +84,7 @@ public class TaskInputDataRenderring {
             }else if( entry.getValue()[0].toString().equals( ObjectConverter.TYPE_BOOLEAN ) ){
                 
                 MaterialTextBox widget = new MaterialTextBox( );
-                widget.setText( entry.getValue()[1].toString() );
+                widget.setText( entry.getValue()[1].toString().equalsIgnoreCase("true") ? "Yes" : "No" );
                 widget.setLabel(entry.getKey().replaceAll("_", " "));
                 widget.setReadOnly(true);
                 widget.setBorderBottom("1px solid DarkOliveGreen");

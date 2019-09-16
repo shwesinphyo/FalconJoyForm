@@ -31,6 +31,9 @@ public class TaskStarter {
     }
     public void startInstances(String url, String containerId, String processId, String body){
         
+        if( body == null || body.isEmpty())
+            body = "{}";
+        
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, 
                 //Constants.url+ "queries/tasks/instances/process/343" );
         url+ "containers/" + containerId + "/processes/" + processId + "/instances");

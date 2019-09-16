@@ -80,7 +80,7 @@
 			</m:MaterialNavBar>
 		</m:MaterialHeader>
 
-		<m:MaterialSideNavPush ui:field="sideNav" m:id="sideBar" width="250" allowBodyScroll="true" showOnAttach="false">
+		<m:MaterialSideNavPush ui:field="sideNav" m:id="sideBar" width="250" allowBodyScroll="true" showOnAttach="true">
 			<m.html:ListItem waves="DEFAULT" paddingBottom="22">
 				<ma:webp.MaterialWebpImage width="50%" url="https://falconbreeze.com/wp-content/uploads/2019/05/falconBREEZE_icon.png" fallbackExtension="png" addStyleNames="{style.logo}"/>
 			</m.html:ListItem>
@@ -92,7 +92,7 @@
                                     </m:MaterialCollapsibleHeader>
                                     <m:MaterialCollapsibleBody>
                                             <m.html:UnorderedList>
-                                                    <m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" text="Create Apps" waves="DEFAULT"/>
+                                                    <m:MaterialLink targetHistoryToken="{tokens.getFormediting}" text="Create Apps" waves="DEFAULT"/>
                                                     <m:MaterialLink targetHistoryToken="{tokens.getDashboard}" text="Mamagement Apps" waves="DEFAULT"/>
                                             </m.html:UnorderedList>
                                     </m:MaterialCollapsibleBody>
@@ -102,7 +102,7 @@
 
                         <!-- for end users -->
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getCampaigns}" iconPosition="LEFT" iconType="NOTIFICATIONS_ACTIVE" text="Notifications" separator="true" layoutPosition="RELATIVE">
+				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" iconPosition="LEFT" iconType="NOTIFICATIONS_ACTIVE" text="Notifications" separator="true" layoutPosition="RELATIVE">
                                         <m:MaterialBadge backgroundColor="RED" text="10" textColor="WHITE" />
                                 </m:MaterialLink>
 			</m.html:ListItem>
@@ -116,11 +116,11 @@
 			</m.html:ListItem>
                         
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getCharts}" iconPosition="LEFT" iconType="COLLECTIONS" text="Public Apps" separator="true" />       
+				<m:MaterialLink targetHistoryToken="{tokens.getPrivateapps}" iconPosition="LEFT" iconType="COLLECTIONS" text="Public Apps" separator="true" />       
 			</m.html:ListItem>
                         
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getCharts}" iconPosition="LEFT" iconType="POLL" text="Analytics" separator="true" />       
+				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" iconPosition="LEFT" iconType="POLL" text="Analytics" separator="true" />       
 			</m.html:ListItem>
 
 			<m:MaterialCollapsible>
@@ -130,7 +130,8 @@
 					</m:MaterialCollapsibleHeader>
 					<m:MaterialCollapsibleBody>
 						<m.html:UnorderedList>
-                                                    <m:MaterialLink targetHistoryToken="{tokens.getFormeditor}" text="Create Form" iconType="ASSIGNMENT" waves="DEFAULT"/>
+                                                    <m:MaterialLink targetHistoryToken="{tokens.getFormeditor}" text="Test Form" iconType="ASSIGNMENT" waves="DEFAULT"/>
+                                                    <m:MaterialLink targetHistoryToken="{tokens.getFormediting}" text="Create New Form" iconType="EDIT" waves="DEFAULT"/>
 						</m.html:UnorderedList>
 					</m:MaterialCollapsibleBody>
 				</m:MaterialCollapsibleItem>

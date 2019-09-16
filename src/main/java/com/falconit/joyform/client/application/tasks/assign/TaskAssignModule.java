@@ -1,4 +1,4 @@
-package com.falconit.joyform.client.application.form;
+package com.falconit.joyform.client.application.tasks.assign;
 
 /*
  * #%L
@@ -21,18 +21,11 @@ package com.falconit.joyform.client.application.form;
  */
 
 
-import com.falconit.joyform.client.application.form.editing.FormEditingModule;
-import com.falconit.joyform.client.application.form.editor.FormEditorModule;
-import com.google.gwt.inject.client.AbstractGinModule;
+import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 
-/**
- * Created by Mark Kevin on 11/30/2015.
- */
-public class FormModule extends AbstractGinModule {
-
+public class TaskAssignModule extends AbstractPresenterModule {
     @Override
     protected void configure() {
-        install(new FormEditorModule());//
-        install(new FormEditingModule());//
+        bindPresenter( TaskAssignPresenter.class, TaskAssignPresenter.MyView.class, TaskAssignView.class, TaskAssignPresenter.MyProxy.class);
     }
 }

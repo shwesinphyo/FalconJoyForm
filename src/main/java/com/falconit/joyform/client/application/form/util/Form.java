@@ -7,7 +7,6 @@ package com.falconit.joyform.client.application.form.util;
 
 import com.falconit.joyform.client.application.form.editor.FormEditorView;
 import com.falconit.joyform.client.application.form.util.WidgetGenerator.WidgetGeneratorButtonClickListener;
-import com.falconit.joyform.client.application.form.util.WidgetGenerator.WidgetGeneratorClickListener;
 import com.falconit.joyform.client.application.form.util.WidgetGenerator.WidgetGeneratorMouseListener;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.json.client.JSONArray;
@@ -35,6 +34,7 @@ import java.util.logging.Logger;
  * @author User
  */
 public class Form implements java.io.Serializable{
+        public static final String TASK_NAME_START_UP = "Start up";
         public static final String JSON_FORM_CHILD = "child";
         public static final String JSON_FORM_ID = "id";
         public static final String JSON_FORM_NAME = "name";

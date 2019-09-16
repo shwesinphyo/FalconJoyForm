@@ -1,4 +1,4 @@
-package com.falconit.joyform.client.application.apps.privateapps;
+package com.falconit.joyform.client.application.tasks.assign;
 
 
 
@@ -31,8 +31,8 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrivateAppsView extends NavigatedView implements PrivateAppsPresenter.MyView {
-    interface Binder extends UiBinder<Widget, PrivateAppsView> {
+public class TaskAssignView extends NavigatedView implements TaskAssignPresenter.MyView {
+    interface Binder extends UiBinder<Widget, TaskAssignView> {
     }
 
     @UiField
@@ -41,7 +41,7 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
     private List<java.util.Map<String, Object[]>> lstTasks = new ArrayList<>();
             
     @Inject
-    PrivateAppsView(Binder uiBinder) {
+    TaskAssignView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
         load();
     }
@@ -123,7 +123,7 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
                 + "&title=" + taskMap.get("process-name")[1].toString()
                 + "&taskName=" + Form.TASK_NAME_START_UP
                 + "&display=" + TaskDisplayView.DISPLAY_START_UP
-                + "#taskdisplay" );
+                + "#taskassignment" );
             
         }catch(Exception ex){}
     }

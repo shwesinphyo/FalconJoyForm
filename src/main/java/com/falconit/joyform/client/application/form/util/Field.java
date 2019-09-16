@@ -12,7 +12,6 @@ import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.user.client.Window;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
 import gwt.material.design.addins.client.richeditor.MaterialRichEditor;
 import gwt.material.design.client.constants.Color;

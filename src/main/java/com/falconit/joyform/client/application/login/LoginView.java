@@ -25,18 +25,11 @@ import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.HumanTaskHelper;
 import com.falconit.joyform.client.application.validators.EmailValidator;
 import com.falconit.joyform.client.application.validators.MobileValidator;
-import com.falconit.joyform.shared.entity.Users;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
@@ -147,7 +140,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
                 String message = jsonOnlineUser.get("message").isString().stringValue();
                 if( message.equalsIgnoreCase("Success")){
                     JSONObject users = jsonOnlineUser.get("user").isObject();
-                    JSONObject user = users.get( "com.falconit.loyaltymanagement.entity.User" ).isObject();
+                    JSONObject user = users.get( "com.falconit.automation.entity.User" ).isObject();
                     
                     try {
                         userMap = new ObjectConverter().fromJSON(user, false, false);

@@ -1,4 +1,4 @@
-package com.falconit.joyform.client.application.form;
+package com.falconit.joyform.client.application.form.editing;
 
 /*
  * #%L
@@ -21,18 +21,12 @@ package com.falconit.joyform.client.application.form;
  */
 
 
-import com.falconit.joyform.client.application.form.editing.FormEditingModule;
-import com.falconit.joyform.client.application.form.editor.FormEditorModule;
-import com.google.gwt.inject.client.AbstractGinModule;
 
-/**
- * Created by Mark Kevin on 11/30/2015.
- */
-public class FormModule extends AbstractGinModule {
+import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 
+public class FormEditingModule extends AbstractPresenterModule {
     @Override
     protected void configure() {
-        install(new FormEditorModule());//
-        install(new FormEditingModule());//
+        bindPresenter(FormEditingPresenter.class, FormEditingPresenter.MyView.class, FormEditingView.class, FormEditingPresenter.MyProxy.class);
     }
 }

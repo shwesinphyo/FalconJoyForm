@@ -305,7 +305,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                         }
                     }
                     
-                    pager.setLimit(20);
+                    pager.setLimit( 20 );
                     dataSource = new ListDataSource<>();
                     dataSource.add(0, lstTasks );
                     pager.setTable(table);
@@ -332,7 +332,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
         helper.tasksList( 
                 //new String[]{APIHelper.STATUS_READY,APIHelper.STATUS_RESERVED, APIHelper.STATUS_INPROGRESS },
                 arrStatus,
-                0, 20, null, null, true);
+                0, 200, null, null, true);
         //helper.query( Constants.containerId, "355");
     }
     

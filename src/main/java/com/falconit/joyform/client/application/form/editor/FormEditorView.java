@@ -97,6 +97,7 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
                 MaterialToast.fireToast("Click on Delete button " + field.getName()+", index=" + index );
             }
         });
+        
         myForm.setName("Leave Approved");
         
         myForm.setContainer("DevTest_1.0.0-SNAPSHOT");
@@ -202,7 +203,7 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
     @UiHandler("btnSave")
     void onSave(ClickEvent e) {
         try {
-            saveForm();
+            //saveForm();
         } catch (Exception ex) {
             Window.alert( ex.getMessage() );
         }
@@ -246,4 +247,5 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
         
         crud.saveUpdate( myForm, true );
     }
+
 }

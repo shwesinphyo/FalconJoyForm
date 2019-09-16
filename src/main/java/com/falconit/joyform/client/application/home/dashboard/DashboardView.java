@@ -2,8 +2,18 @@ package com.falconit.joyform.client.application.home.dashboard;
 
 
 
+import com.falconit.joyform.client.application.form.util.Form;
+import com.falconit.joyform.client.application.form.util.FormCRUD;
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
+import com.falconit.joyform.client.application.util.jbpmclient.api.ContainerManager;
+import com.falconit.joyform.client.application.util.jbpmclient.api.ContainerManager.ContainerManagerListener;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessByContainer;
+import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessVariables;
+import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessVariables.ProcessVariablesListener;
+import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesManager;
+import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesManager.ProcessesManagerListener;
+import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesVariablesMapping;
+import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesVariablesMapping.ProcessesVariablesMappingListener;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.json.client.JSONArray;
@@ -29,6 +39,7 @@ import gwt.material.design.client.ui.MaterialRow;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DashboardView extends NavigatedView implements DashboardPresenter.MyView {
     interface Binder extends UiBinder<Widget, DashboardView> {
@@ -37,14 +48,142 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
     @UiField
     MaterialRow appsholder;
     
+    @UiField
+    MaterialLabel txtapps, txtworkflow, txtform;
+    
+    private java.util.List<Object[]> lstProjects, lstProcesses;
+    private List<Form> lstForms;
     private List<java.util.Map<String, Object[]>> lstTasks = new ArrayList<>();
             
     @Inject
     DashboardView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
-        //load();
+        loadProjects();
+        loadProcesses();
+        loadForms();
+        //processMappings();
+        //processVariables();
     }
 
+    private void loadProjects(){
+        try{
+            ContainerManager manager = new ContainerManager();
+            manager.setListener(new ContainerManagerListener(){
+                @Override
+                public void success(Map<String, Object[]> maps) {
+                    //Window.alert("Project size = " + maps.size());
+                    for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
+                        
+                        lstProjects = (java.util.List<Object[]>) entry.getValue()[1];
+                        txtapps.setText( lstProjects.size() +" active Apps");
+                    }
+                }
+
+                @Override
+                public void fail(String message, int stage) {
+                }
+            });
+            
+            manager.list();
+        }catch(Exception ex){Window.alert(ex.getMessage());}
+    }
+    
+        
+    private void loadProcesses(){
+        try{
+            ProcessesManager manager = new ProcessesManager();
+            manager.setListener(new ProcessesManagerListener(){
+                @Override
+                public void success(Map<String, Object[]> maps) {
+                    
+                    for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
+                        
+                        lstProcesses = (java.util.List<Object[]>) entry.getValue()[1];
+                        txtworkflow.setText( lstProcesses.size() +" active workflows");
+                    }
+                }
+
+                @Override
+                public void fail(String message, int stage) {
+                }
+            });
+            
+            manager.list( null, null );
+        }catch(Exception ex){Window.alert(ex.getMessage());}
+    }
+    
+        
+    private void loadForms(){
+        
+        FormCRUD crud = new FormCRUD();
+        crud.setListener(new FormCRUD.CRUDListener(){
+            @Override
+            public void success(String result) {
+            }
+
+            @Override
+            public void success(Form result) {
+                
+            }
+
+            @Override
+            public void success(List<Form> result) {
+                if( !result.isEmpty() ){
+                    lstForms = result;
+                    txtform.setText(lstForms.size()+" active forms");
+                }
+            }
+
+            @Override
+            public void fail(String message) {
+            }
+        });
+        
+        crud.list();
+    }
+    
+        
+    private void processMappings(){
+        try{
+            ProcessesVariablesMapping manager = new ProcessesVariablesMapping();
+            manager.setListener(new ProcessesVariablesMappingListener(){
+                @Override
+                public void success(Map<String, Object[]> maps) {
+                    Window.alert("Map size = " + maps.size());
+                    for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
+                        Window.alert("List size = " + ((java.util.List<Object[]>) entry.getValue()[1]).size() );
+                    }
+                }
+
+                @Override
+                public void fail(String message, int stage) {
+                }
+            });
+            
+            manager.list( "DevTest_1.0.0-SNAPSHOT", "Leave-Request" );
+        }catch(Exception ex){Window.alert(ex.getMessage());}
+    }
+    
+        
+    private void processVariables(){
+        try{
+            ProcessVariables manager = new ProcessVariables();
+            manager.setListener(new ProcessVariablesListener(){
+                @Override
+                public void success(Map<String, Object[]> maps) {
+                    Window.alert("Variables size = " + maps.size());
+                }
+
+                @Override
+                public void fail(String message, int stage) {
+                }
+            });
+            
+            manager.list( "DevTest_1.0.0-SNAPSHOT", "Leave-Request" );
+        }catch(Exception ex){Window.alert(ex.getMessage());}
+    }
+    
+    
     private void load(){
         lstTasks.clear();
         MaterialLoader.loading( true );
