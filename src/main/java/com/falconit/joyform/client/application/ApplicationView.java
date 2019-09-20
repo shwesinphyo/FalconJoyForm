@@ -71,9 +71,6 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
 */
     @UiField
     MaterialLabel footerCopyRightLabel;
-  
-    @UiField
-    InstallBannerFallbackOverlay installAppOverlay;
 
     @Inject
     ApplicationView(Binder uiBinder) {
@@ -97,11 +94,29 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
     @Override
     protected void onAttach() {
         super.onAttach();
-
-        ThemeManager.register(footer);
+        
+                
+        String value = com.google.gwt.user.client.Window.Location.getParameter("menu");
+        if( value != null && value.equalsIgnoreCase("no")){
+            if( menu.getWidget(0) instanceof MaterialPanel){
+                //Window.alert("Panel");
+                 if( ((MaterialPanel)menu.getWidget(0)).getWidget(1) instanceof MaterialSideNavPush){
+                     //Window.alert("MaterialSideNavPush");
+                     ((MaterialSideNavPush)((MaterialPanel)menu.getWidget(0)).getWidget(1)).setShowOnAttach(false);
+                 }
+            }
+            menu.setVisible( false );
+            footer.setVisible(false);
+        }else{
+            ((MaterialSideNavPush)((MaterialPanel)menu.getWidget(0)).getWidget(1)).setShowOnAttach( true );
+            ((MaterialSideNavPush)((MaterialPanel)menu.getWidget(0)).getWidget(1)).show();
+        }
+        
+        //ThemeManager.register(footer);
         ThemeManager.register(footerCopyRight, ThemeManager.DARKER_SHADE);
         ThemeManager.initialize();
 
+        
         /*
         chipJava.getElement().getStyle().setCursor(Style.Cursor.POINTER);
         chipJava.addClickHandler(clickEvent -> {

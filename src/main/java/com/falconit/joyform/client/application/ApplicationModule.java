@@ -29,6 +29,7 @@ import com.falconit.joyform.client.application.form.FormModule;
 import com.falconit.joyform.client.application.home.HomeModule;
 import com.falconit.joyform.client.application.login.LoginModule;
 import com.falconit.joyform.client.application.menu.MenuModule;
+import com.falconit.joyform.client.application.profile.ProfileModule;
 import com.falconit.joyform.client.application.tasks.TasksModule;
 import com.falconit.joyform.client.application.users.UsersModule;
 
@@ -48,5 +49,6 @@ public class ApplicationModule extends AbstractPresenterModule {
         install(new FormModule() );
         install(new AppsModule() );
         install(new HomeModule() );
+        install(new ProfileModule() );
     }
 }

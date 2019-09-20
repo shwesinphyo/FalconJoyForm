@@ -9,6 +9,7 @@ import com.falconit.joyform.client.application.form.editor.FormEditorView;
 import com.falconit.joyform.client.application.form.util.WidgetGenerator.WidgetGeneratorButtonClickListener;
 import com.falconit.joyform.client.application.form.util.WidgetGenerator.WidgetGeneratorMouseListener;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -19,6 +20,12 @@ import gwt.material.design.addins.client.dnd.MaterialDnd;
 import gwt.material.design.addins.client.dnd.js.JsDragOptions;
 import gwt.material.design.client.base.MaterialWidget;
 import gwt.material.design.client.constants.Axis;
+import gwt.material.design.client.constants.Color;
+import gwt.material.design.client.ui.MaterialCollapsible;
+import gwt.material.design.client.ui.MaterialCollapsibleBody;
+import gwt.material.design.client.ui.MaterialCollapsibleHeader;
+import gwt.material.design.client.ui.MaterialCollapsibleItem;
+import gwt.material.design.client.ui.MaterialLink;
 import gwt.material.design.client.ui.MaterialPanel;
 import gwt.material.design.client.ui.MaterialRow;
 import gwt.material.design.client.ui.MaterialToast;
@@ -34,6 +41,7 @@ import java.util.logging.Logger;
  * @author User
  */
 public class Form implements java.io.Serializable{
+    
         public static final String TASK_NAME_START_UP = "Start up";
         public static final String JSON_FORM_CHILD = "child";
         public static final String JSON_FORM_ID = "id";
@@ -49,7 +57,15 @@ public class Form implements java.io.Serializable{
         public static final String JSON_FORM_STATUS = "status";
         public static final String JSON_FORM_OBJECT_NAME = "objectName";
         public static final String JSON_FORM_FQDN = "fqdn";
+        public static final String JSON_FORM_ITEMS_DISPLAY = "itemsDisplay";
+        public static final String JSON_FORM_TIMER = "useTimer";
+        public static final String JSON_FORM_TIMER_DURATION = "timerDuration";
+        public static final String JSON_FORM_BACKGROUND = "background";
         
+        
+        public static final String ITEMS_DISPLAY_ONE_AFTER_ANOTHER = "oneAfterAnother";
+        public static final String ITEMS_DISPLAY_UP_DOWN = "upDown";
+        public static final String ITEMS_DISPLAY_CATEGORIZE = "categories";
         
         public static final String DISPLAY_MODE_READ_ONLY = "readonly";
         public static final String DISPLAY_MODE_FILL_UP = "fillup";
@@ -72,8 +88,13 @@ public class Form implements java.io.Serializable{
         private String fqdn="";
         
         
+        private String itemDisplay= ITEMS_DISPLAY_UP_DOWN;
+        private boolean useTimer = false;
+        private long timerDuration = 0;
+        private String background = "";
+        
         private boolean draggable = true;
-        private java.util.List<Field> child;
+        private java.util.List<Field> child = new java.util.ArrayList<>();
         
     public interface FormItemListener{
         public void onClick( Field field, int index );
@@ -81,6 +102,8 @@ public class Form implements java.io.Serializable{
         public void mouseExit( Field field, int index );
         public void onEditClick( Field field, int index );
         public void onDeleteClick( Field field, int index );
+        public void onUpClick( Field field, int index );
+        public void onDownClick( Field field, int index );
     }
     
     private FormItemListener itemListener;
@@ -252,6 +275,38 @@ public class Form implements java.io.Serializable{
     public void setChild(List<Field> child) {
         this.child = child;
     }
+
+    public String getItemDisplay() {
+        return itemDisplay;
+    }
+
+    public void setItemDisplay(String itemDisplay) {
+        this.itemDisplay = itemDisplay;
+    }
+
+    public boolean isUseTimer() {
+        return useTimer;
+    }
+
+    public void setUseTimer(boolean useTimer) {
+        this.useTimer = useTimer;
+    }
+
+    public long getTimerDuration() {
+        return timerDuration;
+    }
+
+    public void setTimerDuration(long timerDuration) {
+        this.timerDuration = timerDuration;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
+    }
     
     /**
      * Render the form with related fields and widgets
@@ -259,8 +314,38 @@ public class Form implements java.io.Serializable{
      */    
     public void render( MaterialPanel holder ){
         
+        MaterialCollapsible coll = null;
+        MaterialCollapsibleBody body[]=null;
+        
         if( child == null ) return;
         holder.clear( );
+        
+        if( getItemDisplay().equals(Form.ITEMS_DISPLAY_CATEGORIZE)){
+            coll = new MaterialCollapsible();
+            coll.setAccordion(true);
+            String titles[] = new String[]{"Profile","Contact","Places","Works & education","Documents","Travel info","Family & relationships","Healthcare","Bio-metric","Others"};
+            body = new MaterialCollapsibleBody[10];
+
+            for ( int i =0; i < body.length; i++){
+                body[i] = new MaterialCollapsibleBody();
+                
+                MaterialCollapsibleItem item = new MaterialCollapsibleItem();
+                coll.add(item);
+
+                MaterialCollapsibleHeader header = new MaterialCollapsibleHeader();
+                item.add(header);
+                MaterialLink lnktitle = new MaterialLink();
+                lnktitle.setFontWeight( Style.FontWeight.BOLDER );
+                lnktitle.setTextColor(Color.TEAL);
+                lnktitle.setText(titles[i]);
+                header.add(lnktitle);//<m:MaterialIcon iconType="EDIT" waves="DEFAULT" float="LEFT" circle="true" iconSize="LARGE" />
+                
+                item.add( body[i] );
+            }
+            
+            coll.setActive(1);
+            coll.setShadow(0);
+        }
         
         for( int i=0; i < child.size(); i++ ){
             Field f = child.get(i);
@@ -276,33 +361,62 @@ public class Form implements java.io.Serializable{
                 row = generator.getWidget( f, i );
                 generator.createWidget(f, row, i, getMode(), isMouseOverShadow() );
                             
-                if( isDraggable()){
-                    MaterialDnd.draggable( row, JsDragOptions.create( Axis.VERTICAL ) );
-                    row.addDragEndHandler(event -> {
-                    MaterialToast.fireToast("Added " );
-                    //txtbrief.setText( "" );
-                    int count = 0; 
-                    for ( Widget w : holder.getChildrenList() ){
-                        child.get( count ).setTop( w.getAbsoluteTop() );
-                        child.get( count ).setLeft( w.getAbsoluteLeft() );
-                        count++;
+                if( !getItemDisplay().equals(Form.ITEMS_DISPLAY_CATEGORIZE) ){
+                    if( isDraggable()){
+                        MaterialDnd.draggable( row, JsDragOptions.create( Axis.VERTICAL ) );
+                        row.addDragEndHandler(event -> {
+                        MaterialToast.fireToast("Added " );
+                        //txtbrief.setText( "" );
+                        int count = 0; 
+                        for ( Widget w : holder.getChildrenList() ){
+                            child.get( count ).setTop( w.getAbsoluteTop() );
+                            child.get( count ).setLeft( w.getAbsoluteLeft() );
+                            count++;
+                        }
+                        verticalMove( row, holder );
+                       });
+                    }             
+                    holder.add( row );
+                    f.setTop( row.getAbsoluteTop() );
+                    f.setLeft( row.getAbsoluteLeft() );
+                
+                }else{
+                    String category = f.getCategory();
+                    if( category.equals("profile")){
+                        body[0].add(row);
+                    }else if( category.equals("contact")){
+                        body[1].add(row);
+                    }else if( category.equals("places")){
+                        body[2].add(row);
+                    }else if( category.equals("work & education")){
+                        body[3].add(row);
+                    }else if( category.equals("documents")){
+                        body[4].add(row);
+                    }else if( category.equals("travel info")){
+                        body[5].add(row);
+                    }else if( category.equals("family & relationships")){
+                        body[6].add(row);
+                    }else if( category.equals("health-care")){
+                        body[7].add(row);
+                    }else if( category.equals("bio-matric")){
+                        body[8].add(row);
+                    }else if( category.equals("others")){
+                        body[9].add(row);
                     }
-                    
-                    //itemListener.widget( get( row.getId() ));
-                    verticalMove( row, holder );
-
-                   });
-                }             
-                holder.add( row );
-                f.setTop( row.getAbsoluteTop() );
-                f.setLeft( row.getAbsoluteLeft() );
+                }
                 
             } catch (Exception ex) {
                 Window.alert(ex.getMessage());
-                Logger.getLogger(FormEditorView.class.getName()).log(Level.SEVERE, null, ex);
+                break;
             }
         }
-
+        
+        
+        if( getItemDisplay().equals(Form.ITEMS_DISPLAY_CATEGORIZE)){
+            holder.add( coll );
+        }
+        
+        
     }
     
     private void eventRegister(WidgetGenerator generator){
@@ -331,6 +445,16 @@ public class Form implements java.io.Serializable{
                 @Override
                 public void onDeleteClick(Field field, int index) {
                     if( itemListener != null ) itemListener.onDeleteClick(field, index);
+                }
+
+                @Override
+                public void onUpClick(Field field, int index) {
+                    if( itemListener != null ) itemListener.onUpClick(field, index);
+                }
+
+                @Override
+                public void onDownClick(Field field, int index) {
+                    if( itemListener != null ) itemListener.onDownClick(field, index);
                 }
             });
         }
@@ -536,7 +660,7 @@ public class Form implements java.io.Serializable{
           
           for( Field child : child ){
               for ( Field children : child.getChildren()){
-                  maps.put( children.getName(), children.getBindValue());
+                  maps.put( children.getName(), children.getBindValue( getFqdn() ) );
               }
           }
           
@@ -570,5 +694,16 @@ public class Form implements java.io.Serializable{
               }
             }
         }
+    }
+    
+    public Field contain( String field){
+        Field exist = null;
+        for ( Field f : getChild()){
+            if( f.getName().equals(field)){
+                exist = f;
+                break;
+            }
+        }
+        return exist;
     }
 }

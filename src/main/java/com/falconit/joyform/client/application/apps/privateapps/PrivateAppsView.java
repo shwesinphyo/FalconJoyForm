@@ -4,6 +4,7 @@ package com.falconit.joyform.client.application.apps.privateapps;
 
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
+import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessByContainer;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
@@ -83,7 +84,7 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
             }
         });
 
-        helper.processesList( "DevTest_1.0.0-SNAPSHOT", 0, 200, true );
+        helper.processesList(Constants.containerFilter.get(0) , 0, 200, true );//"DevTest_1.0.0-SNAPSHOT"
     }
     
     private void createProcess( java.util.Map<String, Object[]> taskMap ){

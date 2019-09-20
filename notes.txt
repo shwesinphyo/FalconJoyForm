@@ -4,3 +4,22 @@
 variable: require data only
 2. assign {step 1: initialize by system, 1 step: assign user, step 3: pass to }
 variable: userId or groupId
+
+
+main group
+- personal info
+- security
+- Apps center
+- Privacy
+
+category
+- contact
+- documents
+- travel info
+- work & education
+- bio-matric
+- family & relationships
+- profile
+- health-care
+- places
+- others

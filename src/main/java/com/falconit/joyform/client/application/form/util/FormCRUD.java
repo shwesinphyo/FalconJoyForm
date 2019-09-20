@@ -116,7 +116,7 @@ public class FormCRUD {
      * @param max limit value
      */
     public void getBy(String contaner, String process, String task, int first, int max  ){
-        java.util.List<Form> lst = new java.util.ArrayList<>();
+        java.util.List<Form> lst = new java.util.ArrayList<>( );
         
         try{
             HumanTaskHelper helper = new HumanTaskHelper();
@@ -244,7 +244,8 @@ public class FormCRUD {
             helper.startInstances( Constants.formProcessId, obj.toString( ) );
         }catch(Exception ex){ex.printStackTrace();}
     }
-      
+    
+    
     public void get( long formId ){
         try{
             
@@ -377,11 +378,62 @@ public class FormCRUD {
         return form;
     }
     
+    
+        
+    public void solveFQDN( String query, String fqdn  ){
+        
+        try{
+            HumanTaskHelper helper = new HumanTaskHelper();
+            helper.setListener(new HumanTaskHelper.HumanTaskHelperListener() {
+                @Override
+                public void success(String result) {
+
+                    JSONObject jsonOnlineUser = JSONParser.parseStrict( result ).isObject();
+                    JSONArray groups = jsonOnlineUser.get("results").isArray();
+                    
+                    if( groups != null && groups.size() > 0 ){
+                                            
+                        for( int i=0; i < groups.size(); i++){
+                            
+                            JSONObject obj = groups.get(i).isObject();
+                            JSONObject objForm = obj.get( fqdn ).isObject();
+                            try {
+                                if( objForm != null ){
+                                    listener.success("Success");
+                                    java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
+                                    listener.fqdn( maps );
+                                }else{
+                                    listener.fail( "Failed to get" );
+                                }
+                            } catch (Exception ex) {
+                                listener.fail( ex.getMessage() );
+                            }
+                        }
+                        
+                    }
+                }
+
+                @Override
+                public void fail(String message, int stage) {
+                    listener.fail( message );
+                }
+            });
+
+            JSONObject obj = new JSONObject();
+            obj.put("action", new JSONString( "query" ));
+            obj.put("query", new JSONString( query ));
+
+            helper.startInstances( Constants.formProcessId, obj.toString( ) );
+        }catch(Exception ex){ex.printStackTrace();}
+    }
+     
+    
     public interface CRUDListener{
         public void success(String result);
         public void success(Form result);
         public void success(java.util.List<Form> result);
         public void fail( String message);
+        public void fqdn( java.util.Map<String, Object[]> maps );
     }
     
     private CRUDListener listener;

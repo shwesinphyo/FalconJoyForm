@@ -148,6 +148,16 @@ public class NameTokens {
     public static final String formediting = "formediting";
     public static final String taskassign = "taskassign";
     public static final String taskassignment = "taskassignment";
+    public static final String welcome = "welcome";
+    public static final String personal = "personal";
+
+    public static String getPersonal() {
+        return personal;
+    }
+
+    public static String getWelcome() {
+        return welcome;
+    }
 
     public static String getTaskassignment() {
         return taskassignment;

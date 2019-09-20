@@ -40,6 +40,7 @@ import gwt.material.design.client.ui.animate.Transition;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -138,6 +139,9 @@ public class TaskAssignmentView extends NavigatedView implements TaskAssignmentP
             public void fail(String message) {
                 MaterialLoader.loading( false );
             }
+
+            @Override
+            public void fqdn(Map<String, Object[]> maps) { }
         });
         
         crud.getBy( container, process, taskName );

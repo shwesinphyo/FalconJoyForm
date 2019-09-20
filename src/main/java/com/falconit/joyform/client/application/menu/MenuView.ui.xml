@@ -27,6 +27,7 @@
 	<ui:with field="tokens" type="com.falconit.joyform.client.place.NameTokens"/>
 
 	<ui:style>
+            
 		@external .sidebar, .nav-wrapper, .select2-selection__rendered;
 		.sidebar {
 			padding: 10% !important;
@@ -60,14 +61,16 @@
 			font-size: 1em !important;
 			margin-top: 20px;
 		}
+                
 	</ui:style>
 
 	<m:MaterialPanel>
-		<m:MaterialHeader ui:field="header" width="100%">
+		<m:MaterialHeader ui:field="header" marginTop="-56" width="100%">
 			<m:MaterialNavBar ui:field="navBar" width="100%" backgroundColor="BLUE" activates="sideBar" textColor="WHITE">
+                            <m:MaterialNavBrand paddingLeft="60" text="falconIT" />
 				<m:MaterialLink ui:field="btnSearch" iconType="SEARCH" iconColor="WHITE" float="RIGHT"/>
-				<ma:combobox.MaterialComboBox ui:field="comboThemes" textColor="WHITE" label="Select Theme" marginRight="12" width="120px" float="RIGHT"/>
-                                <m:MaterialLink float="RIGHT" iconType="ACCOUNT_CIRCLE" marginRight="12" tooltip="Account" textColor="WHITE" waves="LIGHT" ui:field="account" />
+				<ma:combobox.MaterialComboBox ui:field="comboThemes" textColor="WHITE" label="Select Theme" marginRight="12" width="120px" float="RIGHT" visible="false"/>
+                                <m:MaterialLink float="RIGHT" iconType="ACCOUNT_CIRCLE" marginLeft="7" marginRight="7" tooltip="Account" textColor="WHITE" waves="LIGHT" ui:field="account" />
                                 <!--
                                 <m:MaterialLink float="RIGHT" iconType="NOTIFICATIONS_ACTIVE" marginRight="30" tooltip="Notifications" textColor="WHITE" waves="LIGHT" ui:field="notifications" iconPosition="NONE" >
                                     <m:MaterialBadge backgroundColor="RED" text="6" textColor="WHITE" />
@@ -80,15 +83,16 @@
 			</m:MaterialNavBar>
 		</m:MaterialHeader>
 
-		<m:MaterialSideNavPush ui:field="sideNav" m:id="sideBar" width="250" allowBodyScroll="true" showOnAttach="true">
-			<m.html:ListItem waves="DEFAULT" paddingBottom="22">
-				<ma:webp.MaterialWebpImage width="50%" url="https://falconbreeze.com/wp-content/uploads/2019/05/falconBREEZE_icon.png" fallbackExtension="png" addStyleNames="{style.logo}"/>
-			</m.html:ListItem>
-
+		<m:MaterialSideNavPush ui:field="sideNav" m:id="sideBar" width="300" textColor="WHITE" withHeader="true" allowBodyScroll="true" showOnAttach="false" >
+                    <!--
+                    <m.html:ListItem waves="DEFAULT" paddingBottom="22">
+                        <ma:webp.MaterialWebpImage width="50%" url="https://falconbreeze.com/wp-content/uploads/2019/05/falconBREEZE_icon.png" fallbackExtension="png" addStyleNames="{style.logo}"/>
+                    </m.html:ListItem>
+                    -->
                         <m:MaterialCollapsible>
                             <m:MaterialCollapsibleItem>
                                     <m:MaterialCollapsibleHeader waves="DEFAULT">
-                                            <m:MaterialLink text="Apps" iconType="APPS" separator="true"/>
+                                            <m:MaterialLink text="Apps" iconType="APPS" textColor="WHITE" separator="true"/>
                                     </m:MaterialCollapsibleHeader>
                                     <m:MaterialCollapsibleBody>
                                             <m.html:UnorderedList>
@@ -102,27 +106,27 @@
 
                         <!-- for end users -->
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" iconPosition="LEFT" iconType="NOTIFICATIONS_ACTIVE" text="Notifications" separator="true" layoutPosition="RELATIVE">
+				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" iconPosition="LEFT" textColor="WHITE" iconType="NOTIFICATIONS_ACTIVE" text="Notifications" separator="true" layoutPosition="RELATIVE">
                                         <m:MaterialBadge backgroundColor="RED" text="10" textColor="WHITE" />
                                 </m:MaterialLink>
 			</m.html:ListItem>
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" iconPosition="LEFT" iconType="INBOX" text="Task inbox" separator="true" layoutPosition="RELATIVE">
+				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" textColor="WHITE" iconPosition="LEFT" iconType="INBOX" text="Task inbox" separator="true" layoutPosition="RELATIVE">
                                         <m:MaterialBadge backgroundColor="RED" text="6 actives" textColor="WHITE" />
                                 </m:MaterialLink>
 			</m.html:ListItem>
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getPrivateapps}" iconPosition="LEFT" iconType="APPS" text="My Apps" />       
+				<m:MaterialLink targetHistoryToken="{tokens.getPrivateapps}" textColor="WHITE" iconPosition="LEFT" iconType="APPS" text="My Apps" separator="true" />       
 			</m.html:ListItem>
                         
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getPrivateapps}" iconPosition="LEFT" iconType="COLLECTIONS" text="Public Apps" separator="true" />       
+				<m:MaterialLink targetHistoryToken="{tokens.getPrivateapps}" textColor="WHITE" iconPosition="LEFT" iconType="COLLECTIONS" text="Public Apps" separator="true" />       
 			</m.html:ListItem>
                         
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" iconPosition="LEFT" iconType="POLL" text="Analytics" separator="true" />       
+				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" textColor="WHITE" iconPosition="LEFT" iconType="POLL" text="Analytics" separator="true" />       
 			</m.html:ListItem>
-
+<!--
 			<m:MaterialCollapsible>
 				<m:MaterialCollapsibleItem>
 					<m:MaterialCollapsibleHeader waves="DEFAULT">
@@ -136,6 +140,7 @@
 					</m:MaterialCollapsibleBody>
 				</m:MaterialCollapsibleItem>
 			</m:MaterialCollapsible>
+                        -->
                         
 		</m:MaterialSideNavPush>
 	</m:MaterialPanel>

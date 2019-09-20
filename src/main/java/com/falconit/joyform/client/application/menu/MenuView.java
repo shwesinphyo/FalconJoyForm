@@ -237,12 +237,17 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
 
     protected void initThemes() {
         ThemeManager.initialize();
+        ThemeManager.register(sideNav );
         ThemeManager.register(navBar, ThemeManager.DARKER_SHADE);
         buildThemeList();
+        ThemeManager.loadTheme( ThemeGrey.INSTANCE );
+        
+        /*
         comboThemes.setSingleValue(ThemeManager.getBundle());
         comboThemes.addValueChangeHandler(event -> {
             ThemeManager.loadTheme(comboThemes.getSingleValue());
         });
+        */
     }
 
     protected void buildThemeList() {

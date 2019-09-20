@@ -1,4 +1,4 @@
-package com.falconit.joyform.client.application.home;
+package com.falconit.joyform.client.application.profile;
 
 /*
  * #%L
@@ -23,19 +23,18 @@ package com.falconit.joyform.client.application.home;
 
 
 
-import com.falconit.joyform.client.application.home.dashboard.DashboardModule;
-import com.falconit.joyform.client.application.home.welcome.WelcomeModule;
+
+import com.falconit.joyform.client.application.profile.personal.PersonalModule;
 import com.google.gwt.inject.client.AbstractGinModule;
 
 
 /**
  * Created by Mark Kevin on 11/30/2015.
  */
-public class HomeModule extends AbstractGinModule {
+public class ProfileModule extends AbstractGinModule {
 
     @Override
     protected void configure( ) {
-        install(new DashboardModule());//
-        install(new WelcomeModule());//
+        install(new PersonalModule());//
     }
 }

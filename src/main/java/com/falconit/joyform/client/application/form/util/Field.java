@@ -5,6 +5,9 @@
  */
 package com.falconit.joyform.client.application.form.util;
 
+import com.falconit.joyform.client.application.form.customwidget.MediaUploading;
+import com.falconit.joyform.client.application.form.customwidget.NRCWidget;
+import com.falconit.joyform.client.application.form.customwidget.SignatureWidget;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -12,7 +15,9 @@ import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.user.client.ui.Widget;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
+import gwt.material.design.addins.client.rating.MaterialRating;
 import gwt.material.design.addins.client.richeditor.MaterialRichEditor;
 import gwt.material.design.client.constants.Color;
 import gwt.material.design.client.constants.IconType;
@@ -21,6 +26,10 @@ import gwt.material.design.client.constants.TextAlign;
 import gwt.material.design.client.constants.WavesType;
 import gwt.material.design.client.ui.MaterialCheckBox;
 import gwt.material.design.client.ui.MaterialDatePicker;
+import gwt.material.design.client.ui.MaterialLabel;
+import gwt.material.design.client.ui.MaterialRadioButton;
+import gwt.material.design.client.ui.MaterialRow;
+import gwt.material.design.client.ui.MaterialSwitch;
 import gwt.material.design.client.ui.MaterialTextArea;
 import gwt.material.design.client.ui.MaterialTextBox;
 import java.util.List;
@@ -32,28 +41,35 @@ import java.util.List;
     public class Field implements java.io.Serializable {
     
         public static final String WIDGET_ROW = "row";
-        public static final String WIDGET_TEXT_BOX = "textbox";
-        public static final String WIDGET_TEXT_AREA = "textarea";
-        public static final String WIDGET_TEXT_BOX_RICH = "textboxrich";
-        public static final String WIDGET_TEXT_BOX_NUMBER = "textboxnumber";
+        public static final String WIDGET_TEXT_BOX = "textbox";// done
+        public static final String WIDGET_TEXT_AREA = "textarea";// done
+        public static final String WIDGET_TEXT_BOX_RICH = "textboxrich";// done
+        public static final String WIDGET_TEXT_BOX_NUMBER = "textboxnumber";// done
         public static final String WIDGET_RANGE = "range";
+        public static final String WIDGET_RATING = "rating";// done
         
         // single true or false
-        public static final String WIDGET_CHECK_BOX = "checkbox";
-        public static final String WIDGET_SWITCH = "switch";
+        public static final String WIDGET_CHECK_BOX = "checkbox";// done
+        public static final String WIDGET_SWITCH = "switch";// done
         
         // multiple selection
-        public static final String WIDGET_COMBO_BOX = "combo";
+        public static final String WIDGET_COMBO_BOX = "combo";// done
         public static final String WIDGET_CHECK_BOX_GROUP = "checkboxgroup";
-        public static final String WIDGET_RADIO_GROUP = "radiogroup";
+        public static final String WIDGET_RADIO_GROUP = "radiogroup";// done
         
         // 
-        public static final String WIDGET_DATE_TIME = "datetime";
-        public static final String WIDGET_FILE_UPLOADER = "upload";
-        public static final String WIDGET_MEDIA = "media";
+        public static final String WIDGET_DATE_TIME = "datetime";// done
+        public static final String WIDGET_FILE_UPLOADER = "upload";// done
+        public static final String WIDGET_MEDIA = "media"; // done
+        public static final String WIDGET_FACIAL_PHOTO = "facialphoto";// done
         public static final String WIDGET_TABLE = "table";
+        public static final String WIDGET_NRC = "nrc";// done
+        public static final String WIDGET_SIGNATURE_PAD = "signPad";// done
         
-    
+        
+        public static final String ORIENTATION_VERTICAL = "vertical";
+        public static final String ORIENTATION_HORIZONTAL = "horizantal";
+
         public static final String JSON_FIELD_CHILDREN = "children";
         public static final String JSON_FIELD_ID = "id";
         public static final String JSON_FIELD_LABEL = "label";
@@ -68,7 +84,7 @@ import java.util.List;
         
         // priority group start
         private String id="";
-        private String label = "";
+        private java.util.Map<String,String> label;
         private Object value;
         private String name="";// this name also use for process data
         private int top=0;
@@ -118,6 +134,11 @@ import java.util.List;
         public static final String JSON_FIELD_TEXT_ALIGN = "textAlign";
         public static final String JSON_FIELD_MIN = "min";
         public static final String JSON_FIELD_MAX = "max";
+        public static final String JSON_FIELD_ORIENTATION = "orientation";
+        public static final String JSON_FIELD_CATEGORY = "category";
+        public static final String JSON_FIELD_CHOICE = "choice";
+        public static final String MULTIPLE_SELECTION = "choice_multiple";
+        public static final String SINGLE_SELECTION = "choice_single";
         // CSS
         private String height="";
         private String width="";// second priority for width
@@ -138,6 +159,9 @@ import java.util.List;
         private TextAlign textAlign;
         private double min;
         private double max;
+        private String orientation = ORIENTATION_VERTICAL;
+        private String choice = SINGLE_SELECTION;
+        private String category = "";
         
         private java.util.List<Field> children = new java.util.ArrayList<> ();
         
@@ -155,20 +179,20 @@ import java.util.List;
             this.name = name;
         }
 
-        public Field( String id, String label, String name ) {
+        public Field( String id, java.util.Map<String,String> label, String name ) {
             this.id = id;
             this.label = label;
             this.name = name;
         }
 
-        public Field(String id, String label, String name, String group) {
+        public Field(String id, java.util.Map<String,String> label, String name, String group) {
             this.id = id;
             this.label = label;
             this.name = name;
             this.group = group;
         }
 
-        public Field(String id, String label, String name, int top, int left) {
+        public Field(String id, java.util.Map<String,String> label, String name, int top, int left) {
             this.id = id;
             this.label = label;
             this.name = name;
@@ -184,11 +208,11 @@ import java.util.List;
             this.id = id;
         }
 
-        public String getLabel() {
+        public java.util.Map<String,String> getLabel() {
             return label;
         }
 
-        public void setLabel(String label) {
+        public void setLabel(java.util.Map<String,String> label) {
             this.label = label;
         }
 
@@ -479,12 +503,48 @@ import java.util.List;
         public void setMax(double max) {
             this.max = max;
         }
+
+    public String getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(String orientation) {
+        this.orientation = orientation;
+    }
+
+    public String getChoice() {
+        return choice;
+    }
+
+    public void setChoice(String choice) {
+        this.choice = choice;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
  
+    
+    
         public void fromJSON( JSONObject json ) throws Exception{
             setId( json.get(JSON_FIELD_ID).isString().stringValue());
             //Window.alert(json.toString());
             
-            setLabel( json.get(JSON_FIELD_LABEL).isString().stringValue());
+            java.util.Map<String,String> labelLang = new java.util.HashMap<>();
+            if( json.get(JSON_FIELD_LABEL).isObject() != null ){
+                JSONObject labels = json.get(JSON_FIELD_LABEL).isObject();
+                for( String key : labels.keySet()){
+                    labelLang.put( key, labels.get(key).isString().stringValue() );
+                }
+            }else{
+                labelLang.put( "en", json.get(JSON_FIELD_LABEL).isString().stringValue() );
+            }
+            setLabel( labelLang );
+            
             if( json.get(JSON_FIELD_VALUE).isNull() != null )
                 setValue( null );
             else
@@ -529,6 +589,13 @@ import java.util.List;
             setMin( json.get(JSON_FIELD_MIN).isNumber().doubleValue() );
             setMax( json.get(JSON_FIELD_MAX).isNumber().doubleValue() );
             
+            if( json.get(JSON_FIELD_ORIENTATION) != null )
+                setOrientation( json.get(JSON_FIELD_ORIENTATION).isString().stringValue());
+            if( json.get(JSON_FIELD_CHOICE) != null )
+                setChoice( json.get(JSON_FIELD_CHOICE).isString().stringValue());
+            if( json.get(JSON_FIELD_CATEGORY) != null )
+                setCategory( json.get(JSON_FIELD_CATEGORY).isString().stringValue());
+            
             if( json.get(JSON_FIELD_CHILDREN) != null ){
                 //Window.alert("Child exist");
                 if( json.get(JSON_FIELD_CHILDREN).isArray() != null ){
@@ -537,8 +604,8 @@ import java.util.List;
                     for( int i=0; i < group.size(); i++){
                         JSONObject child = group.get(i).isObject();
                         Field f = new Field();
-                        f.fromJSON(child);
-                        children.add(f);
+                        f.fromJSON( child );
+                        children.add( f );
                         //Window.alert("Child added in Field=" + children.size() );
                     }
                 }
@@ -552,7 +619,13 @@ import java.util.List;
             JSONObject json = new JSONObject( );
             
             json.put( JSON_FIELD_ID, new JSONString(getId()) );
-            json.put( JSON_FIELD_LABEL, new JSONString(getLabel()) );
+            
+            JSONObject lang = new JSONObject( );
+            for( java.util.Map.Entry<String, String> entry : getLabel().entrySet() ){
+                lang.put( entry.getKey(), new JSONString( entry.getValue() ) );
+            }
+            json.put( JSON_FIELD_LABEL, lang );
+
             json.put( JSON_FIELD_VALUE, ( getValue() == null ? JSONNull.getInstance() : new JSONString(getValue().toString()) ) );
             json.put( JSON_FIELD_NAME, new JSONString(getName()) );
             json.put( JSON_FIELD_TOP, new JSONNumber(getTop()) );
@@ -592,6 +665,9 @@ import java.util.List;
             
             json.put( JSON_FIELD_MIN, new JSONNumber(getMin()) );
             json.put( JSON_FIELD_MAX, new JSONNumber(getMax()) );
+            json.put( JSON_FIELD_ORIENTATION, new JSONString( getOrientation() ) );
+            json.put( JSON_FIELD_CHOICE, new JSONString( getChoice() ) );
+            json.put( JSON_FIELD_CATEGORY, new JSONString( getCategory() ) );
             
             if( children!= null && !children.isEmpty()){
                 JSONArray group = new JSONArray();
@@ -609,8 +685,9 @@ import java.util.List;
         public void bind( Object widget){
             this.widget = widget;
         }
+
         
-        public Object[] getBindValue( ){
+        public Object[] getBindValue( String fqdn ){
             if( getWidgetType().equals(Field.WIDGET_TEXT_BOX) ){
                 String value = ((MaterialTextBox) widget).getText().trim();
                 return new Object[] { ObjectConverter.TYPE_STRING, value };
@@ -634,9 +711,18 @@ import java.util.List;
                 boolean value = ((MaterialCheckBox) widget).getValue();
                 return new Object[] { ObjectConverter.TYPE_BOOLEAN, value };
                 
+            }else if( getWidgetType().equals(Field.WIDGET_SWITCH) ){
+                boolean value = ((MaterialSwitch) widget).getValue();
+                return new Object[] { ObjectConverter.TYPE_BOOLEAN, value };
+                
             }else if( getWidgetType().equals(Field.WIDGET_DATE_TIME) ){
-                java.util.Date value = ((MaterialDatePicker) widget).getDate();
-                return new Object[] { ObjectConverter.TYPE_DATETIME, value.getTime() };
+                if( fqdn != null  && !fqdn.trim().isEmpty()){
+                    java.util.Date value = ((MaterialDatePicker) widget).getDate();
+                    return new Object[] { ObjectConverter.TYPE_TIMESTAMP, value.getTime() };
+                }else{
+                    java.util.Date value = ((MaterialDatePicker) widget).getDate();
+                    return new Object[] { ObjectConverter.TYPE_DATETIME, value.getTime() };
+                }
                 
             }else if( getWidgetType().equals(Field.WIDGET_COMBO_BOX) ){
                 java.util.List value = ((MaterialComboBox) widget).getSelectedValues();
@@ -646,6 +732,55 @@ import java.util.List;
                 }
                 return new Object[] { ObjectConverter.TYPE_STRING, sb.toString() };
                 
+            }else if( getWidgetType().equals(Field.WIDGET_RATING) ){
+                int value = ((MaterialRating) widget).getValue();
+                return new Object[] { ObjectConverter.TYPE_NUMBER, value };
+                
+            }else if( getWidgetType().equals(Field.WIDGET_RADIO_GROUP) ){
+                
+                MaterialRow row =  (MaterialRow) widget;
+                
+                for( Widget w : row.getChildrenList() ){
+                    
+                    if( w instanceof MaterialRow) continue;
+                    if( w instanceof MaterialLabel) continue;
+                    
+                    MaterialRadioButton rbtn =  (MaterialRadioButton) w;
+                    if( rbtn.getValue() ){
+                        return new Object[] { ObjectConverter.TYPE_STRING, rbtn.getText() };
+                    }
+                }
+                return new Object[] { ObjectConverter.TYPE_STRING, "" };
+                
+            }else if( getWidgetType().equals(Field.WIDGET_NRC) ){
+                String value =(String) ((NRCWidget) widget).getValue();
+                return new Object[] { ObjectConverter.TYPE_STRING, value };
+                /*
+                MaterialRow row =  (MaterialRow) widget;
+                
+                String value =(String) ((NRCWidget) row.getChildrenList().get(1)).getValue();
+                return new Object[] { ObjectConverter.TYPE_STRING, value };
+                */
+                
+            }else if( getWidgetType().equals(Field.WIDGET_MEDIA) ){
+                
+                String value =(String) ((MediaUploading) widget).getValue();
+                return new Object[] { ObjectConverter.TYPE_STRING, value };
+
+            }else if( getWidgetType().equals(Field.WIDGET_FILE_UPLOADER) ){
+                
+                String value =(String) ((MediaUploading) widget).getValue();
+                return new Object[] { ObjectConverter.TYPE_STRING, value };
+                
+            }else if( getWidgetType().equals(Field.WIDGET_FACIAL_PHOTO) ){
+                
+                String value =(String) ((MediaUploading) widget).getValue();
+                return new Object[] { ObjectConverter.TYPE_STRING, value };
+                
+            }else if( getWidgetType().equals(Field.WIDGET_SIGNATURE_PAD) ){
+                
+                String value =(String) ((SignatureWidget) widget).getValue();
+                return new Object[] { ObjectConverter.TYPE_STRING, value };
             }
             else
                 return null;

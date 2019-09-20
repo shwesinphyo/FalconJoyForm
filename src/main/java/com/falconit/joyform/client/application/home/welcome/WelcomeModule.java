@@ -1,4 +1,4 @@
-package com.falconit.joyform.client.application.home;
+package com.falconit.joyform.client.application.home.welcome;
 
 /*
  * #%L
@@ -22,20 +22,11 @@ package com.falconit.joyform.client.application.home;
 
 
 
+import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 
-import com.falconit.joyform.client.application.home.dashboard.DashboardModule;
-import com.falconit.joyform.client.application.home.welcome.WelcomeModule;
-import com.google.gwt.inject.client.AbstractGinModule;
-
-
-/**
- * Created by Mark Kevin on 11/30/2015.
- */
-public class HomeModule extends AbstractGinModule {
-
+public class WelcomeModule extends AbstractPresenterModule {
     @Override
-    protected void configure( ) {
-        install(new DashboardModule());//
-        install(new WelcomeModule());//
+    protected void configure() {
+        bindPresenter(WelcomePresenter.class, WelcomePresenter.MyView.class, WelcomeView.class, WelcomePresenter.MyProxy.class);
     }
 }

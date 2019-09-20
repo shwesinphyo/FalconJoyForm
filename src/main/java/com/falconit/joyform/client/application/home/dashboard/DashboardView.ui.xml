@@ -30,43 +30,43 @@
                 <m:MaterialTitle title="My Apps" textColor="BLACK" />
             </m:MaterialRow>
     -->
-        <m:MaterialRow grid="l12 m12 s12">
+        <m:MaterialRow grid="l12 m12 s12" marginTop="20">
             
             <m:MaterialColumn grid="l4">
-            <m:MaterialCard backgroundColor="BLUE_GREY_DARKEN_1">
-             <m:MaterialCardContent textColor="WHITE">
+            <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0"> <!--  backgroundColor="BLUE_GREY_DARKEN_1" -->
+             <m:MaterialCardContent> <!--  textColor="WHITE" -->
               <m:MaterialCardTitle text="Apps" iconType="APPS" iconPosition="RIGHT"/>
               <m:MaterialLabel ui:field="txtapps" text="0 active Apps" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
-              <m:MaterialLink text="Create" iconType="CREATE"/>
-              <m:MaterialLink text="Manage" iconType="TUNE"/>
+              <m:MaterialLink text="Create" iconType="CREATE" textColor="TEAL"/>
+              <m:MaterialLink text="Manage" iconType="TUNE" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
            </m:MaterialColumn>
            
            <m:MaterialColumn grid="l4">
-            <m:MaterialCard backgroundColor="BLUE_GREY_DARKEN_1">
-             <m:MaterialCardContent textColor="WHITE">
+            <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
+             <m:MaterialCardContent>
               <m:MaterialCardTitle text="Workflow" iconType="LIST" iconPosition="RIGHT"/>
               <m:MaterialLabel ui:field="txtworkflow" text="0 active workflows" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
-              <m:MaterialLink text="Create" iconType="CREATE"/>
-              <m:MaterialLink text="Manage" iconType="TUNE"/>
+              <m:MaterialLink text="Create" iconType="CREATE" textColor="TEAL"/>
+              <m:MaterialLink text="Manage" iconType="TUNE" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
            </m:MaterialColumn>
            
            <m:MaterialColumn grid="l4">
-            <m:MaterialCard backgroundColor="BLUE_GREY_DARKEN_1">
-             <m:MaterialCardContent textColor="WHITE">
+            <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
+             <m:MaterialCardContent>
               <m:MaterialCardTitle text="Form" iconType="ASSIGNMENT" iconPosition="RIGHT"/>
               <m:MaterialLabel ui:field="txtform" text="0 active forms" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
-              <m:MaterialLink href="#formediting" text="Create" iconType="CREATE"/>
-              <m:MaterialLink text="Manage" iconType="TUNE"/>
+              <m:MaterialLink href="#formediting" text="Create" iconType="CREATE" textColor="TEAL"/>
+              <m:MaterialLink text="Manage" iconType="TUNE" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
            </m:MaterialColumn>
@@ -75,45 +75,45 @@
                       
                                  
            <m:MaterialColumn grid="l4">
-            <m:MaterialCard backgroundColor="BLUE_GREY_DARKEN_1">
-             <m:MaterialCardContent textColor="WHITE">
+            <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
+             <m:MaterialCardContent>
               <m:MaterialCardTitle text="Task assignemnt" iconType="FORWARD" iconPosition="RIGHT"/>
               <m:MaterialLabel text="Assign tasks to your colleague, offer speciality to your customers" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
-              <m:MaterialLink href="#taskassign" text="Create" iconType="CREATE"/>
+              <m:MaterialLink href="#taskassign" text="Create" iconType="CREATE" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
            </m:MaterialColumn>
                       
            <m:MaterialColumn grid="l4">
-            <m:MaterialCard backgroundColor="BLUE_GREY_DARKEN_1">
-             <m:MaterialCardContent textColor="WHITE">
+            <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
+             <m:MaterialCardContent>
               <m:MaterialCardTitle text="Tasks in progress" iconType="POLL" iconPosition="RIGHT"/>
               <m:MaterialLabel text="12 tasks in progress" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
-              <m:MaterialLink href="#tasklist" text="Open" iconType="OPEN_IN_NEW"/>
+              <m:MaterialLink href="#tasklist" text="Open" iconType="OPEN_IN_NEW" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
            </m:MaterialColumn>
                       
            <m:MaterialColumn grid="l4">
-            <m:MaterialCard backgroundColor="BLUE_GREY_DARKEN_1">
-             <m:MaterialCardContent textColor="WHITE">
+            <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
+             <m:MaterialCardContent>
               <m:MaterialCardTitle text="Tasks completed" iconType="DONE_ALL" iconPosition="RIGHT"/>
               <m:MaterialLabel text="108 tasks completed" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
-              <m:MaterialLink href="#tasklist" text="Open" iconType="OPEN_IN_NEW"/>
+              <m:MaterialLink href="#tasklist" text="Open" iconType="OPEN_IN_NEW" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
            </m:MaterialColumn>
            
         </m:MaterialRow>
-    
+    <!--
         <m:MaterialRow ui:field="appsholder" grid="s12">
-
         </m:MaterialRow>
+        -->
     </m:MaterialRow>
 </ui:UiBinder>

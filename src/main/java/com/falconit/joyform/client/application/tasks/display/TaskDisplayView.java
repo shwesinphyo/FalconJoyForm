@@ -70,6 +70,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
     @UiField
     MaterialTabItem in, out, comment, foward;
     
+
     @Inject
     TaskDisplayView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
@@ -131,6 +132,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
             public void success(List<Form> result) {
                 //Window.alert("Success ");
                 if( !result.isEmpty() ){
+                    //Window.alert("Size");
                     form = result.get(0);
                     form.setDraggable( false );
                     
@@ -150,6 +152,9 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                 Window.Location.assign( "#privateapps" );
                 MaterialLoader.loading( false );
             }
+
+            @Override
+            public void fqdn(Map<String, Object[]> maps) { }
         });
         
         crud.getBy( container, process, taskName );
@@ -181,7 +186,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
     }
     
        
-    private void loadForm(){
+    private void loadForm( ){
         
         FormCRUD crud = new FormCRUD();
         crud.setListener(new FormCRUD.CRUDListener(){
@@ -210,6 +215,9 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
             @Override
             public void fail(String message) {
             }
+
+            @Override
+            public void fqdn(Map<String, Object[]> maps) { }
         });
         
         crud.getBy( container, process, taskName );

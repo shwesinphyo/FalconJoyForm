@@ -45,8 +45,8 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
     interface Binder extends UiBinder<Widget, DashboardView> {
     }
 
-    @UiField
-    MaterialRow appsholder;
+    //@UiField
+    //MaterialRow appsholder;
     
     @UiField
     MaterialLabel txtapps, txtworkflow, txtform;
@@ -137,6 +137,9 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
             @Override
             public void fail(String message) {
             }
+
+            @Override
+            public void fqdn(Map<String, Object[]> maps) { }
         });
         
         crud.list();
@@ -228,7 +231,7 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
         try{
             MaterialColumn col = new MaterialColumn();
             col.setGrid("l4 m4 s12");
-            appsholder.add(col);
+            //appsholder.add(col);
             
             MaterialCard card = new MaterialCard();
             card.setBackgroundColor(Color.BLUE_GREY_DARKEN_3);

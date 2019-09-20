@@ -5,13 +5,16 @@
  */
 package com.falconit.joyform.client.application.util.jbpmclient.api.task;
 
+import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import gwt.material.design.client.constants.InputType;
+import gwt.material.design.client.ui.MaterialImage;
 import gwt.material.design.client.ui.MaterialLabel;
 import gwt.material.design.client.ui.MaterialRow;
 import gwt.material.design.client.ui.MaterialTextBox;
+
 
 /**
  *
@@ -36,6 +39,7 @@ public class TaskInputDataRenderring {
                 widget.setReadOnly(true);
                 widget.setBorderBottom("1px solid DarkOliveGreen");
                 widget.setPadding(5);
+                widget.setPaddingTop(10);
                 row.add(widget);
                 
             }else if( entry.getValue()[0].toString().equals( ObjectConverter.TYPE_DATETIME )){
@@ -47,20 +51,40 @@ public class TaskInputDataRenderring {
                 widget.setReadOnly(true);
                 widget.setBorderBottom("1px solid DarkOliveGreen");
                 widget.setPadding(5);
+                widget.setPaddingTop(10);
                 row.add(widget);
                 
             }else if( entry.getValue()[0].toString().equals( ObjectConverter.TYPE_STRING )){
                 
-                MaterialTextBox widget = new MaterialTextBox( );
-                widget.setText( entry.getValue()[1].toString() );
-                widget.setLabel(entry.getKey().replaceAll("_", " "));
-                widget.setReadOnly(true);
-                widget.setBorderBottom("1px solid DarkOliveGreen");
-                widget.setPadding(5);
-                row.add(widget);
-                if( entry.getKey().equalsIgnoreCase("password"))
-                    widget.setType(InputType.PASSWORD);
+                if( entry.getValue()[1].toString().startsWith("data:image")){
+                    
+                    MaterialRow sign = new MaterialRow();
+                    sign.setMarginTop(10);
+                    MaterialLabel lblrating = new MaterialLabel();
+                    lblrating.setText( entry.getKey().replaceAll("_", " ") );
+                    sign.add( lblrating );
                 
+                    MaterialImage imageData = new MaterialImage();
+                    imageData.setWidth("150px");
+                    imageData.setHeight("150px");
+                    imageData.setUrl( entry.getValue()[1].toString() );
+                    //imageData.setMarginLeft(20);
+                    sign.add( imageData );
+                    row.add( sign );
+                }else{
+                
+                    MaterialTextBox widget = new MaterialTextBox( );
+                    widget.setText( entry.getValue()[1].toString() );
+                    widget.setLabel(entry.getKey().replaceAll("_", " "));
+                    widget.setReadOnly(true);
+                    widget.setBorderBottom("1px solid DarkOliveGreen");
+                    widget.setPadding(5);
+                    widget.setPaddingTop(10);
+                    row.add(widget);
+                    if( entry.getKey().equalsIgnoreCase("password"))
+                        widget.setType(InputType.PASSWORD);
+                
+                }
             }else if( entry.getValue()[0].toString().equals(ObjectConverter.TYPE_DECIMAL) ){
                 
                 MaterialTextBox widget = new MaterialTextBox( );
@@ -69,6 +93,7 @@ public class TaskInputDataRenderring {
                 widget.setReadOnly(true);
                 widget.setBorderBottom("1px solid DarkOliveGreen");
                 widget.setPadding(5);
+                widget.setPaddingTop(10);
                 row.add(widget);
                 
             }else if( entry.getValue()[0].toString().equals(ObjectConverter.TYPE_NUMBER) ){
@@ -79,6 +104,7 @@ public class TaskInputDataRenderring {
                 widget.setReadOnly(true);
                 widget.setBorderBottom("1px solid DarkOliveGreen");
                 widget.setPadding(5);
+                widget.setPaddingTop(10);
                 row.add(widget);
                 
             }else if( entry.getValue()[0].toString().equals( ObjectConverter.TYPE_BOOLEAN ) ){
@@ -89,6 +115,7 @@ public class TaskInputDataRenderring {
                 widget.setReadOnly(true);
                 widget.setBorderBottom("1px solid DarkOliveGreen");
                 widget.setPadding(5);
+                widget.setPaddingTop(10);
                 row.add(widget);
                 
             }else if( entry.getValue()[0].toString().equals( ObjectConverter.TYPE_NULL ) ){
@@ -98,14 +125,15 @@ public class TaskInputDataRenderring {
                 widget.setReadOnly(true);
                 widget.setBorderBottom("1px solid DarkOliveGreen");
                 widget.setPadding(5);
+                widget.setPaddingTop(10);
                 row.add(widget);
                 
             }else if( entry.getValue()[0].toString().equals( ObjectConverter.TYPE_OBJECT ) ){
                 
                 MaterialLabel widget = new MaterialLabel( );
                 widget.setFontWeight(Style.FontWeight.BOLDER);
-                if( entry.getKey().contains(".")){
-                    String names[] = entry.getKey().split("\\.");
+                if( entry.getKey().contains(".") ){
+                    String names[] = entry.getKey( ).split("\\.");
                     if( names.length > 0)
                         widget.setText( names[ names.length -1 ].replaceAll("_", " ") );
                 }else
@@ -114,6 +142,7 @@ public class TaskInputDataRenderring {
                 row.add( widget );
                 java.util.Map<String, Object[]> map = (java.util.Map<String, Object[]>) entry.getValue()[1];
                 MaterialRow r = render( map, "" );
+                widget.setPaddingTop(10);
                 row.add( r );
                 
             }else if( entry.getValue()[0].toString().equals( ObjectConverter.TYPE_ARRAY ) ){
@@ -122,7 +151,7 @@ public class TaskInputDataRenderring {
                 MaterialLabel widget = new MaterialLabel( );
                 widget.setText( entry.getKey().replaceAll("_", " ") );
                 row.add( widget );
-                
+                widget.setPaddingTop(10);
                 
                 java.util.List<Object[]> mapArray = ( java.util.List) entry.getValue()[1];
                 

@@ -3,9 +3,8 @@ package com.falconit.joyform.client.application.tasks.list;
 
 
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
+import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.jbpmclient.APIHelper;
-import com.falconit.joyform.client.application.util.jbpmclient.api.task.TaskInputDataReader;
-import com.falconit.joyform.client.application.util.jbpmclient.api.task.TaskInputDataReader.TaskInputDataReaderListener;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.core.client.GWT;
@@ -36,7 +35,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -128,7 +126,18 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                 return object.get("task-priority")[1].toString();
             }
         }, "Priority");
-     
+             
+        table.addColumn(new TextColumn<java.util.Map<String, Object[]>>() {
+            @Override
+            public Comparator<? super RowComponent<java.util.Map<String, Object[]>>> sortComparator() {
+                return (o1, o2) -> o1.getData().get("task-container-id")[1].toString().compareToIgnoreCase(o2.getData().get("task-container-id")[1].toString());
+            }
+            @Override
+            public String getValue(java.util.Map<String, Object[]> object) {
+                return object.get("task-container-id")[1].toString();
+            }
+        }, "Apps");
+        
         table.addColumn(new WidgetColumn<java.util.Map<String, Object[]>, MaterialBadge>() {
             @Override
             public TextAlign textAlign() {
@@ -297,7 +306,10 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                         
                         try {
                             java.util.Map<String, Object[]> taskMap = new ObjectConverter().fromJSON( task, false, false );
-                            lstTasks.add( taskMap );
+                            String cid = taskMap.get("task-container-id")[1].toString();
+                            if( Constants.containerFilter.contains( cid )){
+                                lstTasks.add( taskMap );
+                            }
                             //Window.alert("Task id = "+taskMap.get("task-id")[1].toString() +", Created on=" + (long)taskMap.get("task-created-on")[1]);
                         } catch (Exception ex) {
                             Window.alert(ex.getMessage());
