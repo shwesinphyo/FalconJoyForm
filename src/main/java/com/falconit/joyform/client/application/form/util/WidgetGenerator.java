@@ -18,6 +18,7 @@ import gwt.material.design.client.constants.ButtonSize;
 import gwt.material.design.client.constants.ButtonType;
 import gwt.material.design.client.constants.Color;
 import gwt.material.design.client.constants.IconType;
+import gwt.material.design.client.constants.InputType;
 import gwt.material.design.client.constants.RadioButtonType;
 import gwt.material.design.client.ui.MaterialAnchorButton;
 import gwt.material.design.client.ui.MaterialCheckBox;
