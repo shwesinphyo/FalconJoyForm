@@ -84,7 +84,7 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
             }
         });
 
-        helper.processesList(Constants.containerFilter.get(0) , 0, 200, true );//"DevTest_1.0.0-SNAPSHOT"
+        helper.processesList(Constants.containerFilter.get(1) , 0, 200, true );//"DevTest_1.0.0-SNAPSHOT"
     }
     
     private void createProcess( java.util.Map<String, Object[]> taskMap ){

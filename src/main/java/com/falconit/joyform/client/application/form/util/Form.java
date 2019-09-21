@@ -5,9 +5,10 @@
  */
 package com.falconit.joyform.client.application.form.util;
 
-import com.falconit.joyform.client.application.form.editor.FormEditorView;
+
 import com.falconit.joyform.client.application.form.util.WidgetGenerator.WidgetGeneratorButtonClickListener;
 import com.falconit.joyform.client.application.form.util.WidgetGenerator.WidgetGeneratorMouseListener;
+import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.json.client.JSONArray;
@@ -33,8 +34,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -320,10 +320,10 @@ public class Form implements java.io.Serializable{
         if( child == null ) return;
         holder.clear( );
         
-        if( getItemDisplay().equals(Form.ITEMS_DISPLAY_CATEGORIZE)){
+        if( getItemDisplay().equals(Form.ITEMS_DISPLAY_CATEGORIZE) ){
             coll = new MaterialCollapsible();
             coll.setAccordion(true);
-            String titles[] = new String[]{"Profile","Contact","Places","Works & education","Documents","Travel info","Family & relationships","Healthcare","Bio-metric","Others"};
+            
             body = new MaterialCollapsibleBody[10];
 
             for ( int i =0; i < body.length; i++){
@@ -337,7 +337,7 @@ public class Form implements java.io.Serializable{
                 MaterialLink lnktitle = new MaterialLink();
                 lnktitle.setFontWeight( Style.FontWeight.BOLDER );
                 lnktitle.setTextColor(Color.TEAL);
-                lnktitle.setText(titles[i]);
+                lnktitle.setText( Constants.PROFILE_CATEGORIES[i] );
                 header.add(lnktitle);//<m:MaterialIcon iconType="EDIT" waves="DEFAULT" float="LEFT" circle="true" iconSize="LARGE" />
                 
                 item.add( body[i] );

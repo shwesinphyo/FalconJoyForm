@@ -148,9 +148,9 @@ public class FormCRUD {
                                 listener.fail( ex.getMessage() );
                             }
                         }
-                        
-                        listener.success( lst );
                     }
+                        
+                    listener.success( lst );
                 }
 
                 @Override

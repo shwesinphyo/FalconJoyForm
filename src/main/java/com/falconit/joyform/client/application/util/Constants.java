@@ -22,6 +22,12 @@ public class Constants {
     public static final java.util.List<String> skipFields = new java.util.ArrayList<>(); //{"DevTest_1.0.0-SNAPSHOT"};
     public static final String LANGUAGE = "en";
     public static final String FQDN_KEY_START = "com.";
+    public static final String DEFAULT_FQDN = "com.falconit.automation.entity.Customer";
+    public static final String DEFAULT_CONTAINER = "automation_1.0.0-SNAPSHOT";
+    public static final String DEFAULT_PROCESS = "Personal-Information";
+    public static final String DEFAULT_TASK = "Start up";
+    public static final String PROFILE_CATEGORIES[] = new String[]{"Profile","Contact","Places","Works & education","Documents","Travel info","Family & relationships","Healthcare","Bio-metric","Others"};
+            
     
     static{
         containerFilter.add("DevTest_1.0.0-SNAPSHOT");

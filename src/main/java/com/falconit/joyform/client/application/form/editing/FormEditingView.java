@@ -432,7 +432,6 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
         }catch(Exception ex){Window.alert(ex.getMessage());}
     }
 
-
     private void processVariables( String container, String processId ){
         try{
             ProcessVariables manager = new ProcessVariables();
@@ -477,18 +476,16 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
         if( !found )
             createFields( variableMaps );
     }
-    
-        
+         
     private void createFields( Form form, Map<String, Object[]> maps ){
-                /*
-        if( cboprocess.getSingleValue().toString().equals("Personal-Information" ) 
-            && cboformtype.getSingleValue().toString().equals("Personal Information" )){
-            myForm.setItemDisplay(Form.ITEMS_DISPLAY_CATEGORIZE);
+        
+        if( form != null && form.getFqdn().equalsIgnoreCase("com.falconit.automation.entity.Customer") ){
+            myForm.setItemDisplay( Form.ITEMS_DISPLAY_CATEGORIZE );
         }else{
-            myForm.setItemDisplay(Form.ITEMS_DISPLAY_UP_DOWN);
+            myForm.setItemDisplay( Form.ITEMS_DISPLAY_UP_DOWN );
         }
-        */
-        myForm.setItemDisplay( Form.ITEMS_DISPLAY_CATEGORIZE );
+        
+        //myForm.setItemDisplay( Form.ITEMS_DISPLAY_CATEGORIZE );
         
         
         fieldholder.clear( );
@@ -505,8 +502,11 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
     }
     
     private void createFields( Map<String, Object[]> maps ){
+        MaterialLoader.loading( true );
         // check the form is already exist or not
-        getForm( );
+        getForm(cbocontainer.getSelectedValue().get(0).toString(), 
+                cboprocess.getSelectedValue().get(0).toString(), 
+                cboformtype.getSelectedValue().get(0).toString() );
         fieldholder.clear( );
         fieldholder.add( createHeader( ) );
         
@@ -571,7 +571,6 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
         
         return row;
     }
-    
     
     private void createFields( String key, Object[] value, Field oldField, boolean referenceOnly ){
         
@@ -955,8 +954,68 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
         }
     }
    
-    private void getForm( ){
+    private void getForm( String container, String process, String task ){
         //id = null;
+        FormCRUD crud = new FormCRUD();
+        crud.setListener(new FormCRUD.CRUDListener(){
+            @Override
+            public void success(String result) {
+                //Window.alert( "Result = " + result );
+            }
+
+            @Override
+            public void success(Form result) {
+                
+            }
+
+            @Override
+            public void success(List<Form> result) {
+                if( !result.isEmpty() ){
+                    MaterialLoader.loading( false );
+                    //myForm = result.get( 0 );
+                    myForm.setId(result.get( 0 ).getId() );
+                    myForm.setName(result.get( 0 ).getName());
+                    myForm.setContainer(result.get( 0 ).getContainer());
+                    myForm.setProcess(result.get( 0 ).getProcess());
+                    myForm.setTask(result.get( 0 ).getTask());
+                    myForm.setCreated(result.get( 0 ).getCreated());
+                    myForm.setUpdated(result.get( 0 ).getUpdated());
+                    myForm.setActors(result.get( 0 ).getActors());
+                    myForm.setGroups(result.get( 0 ).getGroups());
+                    myForm.setStatus(result.get( 0 ).getStatus());
+                    myForm.setItemDisplay(result.get( 0 ).getItemDisplay());
+                    myForm.setUseTimer(result.get( 0 ).isUseTimer());
+                    myForm.setTimerDuration(result.get( 0 ).getTimerDuration());
+                    myForm.setBackground(result.get( 0 ).getBackground());
+                    txtformName.setText(myForm.getName());
+                    myForm.setChild( result.get( 0 ).getChild() );
+                    
+                    createFields( myForm, variableMaps );
+                }else{
+                    MaterialLoader.loading( false );
+                    Window.alert("No existing record");
+                    if( myForm.getFqdn().equals(Constants.DEFAULT_FQDN)){
+                        getCopyForm(   );
+                    }
+                }
+            }
+
+            @Override
+            public void fail(String message) {
+                Window.alert( "Result = " + message );
+            }
+
+            @Override
+            public void fqdn(Map<String, Object[]> maps) {}
+        });
+        
+        crud.getBy( container, process, task );
+    }
+
+         
+    private void getCopyForm(  ){
+        Window.alert("To copy=" + Constants.DEFAULT_CONTAINER +"," + Constants.DEFAULT_PROCESS +"," + Constants.DEFAULT_TASK );
+        MaterialLoader.loading( true );
         FormCRUD crud = new FormCRUD();
         crud.setListener(new FormCRUD.CRUDListener(){
             @Override
@@ -974,65 +1033,19 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                 if( !result.isEmpty() ){
                     
                     //myForm = result.get( 0 );
-                    myForm.setId(result.get( 0 ).getId() );
-                    myForm.setName(result.get( 0 ).getName());
-                    myForm.setContainer(result.get( 0 ).getContainer());
-                    myForm.setProcess(result.get( 0 ).getProcess());
-                    myForm.setTask(result.get( 0 ).getTask());
-                    myForm.setCreated(result.get( 0 ).getCreated());
-                    myForm.setUpdated(result.get( 0 ).getUpdated());
-                    myForm.setActors(result.get( 0 ).getActors());
-                    myForm.setGroups(result.get( 0 ).getGroups());
-                    myForm.setStatus(result.get( 0 ).getStatus());
-                    myForm.setItemDisplay(result.get( 0 ).getItemDisplay());
-                    myForm.setUseTimer(result.get( 0 ).isUseTimer());
-                    myForm.setTimerDuration(result.get( 0 ).getTimerDuration());
-                    myForm.setBackground(result.get( 0 ).getBackground());
-                    txtformName.setText(myForm.getName());
-
-                    java.util.List<Field> body[] = new java.util.ArrayList[10];
-                    for ( int i =0; i < body.length; i++){
-                        body[i] = new java.util.ArrayList<>();
-                    }
-                    
-                    for( Field f : result.get( 0 ).getChild()){
-                        
-                        String category = f.getCategory();
-                        if( category.equals("profile")){
-                            body[0].add(f);
-                        }else if( category.equals("contact")){
-                            body[1].add(f);
-                        }else if( category.equals("places")){
-                            body[2].add(f);
-                        }else if( category.equals("work & education")){
-                            body[3].add(f);
-                        }else if( category.equals("documents")){
-                            body[4].add(f);
-                        }else if( category.equals("travel info")){
-                            body[5].add(f);
-                        }else if( category.equals("family & relationships")){
-                            body[6].add(f);
-                        }else if( category.equals("health-care")){
-                            body[7].add(f);
-                        }else if( category.equals("bio-matric")){
-                            body[8].add(f);
-                        }else if( category.equals("others")){
-                            body[9].add(f);
-                        }
-                    }
-                    
-                    java.util.List<Field> lstt = new java.util.ArrayList<>();
-                    for( int i=0; i < body.length; i++)
-                        lstt.addAll(body[i]);
-                    
-                    myForm.setChild( lstt );
-                    
+                    myForm.setId( null );
+                    myForm.setChild( result.get( 0 ).getChild() );
                     createFields( myForm, variableMaps );
+                    MaterialLoader.loading( false );
+                }else{
+                    MaterialLoader.loading( false );
+                    Window.alert("Default form not found");
                 }
             }
 
             @Override
             public void fail(String message) {
+                MaterialLoader.loading( false );
                 Window.alert( "Result = " + message );
             }
 
@@ -1040,15 +1053,11 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
             public void fqdn(Map<String, Object[]> maps) {}
         });
         
-        crud.getBy( 
-                cbocontainer.getSelectedValue().get(0).toString(), 
-                cboprocess.getSelectedValue().get(0).toString(), 
-                cboformtype.getSelectedValue().get(0).toString());
+        crud.getBy( Constants.DEFAULT_CONTAINER, Constants.DEFAULT_PROCESS, Constants.DEFAULT_TASK );
     }
-
-        
+   
     private void solveFQDN( String fqdn ){
-        
+        MaterialLoader.loading( true );
         FormCRUD crud = new FormCRUD();
         crud.setListener(new FormCRUD.CRUDListener(){
             @Override
@@ -1062,11 +1071,13 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
 
             @Override
             public void fail(String message) {
+                MaterialLoader.loading( false );
                 Window.alert( "Result = " + message );
             }
 
             @Override
             public void fqdn(Map<String, Object[]> maps) {
+                MaterialLoader.loading( false );
                 preprocess( maps );
             }
         });

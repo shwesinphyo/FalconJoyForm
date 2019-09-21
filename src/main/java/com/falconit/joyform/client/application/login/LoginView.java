@@ -144,19 +144,13 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
                     
                     try {
                         userMap = new ObjectConverter().fromJSON(user, false, false);
-                        //Window.alert( "Created size=" + userMap.size());
-                        
-                        //Window.alert( new ObjectConverter().toJSON(userMap).toString() );
-                        
                         String name = userMap.get("username")[1].toString();
                         String id = userMap.get("id")[1].toString();
-                        String outletId = userMap.get("outletId")[1].toString();
                         
                     appLoadingState.setState( State.SUCCESS, "Successfully logged in", "Welcome " + name );
                     
                     CookieHelper.setMyCookie( "un", name );
                     CookieHelper.setMyCookie( "uid", id );
-                    CookieHelper.setMyCookie( "oid", outletId );
                     CookieHelper.setMyCookie( "cdt", txtpassword.getText( ) + "" );
                     History.newItem( NameTokens.charts );
                     } catch (Exception ex) {

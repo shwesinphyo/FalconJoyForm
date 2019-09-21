@@ -4,6 +4,7 @@ package com.falconit.joyform.client.application.tasks.assign;
 
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
+import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessByContainer;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
@@ -43,10 +44,10 @@ public class TaskAssignView extends NavigatedView implements TaskAssignPresenter
     @Inject
     TaskAssignView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
-        load();
+        load( Constants.DEFAULT_CONTAINER );
     }
 
-    private void load(){
+    private void load( String container){
         lstTasks.clear();
         MaterialLoader.loading( true );
         
@@ -83,7 +84,7 @@ public class TaskAssignView extends NavigatedView implements TaskAssignPresenter
             }
         });
 
-        helper.processesList( "DevTest_1.0.0-SNAPSHOT", 0, 200, true );
+        helper.processesList( container, 0, 200, true );
     }
     
     private void createProcess( java.util.Map<String, Object[]> taskMap ){
