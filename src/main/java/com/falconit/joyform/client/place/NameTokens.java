@@ -150,6 +150,16 @@ public class NameTokens {
     public static final String taskassignment = "taskassignment";
     public static final String welcome = "welcome";
     public static final String personal = "personal";
+    public static final String registration = "registration";
+    public static final String myapps = "myapps";
+
+    public static String getMyapps() {
+        return myapps;
+    }
+
+    public static String getRegistration() {
+        return registration;
+    }
 
     public static String getPersonal() {
         return personal;

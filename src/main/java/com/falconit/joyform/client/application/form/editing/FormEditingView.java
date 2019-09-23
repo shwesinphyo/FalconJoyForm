@@ -25,6 +25,7 @@ import com.falconit.joyform.client.application.form.util.Field;
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.form.util.FormCRUD;
 import com.falconit.joyform.client.application.util.Constants;
+import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.api.ContainerManager;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessVariables;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesManager;
@@ -103,14 +104,32 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
     //private MaterialDialogFooter footer;
     
     Field tmpField;
+    String userId = "1";
+    String paramContainer, paramProcess, paramTaskId;
     
     @Inject
     FormEditingView(Binder uiBinder) {
         
         initWidget( uiBinder.createAndBindUi( this ) );
         
+        userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
+        
+        String value = com.google.gwt.user.client.Window.Location.getParameter("container");
+        if( value != null ){
+            paramContainer = value;
+        }
+        String pro = com.google.gwt.user.client.Window.Location.getParameter("process");
+        if( pro != null ){
+            paramProcess = pro;
+        }
+        String id = com.google.gwt.user.client.Window.Location.getParameter("taskId");
+        if( id != null ){
+            paramTaskId = id;
+        }
+        
         myForm.setMode( Form.DISPLAY_MODE_DESIGNER );
         myForm.setMouseOverShadow(true);
+        myForm.setOwner(Long.parseLong(userId));
         myForm.setItemListener(new Form.FormItemListener(){
             @Override
             public void onClick(Field field, int index) {
@@ -167,7 +186,6 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
         registercboFormListener();
         
         createDialog( );
-
                     
         cboproperty.addItem("Select", "Select");
         cboproperty.addItem("profile", "profile");
@@ -260,7 +278,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
     
     private void registercbocontainerListener(){
         cbocontainer.addValueChangeHandler(handler ->{
-            loadProcesses();
+            loadProcesses( );
         });
     }
     
@@ -290,7 +308,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
         });
     }
         
-    private void loadProjects(){
+    private void loadProjects( ){
         try{
             ContainerManager manager = new ContainerManager();
             manager.setListener(new ContainerManager.ContainerManagerListener(){
@@ -309,6 +327,10 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                         }
                     }
                     registercbocontainerListener();
+                    
+                    if( paramContainer != null ){
+                        cbocontainer.setSingleValue( paramContainer, true);
+                    }
                 }
 
                 @Override
@@ -341,6 +363,10 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                                 cboprocess.addItem( map.get("process-name")[1].toString(), map.get("process-id")[1].toString());
                         }
                     }
+                    
+                    if( paramProcess != null ){
+                        cboprocess.setSingleValue( paramProcess, true);
+                    }
                 }
 
                 @Override
@@ -364,15 +390,11 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                     cboformtype.addItem("Select one");
                     
                     if( !maps.isEmpty()){
-                        if( !processId.equals("Personal-Information" ))
-                            cboformtype.addItem( "Start up form", Form.TASK_NAME_START_UP);
-                        else
+                        if( processId.equals("Personal-Information" ))
                             cboformtype.addItem( "Personal Information", Form.TASK_NAME_START_UP);
                     }else{
                         if( processId.equals("Personal-Information" ))
                             cboformtype.addItem( "Personal Information", Form.TASK_NAME_START_UP);
-                        else
-                            cboformtype.addItem( "Start up form", Form.TASK_NAME_START_UP);
                     }
                     
                     for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
@@ -384,6 +406,9 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                         }
                     }
                     
+                    if( paramTaskId != null ){
+                        cboformtype.setSingleValue( paramTaskId, true);
+                    }
                     MaterialLoader.loading( false );
                 }
 
@@ -414,7 +439,10 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                                 java.util.Map<String, Object[]> mapChild = (java.util.Map<String, Object[]>) map.get("taskOutputMappings")[1];
                                 
                                 //Window.alert("Variables size = " + mapChild.size());
-                                preprocess( mapChild );
+                                if( mapChild != null && !mapChild.isEmpty() )
+                                    preprocess( mapChild );
+                                else
+                                    Window.alert( "No out put form field= " + mapChild.size());
                             }
                         }
                     }
@@ -995,7 +1023,8 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                     MaterialLoader.loading( false );
                     Window.alert("No existing record");
                     if( myForm.getFqdn().equals(Constants.DEFAULT_FQDN)){
-                        getCopyForm(   );
+                        Window.alert("FQDN=" + myForm.getFqdn());
+                        copyTemplateForm( container, process, task );
                     }
                 }
             }
@@ -1009,12 +1038,73 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
             public void fqdn(Map<String, Object[]> maps) {}
         });
         
-        crud.getBy( container, process, task );
+        crud.getBy( container, process, task, userId );
     }
+    
+        
+    private void copyTemplateForm( String container, String process, String task ){
+        
+        Window.alert("Copying from template form=" + container +"," + process +"," + task );
+        
+        FormCRUD crud = new FormCRUD();
+        crud.setListener(new FormCRUD.CRUDListener(){
+            @Override
+            public void success(String result) {
+                //Window.alert( "Result = " + result );
+            }
 
-         
-    private void getCopyForm(  ){
-        Window.alert("To copy=" + Constants.DEFAULT_CONTAINER +"," + Constants.DEFAULT_PROCESS +"," + Constants.DEFAULT_TASK );
+            @Override
+            public void success(Form result) {
+                
+            }
+
+            @Override
+            public void success(List<Form> result) {
+                if( !result.isEmpty() ){
+                    MaterialLoader.loading( false );
+                    //myForm = result.get( 0 );
+                    myForm.setId(result.get( 0 ).getId() );
+                    myForm.setName(result.get( 0 ).getName());
+                    myForm.setContainer(result.get( 0 ).getContainer());
+                    myForm.setProcess(result.get( 0 ).getProcess());
+                    myForm.setTask(result.get( 0 ).getTask());
+                    myForm.setCreated(result.get( 0 ).getCreated());
+                    myForm.setUpdated(result.get( 0 ).getUpdated());
+                    myForm.setActors(result.get( 0 ).getActors());
+                    myForm.setGroups(result.get( 0 ).getGroups());
+                    myForm.setStatus(result.get( 0 ).getStatus());
+                    myForm.setItemDisplay(result.get( 0 ).getItemDisplay());
+                    myForm.setUseTimer(result.get( 0 ).isUseTimer());
+                    myForm.setTimerDuration(result.get( 0 ).getTimerDuration());
+                    myForm.setBackground(result.get( 0 ).getBackground());
+                    txtformName.setText(myForm.getName());
+                    myForm.setChild( result.get( 0 ).getChild() );
+                    
+                    createFields( myForm, variableMaps );
+                }else{
+                    MaterialLoader.loading( false );
+                    Window.alert("No template found");
+                    if( myForm.getFqdn().equals(Constants.DEFAULT_FQDN)){
+                        Window.alert("FQDN=" + myForm.getFqdn());
+                        getCopyMasterForm(   );
+                    }
+                }
+            }
+
+            @Override
+            public void fail(String message) {
+                Window.alert( "Result = " + message );
+            }
+
+            @Override
+            public void fqdn(Map<String, Object[]> maps) {}
+        });
+        
+        crud.getBy( container, process, task, "1" );
+    }
+    
+    private void getCopyMasterForm(  ){
+        Window.alert("Copying from master form=" + Constants.DEFAULT_CONTAINER +"," + Constants.DEFAULT_PROCESS +"," + Constants.DEFAULT_TASK );
         MaterialLoader.loading( true );
         FormCRUD crud = new FormCRUD();
         crud.setListener(new FormCRUD.CRUDListener(){
@@ -1035,6 +1125,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                     //myForm = result.get( 0 );
                     myForm.setId( null );
                     myForm.setChild( result.get( 0 ).getChild() );
+                    myForm.setOwner( Long.parseLong(userId) );
                     createFields( myForm, variableMaps );
                     MaterialLoader.loading( false );
                 }else{
@@ -1053,7 +1144,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
             public void fqdn(Map<String, Object[]> maps) {}
         });
         
-        crud.getBy( Constants.DEFAULT_CONTAINER, Constants.DEFAULT_PROCESS, Constants.DEFAULT_TASK );
+        crud.getBy( Constants.DEFAULT_CONTAINER, Constants.DEFAULT_PROCESS, Constants.DEFAULT_TASK, "1" );
     }
    
     private void solveFQDN( String fqdn ){

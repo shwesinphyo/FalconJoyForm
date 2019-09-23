@@ -245,7 +245,14 @@ public class WidgetGenerator {
                 */
             }
             
-            if( field.getWidgetType( ).equals( Field.WIDGET_TEXT_BOX ) 
+            // fallback code here
+            generate( child, field, index, mode );            
+        }
+    }
+
+    public void generate( MaterialColumn child, Field field, int index, String mode ){
+        
+        if( field.getWidgetType( ).equals( Field.WIDGET_TEXT_BOX ) 
                     || field.getWidgetType( ).equals(Field.WIDGET_TEXT_BOX_NUMBER)){
                 MaterialTextBox widget = new MaterialTextBox( );
                 widget.setText( field.getValue() != null ? field.getValue().toString() : "" );
@@ -671,7 +678,5 @@ public class WidgetGenerator {
             }else{
                 child.add( new MaterialLink( "Not implemented yet" ) );
             }
-            
-        }
     }
 }

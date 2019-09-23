@@ -15,6 +15,7 @@ import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
 import gwt.material.design.addins.client.rating.MaterialRating;
@@ -742,12 +743,22 @@ import java.util.List;
                 
                 for( Widget w : row.getChildrenList() ){
                     
-                    if( w instanceof MaterialRow) continue;
+                    //if( w instanceof MaterialRow) continue;
                     if( w instanceof MaterialLabel) continue;
                     
-                    MaterialRadioButton rbtn =  (MaterialRadioButton) w;
-                    if( rbtn.getValue() ){
-                        return new Object[] { ObjectConverter.TYPE_STRING, rbtn.getText() };
+                    if( w instanceof MaterialRow && 
+                            ((MaterialRow)w).getChildrenList().get(0) instanceof MaterialRadioButton ){
+                                            
+                        MaterialRadioButton rbtn =  (MaterialRadioButton) ((MaterialRow)w).getChildrenList().get(0);
+                        if( rbtn.getValue() ){
+                            return new Object[] { ObjectConverter.TYPE_STRING, rbtn.getText() };
+                        }
+                        
+                    }else if( w instanceof MaterialRadioButton){
+                        MaterialRadioButton rbtn =  (MaterialRadioButton) w;
+                        if( rbtn.getValue() ){
+                            return new Object[] { ObjectConverter.TYPE_STRING, rbtn.getText() };
+                        }
                     }
                 }
                 return new Object[] { ObjectConverter.TYPE_STRING, "" };
@@ -781,9 +792,10 @@ import java.util.List;
                 
                 String value =(String) ((SignatureWidget) widget).getValue();
                 return new Object[] { ObjectConverter.TYPE_STRING, value };
+                
+            }else{
+                return new Object[] { ObjectConverter.TYPE_NULL, null };
             }
-            else
-                return null;
         }
     }
 

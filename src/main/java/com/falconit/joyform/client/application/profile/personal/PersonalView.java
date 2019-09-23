@@ -6,10 +6,13 @@ import com.falconit.joyform.client.application.form.util.Field;
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.form.util.FormCRUD;
 import com.falconit.joyform.client.application.util.Constants;
+import com.falconit.joyform.client.application.util.CookieHelper;
+import com.falconit.joyform.client.place.NameTokens;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import gwt.material.design.addins.client.webp.MaterialWebpImage;
@@ -24,6 +27,7 @@ import gwt.material.design.client.ui.MaterialCollapsibleHeader;
 import gwt.material.design.client.ui.MaterialCollapsibleItem;
 import gwt.material.design.client.ui.MaterialLabel;
 import gwt.material.design.client.ui.MaterialLink;
+import gwt.material.design.client.ui.MaterialLoader;
 import gwt.material.design.client.ui.MaterialPanel;
 import gwt.material.design.client.ui.MaterialRow;
 import java.util.List;
@@ -35,6 +39,7 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
     interface Binder extends UiBinder<Widget, PersonalView> {
     }
     
+    private Map<String, Object[]> personMaps;
     private MaterialCollapsible coll;
     MaterialCollapsibleBody body[]=null;
     
@@ -83,11 +88,18 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
         coll.setShadow(0);
         holder.add( coll );
         
-        getForm( );
+        if( CookieHelper.getMyCookie(Constants.COOKIE_USER_ID) == null ){
+            History.newItem( NameTokens.login );
+        }else{
+            getPerson( Long.parseLong( CookieHelper.getMyCookie(Constants.COOKIE_USER_PERSON_ID) ) );
+            
+        }
     }
      
+        
     private void getForm( ){
-        //id = null;
+        
+        MaterialLoader.loading( true );
         FormCRUD crud = new FormCRUD();
         crud.setListener(new FormCRUD.CRUDListener(){
             @Override
@@ -102,15 +114,15 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
 
             @Override
             public void success(List<Form> result) {
-                Window.alert("size=" + result.size());
+                MaterialLoader.loading( false );
+                //Window.alert("form load size="+result.size());
                 if( !result.isEmpty() ){
                     
                     myForm = result.get( 0 );
+                    
                     //myForm.setMode( Form.DISPLAY_MODE_READ_ONLY );
                     //myForm.setItemDisplay(Form.ITEMS_DISPLAY_CATEGORIZE);
-                    int count = 0;
-                    Window.alert( "field size=" + myForm.getChild() );
-                    
+                     //Window.alert("Child size=" + myForm.getChild());
                     for( Field field : myForm.getChild() ){
                         
                         MaterialRow row = new MaterialRow();
@@ -138,11 +150,13 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
                          
                             value.setText( "A photo helps personalize your account" );
                         }else{
-                            value.setText( "test value" );
+                            Object[] values = personMaps.get(field.getName());
+                            if( values[1] != null )
+                                value.setText( values[1].toString() );
+                            else
+                                value.setText( "" );
                             row.setBorderBottom("1px dotted #b2dfdb");
                         }
-                        
-                        //Window.alert( "field=" + field.getName() );
                         
                         if( field.getCategory( ).equals("profile")){
                         if( field.getName().equals("photo") )
@@ -170,15 +184,14 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
                         }else if( field.getCategory().equals("others")){
                             body[9].add(row);
                         }
-                        
-                        count++;
                     }
-                    Window.alert( "Total=" + count );
+                    
                 }
             }
 
             @Override
             public void fail(String message) {
+                MaterialLoader.loading( false );
                 Window.alert( "Result = " + message );
             }
 
@@ -186,10 +199,42 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
             public void fqdn(Map<String, Object[]> maps) {}
         });
         
-        crud.getBy(
-                "automation_1.0.0-SNAPSHOT", 
-                "Personal-Information", 
-                "Start up");
+        crud.getBy( Constants.DEFAULT_CONTAINER, Constants.DEFAULT_PROCESS, Constants.DEFAULT_TASK);
+    }
+
+    private void getPerson( long customerId ){
+        MaterialLoader.loading( true );
+        PersonCRUD crud = new PersonCRUD();
+        crud.setListener(new PersonCRUD.CRUDListener(){
+            @Override
+            public void success(String result) {
+                //Window.alert( "Result = " + result );
+            }
+
+            @Override
+            public void fail(String message) {
+                MaterialLoader.loading( false );
+                Window.alert( "Result = " + message );
+            }
+
+            @Override
+            public void fqdn(Map<String, Object[]> maps) {}
+
+            @Override
+            public void success(Map<String, Object[]> result) {
+                MaterialLoader.loading( false );
+                personMaps = result;
+                Window.alert("Size=" + result.size() +", ID=" + customerId);
+                getForm();
+            }
+
+            @Override
+            public void success(List<Map<String, Object[]>> result) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        
+        crud.get( customerId );
     }
 
 }

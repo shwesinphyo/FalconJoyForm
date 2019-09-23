@@ -310,6 +310,11 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                             if( Constants.containerFilter.contains( cid )){
                                 lstTasks.add( taskMap );
                             }
+                            
+                            //filter with user
+                            //"task-actual-owner": "wbadmin",
+                            //"task-created-by": "wbadmin",
+                            
                             //Window.alert("Task id = "+taskMap.get("task-id")[1].toString() +", Created on=" + (long)taskMap.get("task-created-on")[1]);
                         } catch (Exception ex) {
                             Window.alert(ex.getMessage());
@@ -357,7 +362,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
         
         Window.Location.assign( "?container=" + container 
                 + "&taskId=" + taskId 
-                + "&process" + processId 
+                + "&process=" + processId 
                 + "&taskName=" + taskName 
                 + "&display=" + TaskDisplayView.DISPLAY_PROCESS
                 + "#taskdisplay" );

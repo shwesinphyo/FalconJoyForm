@@ -3,8 +3,10 @@ package com.falconit.joyform.client.application.tasks.assign;
 
 
 import com.falconit.joyform.client.application.form.util.Form;
+import com.falconit.joyform.client.application.form.util.FormCRUD;
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
 import com.falconit.joyform.client.application.util.Constants;
+import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessByContainer;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
@@ -27,10 +29,12 @@ import gwt.material.design.client.ui.MaterialLabel;
 import gwt.material.design.client.ui.MaterialLink;
 import gwt.material.design.client.ui.MaterialLoader;
 import gwt.material.design.client.ui.MaterialRow;
+import gwt.material.design.client.ui.MaterialSwitch;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TaskAssignView extends NavigatedView implements TaskAssignPresenter.MyView {
     interface Binder extends UiBinder<Widget, TaskAssignView> {
@@ -44,9 +48,145 @@ public class TaskAssignView extends NavigatedView implements TaskAssignPresenter
     @Inject
     TaskAssignView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
-        load( Constants.DEFAULT_CONTAINER );
+        //load( Constants.DEFAULT_CONTAINER );
+        loadForms();
     }
 
+            
+    private void loadForms( ){
+        
+        FormCRUD crud = new FormCRUD();
+        crud.setListener( new FormCRUD.CRUDListener(){
+            @Override
+            public void success(String result) {
+            }
+
+            @Override
+            public void success(Form result) {
+                
+            }
+
+            @Override
+            public void success( List<Form> result ) {
+                if( !result.isEmpty( ) ){
+                    
+                    for( Form form : result )
+                        createProcess ( form );
+                }
+            }
+
+            @Override
+            public void fail(String message) {
+            }
+
+            @Override
+            public void fqdn( Map<String, Object[]> maps ) { }
+        });
+        String userId = CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
+        crud.getBy( Long.parseLong( userId ) );
+    }
+    
+        
+    private java.util.Set<String> names = new java.util.HashSet<>();
+    
+    private void createProcess( Form form ){
+        try{
+            if( form.getTask().equalsIgnoreCase("start up"))
+                return;
+            
+            if( names.contains( form.getProcess() )){
+                return;
+            }else{
+                names.add( form.getProcess() );
+            }
+            
+            MaterialColumn col = new MaterialColumn();
+            col.setGrid("l4 m4 s12");
+            appsholder.add(col);
+            
+            MaterialCard card = new MaterialCard( );
+            card.setBackgroundColor( Color.GREY_LIGHTEN_3 );
+            card.setShadow(0);
+            col.add( card );
+            
+            MaterialCardContent content = new MaterialCardContent();
+            card.add( content );
+            //content.setTextColor(Color.WHITE);
+            
+            MaterialCardTitle title = new MaterialCardTitle();
+            content.add( title );
+            title.setIconType( IconType.APPS );
+            title.setIconPosition( IconPosition.RIGHT );
+            title.setText( form.getProcess().replace("-", " ") );
+            
+            try{
+                MaterialLabel label = new MaterialLabel( );
+                content.add( label );
+                String version = form.getContainer().substring( form.getContainer().indexOf("_") + 1, 
+                        form.getContainer().contains("-") ? 
+                                form.getContainer().lastIndexOf("-") : form.getContainer().length() -1 );
+                label.setText( "Version: " + version );
+            }catch(Exception ex){}
+            
+                        
+            MaterialSwitch onOff = new MaterialSwitch();
+            onOff.setTextColor( Color.TEAL );
+            onOff.setOnLabel("Share");
+            onOff.setOffLabel("Only me");
+            onOff.setMarginTop(15);
+            content.add( onOff );
+            
+            MaterialCardAction actions = new MaterialCardAction();
+            card.add(actions);
+            
+                        
+            MaterialLink link = new MaterialLink();
+            actions.add( link );
+            link.setText("Assign");
+            link.setTextColor( Color.TEAL );
+            link.setIconType(IconType.OPEN_IN_NEW);
+            link.setHref(
+                "?container=" + form.getContainer()
+                + "&process=" + form.getProcess()
+                + "&title=" + form.getProcess()
+                + "&taskName=" + Form.TASK_NAME_START_UP
+                + "&display=" + TaskDisplayView.DISPLAY_START_UP
+                + "#taskassignment" );
+            
+            /*
+            MaterialLink link = new MaterialLink( );
+            actions.add( link );
+            link.setText( "Form link" );
+            link.setIconType( IconType.ATTACHMENT );
+            link.setTextColor(Color.TEAL);
+            String shareLink = 
+                "?container=" + form.getContainer()
+                + "&process=" + form.getProcess()
+                + "&title=" + form.getProcess()
+                + "&taskName=" + Form.TASK_NAME_START_UP
+                + "&display=" + TaskDisplayView.DISPLAY_START_UP
+                + "&ownerId=" + form.getOwner()
+                + "&owner=" + CookieHelper.getMyCookie( Constants.COOKIE_USER_NAME )
+                + "#taskdisplay";
+            link.setHref( shareLink );
+            
+            
+            MaterialLink lnkuse = new MaterialLink( );
+            actions.add( lnkuse );
+            lnkuse.setText( "Edit" );
+            lnkuse.setTextColor( Color.TEAL );
+            lnkuse.setIconType( IconType.EDIT );
+            lnkuse.setHref(
+                "?container=" + form.getContainer()
+                + "&process=" + form.getProcess()
+                + "&taskId=" + form.getTask()
+                + "#formediting" );
+           */
+            
+        }catch(Exception ex){}
+    }
+
+    
     private void load( String container){
         lstTasks.clear();
         MaterialLoader.loading( true );
@@ -93,15 +233,14 @@ public class TaskAssignView extends NavigatedView implements TaskAssignPresenter
             col.setGrid("l4 m4 s12");
             appsholder.add(col);
             
-            MaterialCard card = new MaterialCard();
-            card.setBackgroundColor(Color.BLUE_GREY_DARKEN_3);
-            col.add(card);
+            MaterialCard card = new MaterialCard( );
+            card.setBackgroundColor( Color.GREY_LIGHTEN_3 );
+            col.add( card );
             
             MaterialCardContent content = new MaterialCardContent();
-            card.add(content);
-            content.setTextColor(Color.WHITE);
+            card.add( content );
             
-            MaterialCardTitle title = new MaterialCardTitle();
+            MaterialCardTitle title = new MaterialCardTitle( );
             content.add(title);
             title.setIconType(IconType.APPS);
             title.setIconPosition(IconPosition.RIGHT);
@@ -117,6 +256,7 @@ public class TaskAssignView extends NavigatedView implements TaskAssignPresenter
             MaterialLink link = new MaterialLink();
             actions.add(link);
             link.setText("Open");
+            link.setTextColor( Color.TEAL );
             link.setIconType(IconType.OPEN_IN_NEW);
             link.setHref(
                 "?container=" + taskMap.get("container-id")[1].toString()

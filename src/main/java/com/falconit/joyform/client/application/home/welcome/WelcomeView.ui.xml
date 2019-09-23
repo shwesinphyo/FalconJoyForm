@@ -48,7 +48,7 @@
                 </m:MaterialRow>
              </m:MaterialCardContent>
              <m:MaterialCardAction>
-              <m:MaterialLink text="Manage your data and personalization" iconType="CREATE" textColor="TEAL"/>
+              <m:MaterialLink href="#personal" text="Manage your data and personalization" iconType="CREATE" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
            </m:MaterialColumn>

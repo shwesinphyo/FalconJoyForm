@@ -5,6 +5,8 @@ package com.falconit.joyform.client.application.home.dashboard;
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.form.util.FormCRUD;
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
+import com.falconit.joyform.client.application.util.Constants;
+import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.api.ContainerManager;
 import com.falconit.joyform.client.application.util.jbpmclient.api.ContainerManager.ContainerManagerListener;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessByContainer;
@@ -65,7 +67,7 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
         //processVariables();
     }
 
-    private void loadProjects(){
+    private void loadProjects( ){
         try{
             ContainerManager manager = new ContainerManager();
             manager.setListener(new ContainerManagerListener(){
@@ -113,10 +115,10 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
     }
     
         
-    private void loadForms(){
+    private void loadForms( ){
         
         FormCRUD crud = new FormCRUD();
-        crud.setListener(new FormCRUD.CRUDListener(){
+        crud.setListener( new FormCRUD.CRUDListener(){
             @Override
             public void success(String result) {
             }
@@ -127,10 +129,10 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
             }
 
             @Override
-            public void success(List<Form> result) {
-                if( !result.isEmpty() ){
+            public void success( List<Form> result ) {
+                if( !result.isEmpty( ) ){
                     lstForms = result;
-                    txtform.setText(lstForms.size()+" active forms");
+                    txtform.setText( lstForms.size( ) + " active forms" );
                 }
             }
 
@@ -139,10 +141,10 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
             }
 
             @Override
-            public void fqdn(Map<String, Object[]> maps) { }
+            public void fqdn( Map<String, Object[]> maps ) { }
         });
-        
-        crud.list();
+        String userId = CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
+        crud.getBy( Long.parseLong( userId ) );
     }
     
         

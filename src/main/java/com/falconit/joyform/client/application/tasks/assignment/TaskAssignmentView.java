@@ -286,7 +286,7 @@ public class TaskAssignmentView extends NavigatedView implements TaskAssignmentP
                 }
             });
             
-            start.startInstances( Constants.url, container, process, body );
+            start.startInstances( Constants.url, container, process, body, true );
         } catch (Exception ex) {
             MaterialLoader.loading( false );
             Logger.getLogger(TaskDisplayView.class.getName()).log(Level.SEVERE, null, ex);

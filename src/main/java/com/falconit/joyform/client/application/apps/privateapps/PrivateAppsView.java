@@ -3,8 +3,10 @@ package com.falconit.joyform.client.application.apps.privateapps;
 
 
 import com.falconit.joyform.client.application.form.util.Form;
+import com.falconit.joyform.client.application.form.util.FormCRUD;
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
 import com.falconit.joyform.client.application.util.Constants;
+import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessByContainer;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
@@ -27,10 +29,12 @@ import gwt.material.design.client.ui.MaterialLabel;
 import gwt.material.design.client.ui.MaterialLink;
 import gwt.material.design.client.ui.MaterialLoader;
 import gwt.material.design.client.ui.MaterialRow;
+import gwt.material.design.client.ui.MaterialSwitch;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PrivateAppsView extends NavigatedView implements PrivateAppsPresenter.MyView {
     interface Binder extends UiBinder<Widget, PrivateAppsView> {
@@ -44,9 +48,130 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
     @Inject
     PrivateAppsView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
-        load();
+        //load();
+        loadForms();
     }
 
+        
+    private void loadForms( ){
+        
+        FormCRUD crud = new FormCRUD();
+        crud.setListener( new FormCRUD.CRUDListener(){
+            @Override
+            public void success(String result) {
+            }
+
+            @Override
+            public void success(Form result) {
+                
+            }
+
+            @Override
+            public void success( List<Form> result ) {
+                if( !result.isEmpty( ) ){
+                    
+                    for( Form form : result )
+                        createProcess ( form );
+                }
+            }
+
+            @Override
+            public void fail(String message) {
+            }
+
+            @Override
+            public void fqdn( Map<String, Object[]> maps ) { }
+        });
+        String userId = CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
+        crud.getBy( Long.parseLong( userId ) );
+    }
+    
+        
+    private java.util.Set<String> names = new java.util.HashSet<>();
+    
+    private void createProcess( Form form ){
+        try{
+            if( form.getTask().equalsIgnoreCase("start up"))
+                return;
+            
+            if( names.contains( form.getProcess() )){
+                return;
+            }else{
+                names.add( form.getProcess() );
+            }
+            
+            MaterialColumn col = new MaterialColumn();
+            col.setGrid("l4 m4 s12");
+            appsholder.add(col);
+            
+            MaterialCard card = new MaterialCard( );
+            card.setBackgroundColor( Color.GREY_LIGHTEN_3 );
+            card.setShadow(0);
+            col.add( card );
+            
+            MaterialCardContent content = new MaterialCardContent();
+            card.add( content );
+            //content.setTextColor(Color.WHITE);
+            
+            MaterialCardTitle title = new MaterialCardTitle();
+            content.add( title );
+            title.setIconType( IconType.APPS );
+            title.setIconPosition( IconPosition.RIGHT );
+            title.setText( form.getProcess().replace("-", " ") );
+            
+            try{
+                MaterialLabel label = new MaterialLabel( );
+                content.add( label );
+                String version = form.getContainer().substring( form.getContainer().indexOf("_") + 1, 
+                        form.getContainer().contains("-") ? 
+                                form.getContainer().lastIndexOf("-") : form.getContainer().length() -1 );
+                label.setText( "Version: " + version );
+            }catch(Exception ex){}
+            
+                        
+            MaterialSwitch onOff = new MaterialSwitch();
+            onOff.setTextColor( Color.TEAL );
+            onOff.setOnLabel("Share");
+            onOff.setOffLabel("Only me");
+            onOff.setMarginTop(15);
+            content.add( onOff );
+            
+            MaterialCardAction actions = new MaterialCardAction();
+            card.add(actions);
+            
+            MaterialLink link = new MaterialLink( );
+            actions.add( link );
+            link.setText( "Form link" );
+            link.setIconType( IconType.ATTACHMENT );
+            link.setTextColor(Color.TEAL);
+            String shareLink = 
+                "?container=" + form.getContainer()
+                + "&process=" + form.getProcess()
+                + "&title=" + form.getProcess()
+                + "&taskName=" + Form.TASK_NAME_START_UP
+                + "&display=" + TaskDisplayView.DISPLAY_START_UP
+                + "&ownerId=" + form.getOwner()
+                + "&owner=" + CookieHelper.getMyCookie( Constants.COOKIE_USER_NAME )
+                + "#taskdisplay";
+            link.setHref( shareLink );
+            
+            
+            MaterialLink lnkuse = new MaterialLink( );
+            actions.add( lnkuse );
+            lnkuse.setText( "Edit" );
+            lnkuse.setTextColor( Color.TEAL );
+            lnkuse.setIconType( IconType.EDIT );
+            lnkuse.setHref(
+                "?container=" + form.getContainer()
+                + "&process=" + form.getProcess()
+                + "&taskId=" + form.getTask()
+                + "#formediting" );
+           
+            
+        }catch(Exception ex){}
+    }
+
+    
     private void load(){
         lstTasks.clear();
         MaterialLoader.loading( true );
@@ -84,7 +209,7 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
             }
         });
 
-        helper.processesList(Constants.containerFilter.get(1) , 0, 200, true );//"DevTest_1.0.0-SNAPSHOT"
+        helper.processesList( Constants.containerFilter.get(1) , 0, 200, true );//"DevTest_1.0.0-SNAPSHOT"
     }
     
     private void createProcess( java.util.Map<String, Object[]> taskMap ){
@@ -93,31 +218,33 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
             col.setGrid("l4 m4 s12");
             appsholder.add(col);
             
-            MaterialCard card = new MaterialCard();
-            card.setBackgroundColor(Color.BLUE_GREY_DARKEN_3);
-            col.add(card);
+            MaterialCard card = new MaterialCard( );
+            card.setBackgroundColor( Color.GREY_LIGHTEN_3 );
+            card.setShadow(0);
+            col.add( card );
             
             MaterialCardContent content = new MaterialCardContent();
-            card.add(content);
-            content.setTextColor(Color.WHITE);
+            card.add( content );
+            //content.setTextColor(Color.WHITE);
             
             MaterialCardTitle title = new MaterialCardTitle();
-            content.add(title);
-            title.setIconType(IconType.APPS);
-            title.setIconPosition(IconPosition.RIGHT);
+            content.add( title );
+            title.setIconType( IconType.APPS );
+            title.setIconPosition( IconPosition.RIGHT );
             title.setText( taskMap.get("process-name")[1].toString() );
             
-            MaterialLabel label = new MaterialLabel();
-            content.add(label);
+            MaterialLabel label = new MaterialLabel( );
+            content.add( label );
             label.setText("Version: "+taskMap.get("process-version")[1].toString());
             
             MaterialCardAction actions = new MaterialCardAction();
             card.add(actions);
             
-            MaterialLink link = new MaterialLink();
-            actions.add(link);
-            link.setText("Open");
-            link.setIconType(IconType.OPEN_IN_NEW);
+            MaterialLink link = new MaterialLink( );
+            actions.add( link );
+            link.setText( "Share" );
+            link.setIconType( IconType.CONTENT_COPY );
+            link.setTextColor(Color.TEAL);
             link.setHref(
                 "?container=" + taskMap.get("container-id")[1].toString()
                 + "&process=" + taskMap.get("process-id")[1].toString()
@@ -126,40 +253,22 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
                 + "&display=" + TaskDisplayView.DISPLAY_START_UP
                 + "#taskdisplay" );
             
+            MaterialLink lnkuse = new MaterialLink( );
+            actions.add( lnkuse );
+            lnkuse.setText( "Edit" );
+            lnkuse.setTextColor( Color.TEAL );
+            lnkuse.setIconType( IconType.EDIT );
+            lnkuse.setHref(
+                "?container=" + taskMap.get("container-id")[1].toString()
+                + "&process=" + taskMap.get("process-id")[1].toString()
+                + "&title=" + taskMap.get("process-name")[1].toString()
+                + "#formediting" );
+            
         }catch(Exception ex){}
     }
-    
-    private void taskSelected( java.util.Map<String, Object[]> map ){
-        String container = map.get("task-container-id")[1].toString();
-        String taskId = map.get("task-id")[1].toString();
-        String processId = map.get("task-proc-def-id")[1].toString();
-        String taskName = map.get("task-name")[1].toString();
-        
-        
-        Window.Location.assign( "?container=" + container + "&taskId=" + taskId +"&process" + processId +"&taskName=" + taskName + "#taskdisplay" );
-            
-        /*
-        TaskInputDataReader reader = new TaskInputDataReader();
-        reader.setListener(new TaskInputDataReaderListener(){
-            @Override
-            public void result(String taskName, String nodeName, String Skippable, Map<String, Object[]> maps) {
-                Window.alert("Task name=" + taskName + ", Node name=" + nodeName+", size=" + maps.size());
-            }
 
-            @Override
-            public void fail(String message) {
-            }
-        });
-        reader.read(container, taskId);
-        */
-    }
-    
-  /*  
-    @UiHandler("btnGotoFirstPage")
-    void onGotoFirstPage(ClickEvent e) {
-        pager.firstPage();
-    }
-*/
-    
+    private native void copy ( String s ) /*-{
+        $wnd.window.clipboardData.setData("Text", s); 
+     }-*/;
     
 }

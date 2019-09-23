@@ -69,7 +69,7 @@
 			<m:MaterialNavBar ui:field="navBar" width="100%" backgroundColor="BLUE" activates="sideBar" textColor="WHITE">
                             <m:MaterialNavBrand paddingLeft="60" text="falconIT" />
 				<m:MaterialLink ui:field="btnSearch" iconType="SEARCH" iconColor="WHITE" float="RIGHT"/>
-				<ma:combobox.MaterialComboBox ui:field="comboThemes" textColor="WHITE" label="Select Theme" marginRight="12" width="120px" float="RIGHT" visible="false"/>
+				<ma:combobox.MaterialComboBox ui:field="comboThemes" textColor="WHITE" label="Select Theme" marginRight="12" width="120px" float="RIGHT" visible="true"/>
                                 <m:MaterialLink float="RIGHT" iconType="ACCOUNT_CIRCLE" marginLeft="7" marginRight="7" tooltip="Account" textColor="WHITE" waves="LIGHT" ui:field="account" />
                                 <!--
                                 <m:MaterialLink float="RIGHT" iconType="NOTIFICATIONS_ACTIVE" marginRight="30" tooltip="Notifications" textColor="WHITE" waves="LIGHT" ui:field="notifications" iconPosition="NONE" >

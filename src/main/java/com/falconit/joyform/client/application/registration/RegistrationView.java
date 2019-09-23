@@ -1,4 +1,4 @@
-package com.falconit.joyform.client.application.login;
+package com.falconit.joyform.client.application.registration;
 
 /*
  * #%L
@@ -43,6 +43,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.falconit.joyform.client.place.NameTokens;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
+import com.google.gwt.json.client.JSONNumber;
 import gwt.material.design.client.ui.MaterialPanel;
 import gwt.material.design.client.ui.MaterialTextBox;
 import gwt.material.design.incubator.client.loadingstate.AppLoadingState;
@@ -51,9 +52,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-
-public class LoginView extends ViewImpl implements LoginPresenter.MyView {
-    public interface Binder extends UiBinder<Widget, LoginView> {
+public class RegistrationView extends ViewImpl implements RegistrationPresenter.MyView {
+    public interface Binder extends UiBinder<Widget, RegistrationView> {
     }
 
     public static java.util.Map<String, Object[]> userMap = null;
@@ -67,13 +67,10 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
     @UiField
     AppLoadingState appLoadingState;
     @UiField
-    MaterialTextBox txtusername;
-    @UiField
-    MaterialTextBox txtpassword;
-
+    MaterialTextBox txtusername, txtpassword, txtconfirmpassword;
     
     @Inject
-    LoginView(Binder uiBinder) {
+    RegistrationView(Binder uiBinder) {
         initWidget(uiBinder.createAndBindUi(this));
         
         appLoadingState.setTarget(target);
@@ -83,19 +80,19 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
         // third action
         txtusername.addKeyUpHandler(new KeyUpHandler(){
             @Override
-            public void onKeyUp( KeyUpEvent event ) {
-                if( txtusername.getText().trim().isEmpty() ) return;
+            public void onKeyUp(KeyUpEvent event) {
+                if( txtusername.getText().trim().isEmpty()) return;
                 
-                for( char c : txtusername.getText().trim( ).toCharArray() ){
+                for( char c : txtusername.getText().trim().toCharArray()){
                     if( !Character.isDigit(c) ){
-                        txtusername.removeValidator( mobileValidator );
+                        txtusername.removeValidator(mobileValidator);
                         txtusername.addValidator( emailValidator );
                         return;
                     }
                 }
                 
                 txtusername.removeValidator(emailValidator);
-                txtusername.addValidator( mobileValidator ); 
+                txtusername.addValidator( mobileValidator );
             }
         });
         //second action
@@ -111,13 +108,14 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
             @Override
             public void onKeyPress(KeyPressEvent event) {
                 if( event.getCharCode() == 13)
-                    login( );
+                    customerRegister( );
             }
         });
     }
     
-    @UiHandler("btnLogin")
+    @UiHandler("btnRegister")
     void login(ClickEvent e) {
+        
         
 //        Scheduler.get().scheduleFixedDelay(() -> {
 //            if (success ) {
@@ -127,18 +125,22 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
 //            }
 //            return false;
 //        }, 2000);
-        login();
+        customerRegister();
     }
     
 //    public interface OMapper extends ObjectMapper<Users> {}
-    private void login(){
-        appLoadingState.setState(State.LOADING, "Loggin in", "Please wait while logging in your account.");
+    private void login( String customerId ){
+        
+        //appLoadingState.setState(State.LOADING, "Account registering", "Please wait while registering...");
         HumanTaskHelper helper = new HumanTaskHelper();
         helper.setListener(new HumanTaskHelper.HumanTaskHelperListener() {
             @Override
             public void success( String result ) {
                 
                 JSONObject jsonOnlineUser = JSONParser.parseStrict( result ).isObject();
+                
+                Window.alert(jsonOnlineUser.toString());
+                
                 String message = jsonOnlineUser.get("message").isString().stringValue();
                 if( message.equalsIgnoreCase("Success")){
                     JSONObject users = jsonOnlineUser.get("user").isObject();
@@ -151,27 +153,27 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
                         String cid = userMap.get("customerId")[1].toString();
                         String roles = userMap.get("roles")[1].toString();
                         
-                    appLoadingState.setState( State.SUCCESS, "Successfully logged in", "Welcome " + name );
+                    appLoadingState.setState( State.SUCCESS, "Successfully registered", "Welcome " + name );
                     
-                    CookieHelper.setMyCookie( Constants.COOKIE_USER_NAME, name );
-                    CookieHelper.setMyCookie( Constants.COOKIE_USER_ID, id );
-                    CookieHelper.setMyCookie( Constants.COOKIE_USER_PERSON_ID, cid );
+                    CookieHelper.setMyCookie( "un", name );
+                    CookieHelper.setMyCookie( "uid", id );
+                    CookieHelper.setMyCookie( "cid", cid );
+                    CookieHelper.setMyCookie( "cdt", txtpassword.getText( ) + "" );
                     CookieHelper.setMyCookie( Constants.COOKIE_USER_ROLES, roles );
-                    CookieHelper.setMyCookie( Constants.COOKIE_USER_CREDENTIAL, txtpassword.getText( ) + "" );
-                    History.newItem( NameTokens.personal );
+                    History.newItem( NameTokens.welcome );
                     } catch (Exception ex) {
                         Window.alert( "Error " + ex.getMessage());
-                        Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(RegistrationView.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }else{
-                    appLoadingState.setState( State.ERROR, "Failed logging in", message );
+                    appLoadingState.setState( State.ERROR, "Failed to register", message );
                 }
             }
 
             @Override
             public void fail( String message, int stage ) {
               Window.alert( message );
-              appLoadingState.setState(State.ERROR, "Failed logging in", "Please check your Internet connection.");
+              appLoadingState.setState(State.ERROR, "Failed to register", "Please check your Internet connection.");
             }
         });
         
@@ -184,18 +186,88 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
         else
             mobile = txtusername.getText().trim( );
         
+        if( email.isEmpty())
+            users.put("username", new JSONString( mobile ));
+        else
+            users.put("username", new JSONString( email ));
+        
         users.put("email", new JSONString( email ));
         users.put("phone", new JSONString( mobile ));
         users.put("password", new JSONString( txtpassword.getText() ));
+        users.put("customerId", new JSONNumber( Long.parseLong(customerId) ));
         
-        JSONObject user = new JSONObject();
+        JSONObject user = new JSONObject( );
         user.put("User", users);
         
         JSONObject obj = new JSONObject();
-        obj.put("action", new JSONString( "login" ));
+        obj.put("action", new JSONString( "create" ));
         obj.put("user", user);
         
         helper.startInstances( Constants.userProcessId, obj.toString());
+        //helper.query( Constants.containerId, "355");
+    }
+    
+        
+    private void customerRegister( ){
+        appLoadingState.setState(State.LOADING, "Account registering", "Please wait while registering...");
+        HumanTaskHelper helper = new HumanTaskHelper();
+        helper.setListener(new HumanTaskHelper.HumanTaskHelperListener() {
+            @Override
+            public void success( String result ) {
+                
+                JSONObject jsonOnlineUser = JSONParser.parseStrict( result ).isObject();
+                Window.alert(jsonOnlineUser.toString());
+                String message = jsonOnlineUser.get("message").isString().stringValue();
+                if( message.equalsIgnoreCase("Success")){
+                    JSONObject users = jsonOnlineUser.get("object").isObject();
+                    JSONObject user = users.get( "com.falconit.automation.entity.Customer" ).isObject();
+                    try {
+                        userMap = new ObjectConverter().fromJSON( user, false, false);
+                        String id = userMap.get("id")[1].toString();
+                        Window.alert("Customer id=" + id);
+                        login( id );
+                        CookieHelper.setMyCookie( "cid", id );
+                    
+                    } catch (Exception ex) {
+                        Window.alert( "Error " + ex.getMessage());
+                        Logger.getLogger(RegistrationView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }else{
+                    appLoadingState.setState( State.ERROR, "Failed to register", message );
+                }
+            }
+
+            @Override
+            public void fail( String message, int stage ) {
+              Window.alert( message );
+              appLoadingState.setState(State.ERROR, "Failed to register", "Please check your Internet connection.");
+            }
+        });
+        
+        JSONObject users = new JSONObject( );
+        String email = "";
+        String mobile = "";
+        //Window.alert(txtusername.getText());
+        if( txtusername.getText().contains("@") || txtusername.getText().contains("."))
+            email = txtusername.getText().trim( );
+        else
+            mobile = txtusername.getText().trim( );
+        
+        if( email.isEmpty())
+            users.put("firstname", new JSONString( mobile ));
+        else
+            users.put("firstname", new JSONString( email ));
+        
+        users.put("status", new JSONNumber( 1 ));
+        
+        JSONObject user = new JSONObject( );
+        user.put("Customer", users);
+        
+        JSONObject obj = new JSONObject();
+        obj.put("action", new JSONString( "create" ));
+        obj.put("object", user);
+        
+        helper.startInstances( Constants.personProcessId, obj.toString());
         //helper.query( Constants.containerId, "355");
     }
     

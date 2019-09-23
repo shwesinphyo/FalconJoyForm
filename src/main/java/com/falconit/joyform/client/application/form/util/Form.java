@@ -55,6 +55,7 @@ public class Form implements java.io.Serializable{
         public static final String JSON_FORM_CREATED = "created";
         public static final String JSON_FORM_UPDATED = "updated";
         public static final String JSON_FORM_STATUS = "status";
+        public static final String JSON_FORM_OWNER = "owner";
         public static final String JSON_FORM_OBJECT_NAME = "objectName";
         public static final String JSON_FORM_FQDN = "fqdn";
         public static final String JSON_FORM_ITEMS_DISPLAY = "itemsDisplay";
@@ -77,6 +78,7 @@ public class Form implements java.io.Serializable{
         private String container;
         private String process;
         private String task;
+        private long owner=1;
         private String mode = DISPLAY_MODE_FILL_UP;
         private boolean mouseOverShadow = false;
         private java.util.Date created;
@@ -307,6 +309,14 @@ public class Form implements java.io.Serializable{
     public void setBackground(String background) {
         this.background = background;
     }
+
+    public long getOwner() {
+        return owner;
+    }
+
+    public void setOwner(long owner) {
+        this.owner = owner;
+    }
     
     /**
      * Render the form with related fields and widgets
@@ -353,6 +363,11 @@ public class Form implements java.io.Serializable{
                 --i; 
                 child.remove(f); continue;
             }
+            
+            if( f.isHide() || f.getChildren().get(0).isHide() )
+                continue;
+            
+            
             MaterialRow row;
             WidgetGenerator generator = new WidgetGenerator();
             eventRegister( generator );
@@ -603,9 +618,10 @@ public class Form implements java.io.Serializable{
           setContainer( json.get(JSON_FORM_CONTAINER_ID).isString().stringValue());
           setProcess( json.get(JSON_PROCESS_ID).isString().stringValue());
           setTask( json.get(JSON_TASK_ID).isString().stringValue());
+          //setOwner( (long) json.get(JSON_FORM_OWNER).isNumber().doubleValue());
           
           JSONArray group = json.get(JSON_FORM_CHILD).isArray();
-          //Window.alert( "Child size=" + group.size() );
+          
             child = new java.util.ArrayList<>();
             for( int i=0; i < group.size(); i++){
                 //Window.alert("Index=" + i);
@@ -636,7 +652,8 @@ public class Form implements java.io.Serializable{
           json.put( JSON_FORM_CONTAINER_ID, new JSONString(getContainer()) );
           json.put( JSON_PROCESS_ID, new JSONString(getProcess()) );
           json.put( JSON_TASK_ID, new JSONString(getTask()) );
-                      
+          //json.put( JSON_FORM_OWNER, new JSONNumber(getOwner()) );
+                 
           if( !child.isEmpty()){
             JSONArray group = new JSONArray();
             int count=0;
@@ -659,7 +676,7 @@ public class Form implements java.io.Serializable{
           java.util.Map<String, Object[]> maps = new java.util.HashMap<>();
           
           for( Field child : child ){
-              for ( Field children : child.getChildren()){
+              for ( Field children : child.getChildren() ){
                   maps.put( children.getName(), children.getBindValue( getFqdn() ) );
               }
           }
@@ -676,6 +693,18 @@ public class Form implements java.io.Serializable{
             return json;
       }
       
+        public java.util.Map<String, Object[]> getOutputDataForPerson() throws Exception{
+          java.util.Map<String, Object[]> maps = new java.util.HashMap<>();
+          
+          for( Field child : child ){
+              for ( Field children : child.getChildren() ){
+                  maps.put( children.getName(), children.getBindValue( getFqdn() ) );
+              }
+          }
+          
+          return maps;
+      }
+        
     /**
      * Filling data from Task Instance of KIE server
      * @param json Task JSON object from KIE server
@@ -683,7 +712,10 @@ public class Form implements java.io.Serializable{
      */
     public void bindWithTaskData( JSONObject json )throws Exception{
         java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( json,false,false );
+        bindWithTaskData( maps );
+    }
         
+    public void bindWithTaskData( java.util.Map<String, Object[]> maps )throws Exception{
         for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
             Outer: for( Field child : child ){
               for ( Field children : child.getChildren()){

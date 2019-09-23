@@ -39,7 +39,9 @@
               <m:MaterialLabel ui:field="txtapps" text="0 active Apps" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
+                 <!--
               <m:MaterialLink text="Create" iconType="CREATE" textColor="TEAL"/>
+              -->
               <m:MaterialLink text="Manage" iconType="TUNE" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
@@ -52,7 +54,9 @@
               <m:MaterialLabel ui:field="txtworkflow" text="0 active workflows" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
+                 <!--
               <m:MaterialLink text="Create" iconType="CREATE" textColor="TEAL"/>
+              -->
               <m:MaterialLink text="Manage" iconType="TUNE" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
@@ -65,23 +69,22 @@
               <m:MaterialLabel ui:field="txtform" text="0 active forms" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
-              <m:MaterialLink href="#formediting" text="Create" iconType="CREATE" textColor="TEAL"/>
-              <m:MaterialLink text="Manage" iconType="TUNE" textColor="TEAL"/>
+                 
+              <m:MaterialLink href="#myapps" text="Create" iconType="CREATE" textColor="TEAL"/>
+              
+              <m:MaterialLink text="Manage" href="#privateapps" iconType="TUNE" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
            </m:MaterialColumn>
     
-                      
-                      
-                                 
            <m:MaterialColumn grid="l4">
             <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
              <m:MaterialCardContent>
-              <m:MaterialCardTitle text="Task assignemnt" iconType="FORWARD" iconPosition="RIGHT"/>
-              <m:MaterialLabel text="Assign tasks to your colleague, offer speciality to your customers" />
+              <m:MaterialCardTitle text="Task invite" iconType="FORWARD" iconPosition="RIGHT"/>
+              <m:MaterialLabel text="Assign by names or groups" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
-              <m:MaterialLink href="#taskassign" text="Create" iconType="CREATE" textColor="TEAL"/>
+              <m:MaterialLink href="#taskassign" text="Create" iconType="ASSIGNMENT_IND" textColor="TEAL"/>
              </m:MaterialCardAction>
             </m:MaterialCard>
            </m:MaterialColumn>

@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.falconit.joyform.client.application.form.util;
+package com.falconit.joyform.client.application.profile.personal;
+
 
 import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.jbpmclient.HumanTaskHelper;
@@ -19,18 +20,14 @@ import com.google.gwt.user.client.Window;
  *
  * @author User
  */
-public class FormCRUD {
+public class PersonCRUD {
     /**
      * 
      * @param form created form object to save or update
      * @param isSave true for saving (don't add Id allow it null)
      */
-    public void saveUpdate( Form form, boolean isSave ){
+    public void saveUpdate( java.util.Map<String, Object[]> maps, boolean isSave ){
         try{
-            
-            if( isSave )
-                form.setId( null );
-            java.util.Map<String, Object[]> maps = fillData( form );
             
             JSONObject json = new ObjectConverter().toJSON( maps );
             
@@ -42,13 +39,13 @@ public class FormCRUD {
                     JSONObject jsonOnlineUser = JSONParser.parseStrict( result ).isObject();
 
                     JSONObject obj = jsonOnlineUser.get("object").isObject();
-                    JSONObject objForm = obj.get("com.falconit.automation.entity.Form").isObject();
+                    JSONObject objForm = obj.get("com.falconit.automation.entity.Customer").isObject();
                     try {
                         if( objForm != null ){
                             listener.success("Success");
                             if( isSave ){
                                 java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
-                                    form.setId( getFormBack( maps ).getId() );
+                                listener.success(maps);
                             }
                         }else{
                             listener.fail( "Failed to save" );
@@ -65,7 +62,7 @@ public class FormCRUD {
             });
 
             JSONObject objForm = new JSONObject();
-            objForm.put("Form", json);
+            objForm.put("Customer", json);
 
             JSONObject obj = new JSONObject();
             if( isSave ){
@@ -76,7 +73,7 @@ public class FormCRUD {
             
             obj.put("object", objForm);
           
-            helper.startInstances( Constants.formProcessId, obj.toString( ) );
+            helper.startInstances( Constants.personProcessId, obj.toString( ) );
         }catch(Exception ex){ex.printStackTrace();}
     }
 
@@ -85,20 +82,16 @@ public class FormCRUD {
      * @param contaner  container name
      */
     public void getBy(String contaner ){
-        getBy( contaner, null, null, -1, 0, null );
+        //getBy( contaner, null, null, -1, 0 );
     }
     
-        
-    public void getBy( long ownerId ){
-        getBy( null, null, null, -1, 0, ownerId+"" );
-    }
     /**
      * Extract with container name and process name
      * @param contaner container name
      * @param process process name
      */
     public void getBy(String contaner, String process){
-        getBy( contaner, process, null, -1, 0, null );
+        //getBy( contaner, process, null, -1, 0 );
     }
     
     /**
@@ -107,14 +100,8 @@ public class FormCRUD {
      * @param process process name
      * @param task task name
      */
-   
     public void getBy(String contaner, String process, String task ){
-        getBy( contaner, process, task, -1, 0, null );
-    }
-    
-        
-    public void getBy(String contaner, String process, String task, String ownerId ){
-        getBy( contaner, process, task, -1, 0, ownerId );
+        //getBy( contaner, process, task, -1, 0 );
     }
     
     /**
@@ -125,8 +112,9 @@ public class FormCRUD {
      * @param first offset value
      * @param max limit value
      */
-    public void getBy(String contaner, String process, String task, int first, int max, String ownerId  ){
-        java.util.List<Form> lst = new java.util.ArrayList<>( );
+    /*
+    public void getBy(String contaner, String process, String task, int first, int max  ){
+        java.util.List<java.util.Map<String, Object[]>> lst = new java.util.ArrayList<>( );
         
         try{
             HumanTaskHelper helper = new HumanTaskHelper();
@@ -142,15 +130,15 @@ public class FormCRUD {
                         for( int i=0; i < groups.size(); i++){
                             
                             JSONObject obj = groups.get(i).isObject();
-                            JSONObject objForm = obj.get("com.falconit.automation.entity.Form").isObject();
+                            JSONObject objForm = obj.get("com.falconit.automation.entity.Customer").isObject();
                             try {
                                 if( objForm != null ){
                                     listener.success("Success");
                                     
-                                    //Window.alert(objForm.toString());///////////////
+                                    //Window.alert("Result=" + objForm.toString());
                                     java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
                                     //Window.alert("Map size=" + maps.size());
-                                    lst.add( getFormBack( maps ) );
+                                    lst.add( maps );
                                 }else{
                                     listener.fail( "Failed to get" );
                                 }
@@ -185,14 +173,6 @@ public class FormCRUD {
             if( task != null && !task.isEmpty() ){
                 sb.append( " AND f.task='" + task + "'" );
             }
-            
-            if( ownerId != null && !ownerId.isEmpty() ){
-                if( sb.toString().contains("where"))
-                    sb.append( " AND f.owner=" + ownerId + "" );
-                else
-                    sb.append( " where f.owner=" + ownerId + "" );
-            }
-            
             //sb.append( " WHERE f.status=1" );
             obj.put("query", new JSONString( sb.toString() ));
             
@@ -205,13 +185,13 @@ public class FormCRUD {
             helper.startInstances( Constants.formProcessId, obj.toString( ) );
         }catch(Exception ex){ex.printStackTrace();}
     }
-
+*/
     public void list( ){
         list( -1, 0 );
     }
     
     public void list( int first, int max  ){
-        java.util.List<Form> lst = new java.util.ArrayList<>();
+        java.util.List<java.util.Map<String, Object[]>> lst = new java.util.ArrayList<>();
         
         try{
             HumanTaskHelper helper = new HumanTaskHelper();
@@ -227,12 +207,12 @@ public class FormCRUD {
                         for( int i=0; i < groups.size(); i++){
                             
                             JSONObject obj = groups.get(i).isObject();
-                            JSONObject objForm = obj.get("com.falconit.automation.entity.Form").isObject();
+                            JSONObject objForm = obj.get("com.falconit.automation.entity.Customer").isObject();
                             try {
                                 if( objForm != null ){
                                     listener.success("Success");
                                     java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
-                                    lst.add( getFormBack( maps ) );
+                                    lst.add( maps );
                                 }else{
                                     listener.fail( "Failed to get" );
                                 }
@@ -259,16 +239,16 @@ public class FormCRUD {
             if( first > -1)
                 obj.put("offset", new JSONNumber( first ) );
 
-            helper.startInstances( Constants.formProcessId, obj.toString( ) );
+            helper.startInstances( Constants.personProcessId, obj.toString( ) );
         }catch(Exception ex){ex.printStackTrace();}
     }
     
     
-    public void get( long formId ){
+    public void get( long customerId ){
         try{
             
             JSONObject json = new JSONObject();
-            json.put( Form.JSON_FORM_ID, new JSONNumber(formId) );
+            json.put( "id", new JSONNumber(customerId) );
             
             HumanTaskHelper helper = new HumanTaskHelper();
             helper.setListener(new HumanTaskHelper.HumanTaskHelperListener() {
@@ -278,12 +258,12 @@ public class FormCRUD {
                     JSONObject jsonOnlineUser = JSONParser.parseStrict( result ).isObject();
 
                     JSONObject obj = jsonOnlineUser.get("object").isObject();
-                    JSONObject objForm = obj.get("com.falconit.automation.entity.Form").isObject();
+                    JSONObject objForm = obj.get("com.falconit.automation.entity.Customer").isObject();
                     try {
                         if( objForm != null ){
                             listener.success("Success");
                             java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
-                            listener.success( getFormBack( maps ) );
+                            listener.success( maps );
                         }else{
                             listener.fail( "Failed to get" );
                         }
@@ -299,106 +279,18 @@ public class FormCRUD {
             });
 
             JSONObject objForm = new JSONObject( );
-            objForm.put("Form", json);
+            objForm.put("Customer", json);
 
             JSONObject obj = new JSONObject();
             obj.put("action", new JSONString( "get" ));
             obj.put("object", objForm);
-
-            helper.startInstances( Constants.formProcessId, obj.toString( ) );
+            
+            helper.startInstances( Constants.personProcessId, obj.toString( ) );
         }catch(Exception ex){
             Window.alert(ex.getMessage());
             ex.printStackTrace();
         }
     }
-    
-    private java.util.Map<String, Object[]> fillData( Form form ){
-        java.util.Map<String, Object[]> maps = new java.util.HashMap<>();
-        
-        try{
-            if( form.getId() != null ){
-                maps.put( Form.JSON_FORM_ID, new Object[] { ObjectConverter.TYPE_NUMBER, form.getId()} );
-            }
-
-            maps.put( Form.JSON_FORM_NAME, new Object[] { ObjectConverter.TYPE_STRING, form.getName()} );
-
-            maps.put( Form.JSON_FORM_CONTAINER_ID, new Object[] { ObjectConverter.TYPE_STRING, form.getContainer()} );
-            maps.put( Form.JSON_PROCESS_ID, new Object[] { ObjectConverter.TYPE_STRING, form.getProcess()} );
-            maps.put( Form.JSON_TASK_ID, new Object[] { ObjectConverter.TYPE_STRING, form.getTask()} );
-            maps.put( Form.JSON_FORM_DATA, new Object[] { ObjectConverter.TYPE_STRING, form.toJSON().toString()} );
-            
-            StringBuffer sb = new StringBuffer();
-            for( String actor : form.getActors() ){
-                sb.append(sb.toString().isEmpty() ? actor : "," + actor);
-            }
-            maps.put( Form.JSON_FORM_PERMISSION_ACTORS, new Object[] { ObjectConverter.TYPE_STRING, sb.toString()} );
-            
-            sb = new StringBuffer();
-            for( String group : form.getGroups() ){
-                sb.append( sb.toString().isEmpty() ? group : "," + group );
-            }
-            maps.put( Form.JSON_FORM_PERMISSION_GROUPS, new Object[] { ObjectConverter.TYPE_STRING, sb.toString()} );
-            
-            maps.put( Form.JSON_FORM_CREATED, new Object[] { ObjectConverter.TYPE_TIMESTAMP, 
-                form.getCreated() == null ? new java.util.Date().getTime() : form.getCreated().getTime()} );
-            
-            maps.put( Form.JSON_FORM_UPDATED, new Object[] { ObjectConverter.TYPE_TIMESTAMP, 
-                form.getUpdated() == null ? new java.util.Date().getTime() : form.getUpdated().getTime()} );
-            
-            maps.put( Form.JSON_FORM_STATUS, new Object[] { ObjectConverter.TYPE_NUMBER, form.getStatus()} );
-            
-            maps.put( Form.JSON_FORM_OBJECT_NAME, new Object[] { ObjectConverter.TYPE_STRING, form.getObjectName()} );
-            
-            maps.put( Form.JSON_FORM_FQDN, new Object[] { ObjectConverter.TYPE_STRING, form.getFqdn()} );
-            
-            maps.put( Form.JSON_FORM_OWNER, new Object[] { ObjectConverter.TYPE_NUMBER, form.getOwner()} );
-        
-        }catch(Exception ex){}
-        
-        return maps;
-    }
-
-    private Form getFormBack( java.util.Map<String, Object[]> maps ){
-        Form form = new Form();
-        
-        try{
-            form.setId( (long) maps.get( Form.JSON_FORM_ID )[1] );
-            //Window.alert( maps.get( Form.JSON_FORM_ID )[1].toString() );
-            form.setName( (String) maps.get( Form.JSON_FORM_NAME )[1] );
-            //Window.alert( maps.get( Form.JSON_FORM_NAME )[1].toString() );
-            form.setContainer( (String) maps.get( Form.JSON_FORM_CONTAINER_ID )[1] );
-            //Window.alert( maps.get( Form.JSON_FORM_CONTAINER_ID )[1].toString() );
-            form.setProcess( (String) maps.get( Form.JSON_PROCESS_ID )[1] );
-            //Window.alert( maps.get( Form.JSON_PROCESS_ID )[1].toString() );
-            form.setTask( (String) maps.get( Form.JSON_TASK_ID )[1] );
-            //Window.alert( maps.get( Form.JSON_TASK_ID )[1].toString() );
-            //form.setContainer( (String) maps.get( Form.JSON_FORM_DATA )[1] );
-            
-            form.setFqdn( (String) maps.get( Form.JSON_FORM_FQDN )[1] );
-            //Window.alert( maps.get( Form.JSON_FORM_FQDN )[1].toString() );
-            form.setObjectName( (String) maps.get( Form.JSON_FORM_OBJECT_NAME )[1] );
-            //Window.alert( maps.get( Form.JSON_FORM_OBJECT_NAME )[1].toString() );
-            form.setCreated( new java.util.Date( (long) maps.get( Form.JSON_FORM_CREATED )[1]) );
-            //Window.alert( maps.get( Form.JSON_FORM_CREATED )[1].toString() );
-            form.setUpdated(new java.util.Date( (long) maps.get( Form.JSON_FORM_UPDATED )[1] ));
-            //Window.alert( maps.get( Form.JSON_FORM_UPDATED )[1].toString() );
-            
-            form.setActors( ((String) maps.get( Form.JSON_FORM_PERMISSION_ACTORS )[1]).split(",") );
-            form.setGroups( ((String) maps.get( Form.JSON_FORM_PERMISSION_GROUPS )[1]).split(",") );
-            form.setStatus( Integer.parseInt( maps.get( Form.JSON_FORM_STATUS )[1].toString()) );
-            form.setOwner( Long.parseLong( maps.get( Form.JSON_FORM_OWNER)[1].toString()));
-            
-//Window.alert( maps.get( Form.JSON_FORM_STATUS )[1].toString() );
-            
-            //Window.alert("Attributes OK");
-            form.fromJSON( JSONParser.parseStrict( (String) maps.get( Form.JSON_FORM_DATA )[1] ).isObject() );
-             //Window.alert("Pass back OK");
-            
-        }catch(Exception ex){}
-        
-        return form;
-    }
-    
     
         
     public void solveFQDN( String query, String fqdn  ){
@@ -451,8 +343,8 @@ public class FormCRUD {
     
     public interface CRUDListener{
         public void success(String result);
-        public void success(Form result);
-        public void success(java.util.List<Form> result);
+        public void success(java.util.Map<String, Object[]> result);
+        public void success(java.util.List<java.util.Map<String, Object[]>> result);
         public void fail( String message);
         public void fqdn( java.util.Map<String, Object[]> maps );
     }
