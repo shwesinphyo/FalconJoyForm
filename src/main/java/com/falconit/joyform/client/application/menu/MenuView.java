@@ -83,6 +83,7 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
     @UiField MaterialSearch txtSearch;
     @UiField MaterialComboBox<ThemeLoader.ThemeBundle> comboThemes;
     @UiField MaterialBadge badgeinbox;
+    @UiField MaterialLink account, logout;
 
     @Inject
     MenuView(Binder uiBinder) {
@@ -120,6 +121,8 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
         initThemes( );
         initSearches( );
         if( CookieHelper.getMyCookie( Constants.COOKIE_USER_ID ) != null ){
+            account.setVisible(true);
+            logout.setVisible(true);
             loadNoti( );
         }
     }
@@ -287,7 +290,7 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
         txtSearch.open();
     }
     
-        /*
+        
     @UiHandler("logout")
     void onLogout(ClickEvent e){
         CookieHelper.setMyCookie( Constants.COOKIE_USER_NAME, null );
@@ -297,7 +300,7 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
         CookieHelper.setMyCookie( Constants.COOKIE_USER_CREDENTIAL, null );
         History.newItem( NameTokens.login );
     }
-    */
+    
         
     private void loadNoti(){
             

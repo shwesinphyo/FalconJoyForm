@@ -47,7 +47,9 @@
                     <ma:webp.MaterialWebpImage grid="l4 m4 s4" fallbackExtension="png" url="https://cdn3.iconfinder.com/data/icons/flat-rounded-7/50/617-512.png" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
                     -->
                     <m:MaterialCardTitle text="Personal information" />
-                    <m:MaterialLabel text="See the data in your falconIT Account and choose what activity is saved to personalize your falconIT experience" />
+                    
+                    <m:MaterialLabel text="See the data in your falconIT Account and saved" />
+                <!-- See the data in your falconIT Account and choose what activity is saved to personalize your falconIT experience -->
                 </m:MaterialRow>
              </m:MaterialCardContent>
              <m:MaterialCardAction>
@@ -84,7 +86,7 @@
                     <ma:webp.MaterialWebpImage marginBottom="20" grid="l4 m4 s4" fallbackExtension="png" url="https://image21.net/103/security_png/security_png_16.png" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
                     -->
                     <m:MaterialCardTitle text="Security" />
-                    <m:MaterialLabel text="Protect your account, falconIT care your login devices, location, 2 factor authentications" />
+                    <m:MaterialLabel text="Protect your account, falconIT care your login devices, 2FA" />
                 </m:MaterialRow>
              </m:MaterialCardContent>
              <m:MaterialCardAction>

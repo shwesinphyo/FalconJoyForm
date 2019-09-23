@@ -60,6 +60,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
    private Form form;
    private String owner = "sysadmin@falconbreeze.com";
    private String ownerId = "1";
+   private String auth = "true";
    
     @UiField
     MaterialRow comments, forwards, processing, startup;
@@ -116,6 +117,10 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         if( oID != null ){
             ownerId = oID;
         }
+        String au = com.google.gwt.user.client.Window.Location.getParameter( "auth" );
+        if( au != null ){
+            auth = au;
+        }
         
         //tab.selectTab("out");
         
@@ -133,7 +138,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         String userName = CookieHelper.getMyCookie( Constants.COOKIE_USER_NAME );
         String userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
         
-        if( userId == null || userName == null ){
+        if( (userId == null || userName == null) && auth.equals("true") ){
             
             Window.Location.assign(
                 "?container=" + container
@@ -143,6 +148,10 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                 + "&display=" + TaskDisplayView.DISPLAY_START_UP
                 + "#login" );
             return;
+        }else{
+            
+            userId = "0";
+            userName = "anonymous";
         }
         
         MaterialLoader.loading( true );

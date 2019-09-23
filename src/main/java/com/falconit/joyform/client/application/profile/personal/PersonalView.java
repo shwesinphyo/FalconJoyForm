@@ -53,13 +53,17 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
         
         initWidget( uiBinder.createAndBindUi( this ) );
         
+                
+        if( CookieHelper.getMyCookie( Constants.COOKIE_USER_ID ) == null ){
+            History.newItem( NameTokens.login );
+        }
         coll = new MaterialCollapsible( );
         coll.setAccordion( true );
 
         body = new MaterialCollapsibleBody[10];
 
         for ( int i =0; i < body.length; i++){
-            body[i] = new MaterialCollapsibleBody();
+            body[i] = new MaterialCollapsibleBody( );
 
             MaterialCollapsibleItem item = new MaterialCollapsibleItem();
             coll.add(item);
@@ -72,14 +76,18 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
             lnktitle.setText( Constants.PROFILE_CATEGORIES[i] );
             header.add(lnktitle);//<m:MaterialIcon iconType="EDIT" waves="DEFAULT" float="LEFT" circle="true" iconSize="LARGE" />
 
-            MaterialLink lnkedit = new MaterialLink();
+            MaterialLink lnkedit = new MaterialLink( );
             lnkedit.setIconType(IconType.EDIT);
             lnkedit.setWaves(WavesType.DEFAULT);
             lnkedit.setIconColor(Color.TEAL);
             lnkedit.setFloat(Style.Float.LEFT);
             lnkedit.setCircle(true);
             lnkedit.setIconSize(IconSize.LARGE);
+            lnkedit.setId(""+ i );
             header.add( lnkedit );
+            lnkedit.addClickHandler(handler ->{
+                
+            });
             
             item.add( body[i] );
         }
@@ -95,7 +103,55 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
             
         }
     }
-     
+    
+    private void edit( String id ){
+        
+        int intID = Integer.parseInt( id );
+        coll.setActive( intID + 1 );
+        
+        String group = "profile";
+        switch (intID) {
+            case 0:
+                group = "profile";
+                break;
+            case 1:
+                group = "contact";
+                break;
+            case 2:
+                group = "places";
+                break;
+            case 3:
+                group = "work & education";
+                break;
+            case 4:
+                group = "documents";
+                break;
+            case 5:
+                group = "travel info";
+                break;
+            case 6:
+                group = "family & relationships";
+                break;
+            case 7:
+                group = "bio-matric";
+                break;
+            case 8:
+                group = "health-care";
+                break;
+            case 9:
+                group = "others";
+                break;
+            default:
+                break;
+        }
+        
+        body[intID].clear();
+        for( Field field : myForm.getChild( ) ){
+            if( field.getCategory( ).equals( group )){
+                
+            }
+        }
+    }
         
     private void getForm( ){
         
@@ -117,75 +173,8 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
                 MaterialLoader.loading( false );
                 //Window.alert("form load size="+result.size());
                 if( !result.isEmpty() ){
-                    
                     myForm = result.get( 0 );
-                    
-                    //myForm.setMode( Form.DISPLAY_MODE_READ_ONLY );
-                    //myForm.setItemDisplay(Form.ITEMS_DISPLAY_CATEGORIZE);
-                     //Window.alert("Child size=" + myForm.getChild());
-                    for( Field field : myForm.getChild() ){
-                        
-                        MaterialRow row = new MaterialRow();
-                        MaterialLabel label = new MaterialLabel( );
-                        label.setGrid( "l4 m4 s12" );
-                        label.setFontSize("0.8em");
-                        label.setText( field.getChildren().get(0).getLabel().get( Constants.LANGUAGE ) );
-                        row.add( label );
-                        
-                        MaterialLabel value = new MaterialLabel();
-                        value.setGrid( "l6 m6 s12" );
-                        value.setFontWeight(Style.FontWeight.BOLD);
-                        row.add( value );
-                        
-                        if( field.getName().equals("photo")){
-                            MaterialWebpImage photo = new MaterialWebpImage();
-                            row.add(photo);
-                            photo.setGrid("l2 m2 s4");
-                            photo.setFloat(Style.Float.LEFT);
-                            photo.setFallbackExtension("png");
-                            photo.setMaxWidth("150px");
-                            photo.setMaxHeight("150px");
-                            photo.setType(ImageType.CIRCLE);
-                            photo.setUrl("https://p7.hiclipart.com/preview/535/466/472/google-account-microsoft-account-login-email-gmail-email.jpg");
-                         
-                            value.setText( "A photo helps personalize your account" );
-                        }else{
-                            Object[] values = personMaps.get(field.getName());
-                            if( values[1] != null )
-                                value.setText( values[1].toString() );
-                            else
-                                value.setText( "" );
-                            row.setBorderBottom("1px dotted #b2dfdb");
-                        }
-                        
-                        if( field.getCategory( ).equals("profile")){
-                        if( field.getName().equals("photo") )
-                            body[0].insert(row, 0);
-                        else
-                            body[0].add(row);
-
-                        }else if( field.getCategory().equals("contact")){
-                            body[1].add(row);
-
-                        }else if( field.getCategory().equals("places")){
-                            body[2].add(row);
-                        }else if( field.getCategory().equals("work & education")){
-                            body[3].add(row);
-                        }else if( field.getCategory().equals("documents")){
-                            body[4].add(row);
-                        }else if( field.getCategory().equals("travel info")){
-                            body[5].add(row);
-                        }else if( field.getCategory().equals("family & relationships")){
-                            body[6].add(row);
-                        }else if( field.getCategory().equals("bio-matric")){
-                            body[7].add(row);
-                        }else if( field.getCategory().equals("health-care")){
-                            body[8].add(row);
-                        }else if( field.getCategory().equals("others")){
-                            body[9].add(row);
-                        }
-                    }
-                    
+                    display();
                 }
             }
 
@@ -202,6 +191,75 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
         crud.getBy( Constants.DEFAULT_CONTAINER, Constants.DEFAULT_PROCESS, Constants.DEFAULT_TASK);
     }
 
+    private void display(){
+        
+        for ( int i =0; i < body.length; i++){
+            body[i].clear();
+        }
+        
+        for( Field field : myForm.getChild( ) ){
+                        
+            MaterialRow row = new MaterialRow();
+            MaterialLabel label = new MaterialLabel( );
+            label.setGrid( "l4 m4 s12" );
+            label.setFontSize("0.8em");
+            label.setText( field.getChildren().get(0).getLabel().get( Constants.LANGUAGE ) );
+            row.add( label );
+
+            MaterialLabel value = new MaterialLabel();
+            value.setGrid( "l6 m6 s12" );
+            value.setFontWeight(Style.FontWeight.BOLD);
+            row.add( value );
+
+            if( field.getName().equals("photo")){
+                MaterialWebpImage photo = new MaterialWebpImage();
+                row.add(photo);
+                photo.setGrid("l2 m2 s4");
+                photo.setFloat(Style.Float.LEFT);
+                photo.setFallbackExtension("png");
+                photo.setMaxWidth("150px");
+                photo.setMaxHeight("150px");
+                photo.setType(ImageType.CIRCLE);
+                photo.setUrl("https://p7.hiclipart.com/preview/535/466/472/google-account-microsoft-account-login-email-gmail-email.jpg");
+
+                value.setText( "A photo helps personalize your account" );
+            }else{
+                Object[] values = personMaps.get(field.getName());
+                if( values[1] != null )
+                    value.setText( values[1].toString() );
+                else
+                    value.setText( "" );
+                row.setBorderBottom("1px dotted #b2dfdb");
+            }
+
+            if( field.getCategory( ).equals("profile")){
+            if( field.getName().equals("photo") )
+                body[0].insert(row, 0);
+            else
+                body[0].add(row);
+
+            }else if( field.getCategory().equals("contact")){
+                body[1].add(row);
+            }else if( field.getCategory().equals("places")){
+                body[2].add(row);
+            }else if( field.getCategory().equals("work & education")){
+                body[3].add(row);
+            }else if( field.getCategory().equals("documents")){
+                body[4].add(row);
+            }else if( field.getCategory().equals("travel info")){
+                body[5].add(row);
+            }else if( field.getCategory().equals("family & relationships")){
+                body[6].add(row);
+            }else if( field.getCategory().equals("bio-matric")){
+                body[7].add(row);
+            }else if( field.getCategory().equals("health-care")){
+                body[8].add(row);
+            }else if( field.getCategory().equals("others")){
+                body[9].add(row);
+            }
+        }// end of for
+    }
+    
     private void getPerson( long customerId ){
         MaterialLoader.loading( true );
         PersonCRUD crud = new PersonCRUD();

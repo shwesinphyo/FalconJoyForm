@@ -30,12 +30,14 @@ import com.falconit.joyform.client.application.util.jbpmclient.api.ContainerMana
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessVariables;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesManager;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesVariablesMapping;
+import com.falconit.joyform.client.place.NameTokens;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -111,6 +113,10 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
     FormEditingView(Binder uiBinder) {
         
         initWidget( uiBinder.createAndBindUi( this ) );
+        
+        if( CookieHelper.getMyCookie( Constants.COOKIE_USER_ID ) == null ){
+            History.newItem( NameTokens.login );
+        }
         
         userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
         
