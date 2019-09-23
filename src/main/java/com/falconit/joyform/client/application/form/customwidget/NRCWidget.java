@@ -7,6 +7,7 @@ package com.falconit.joyform.client.application.form.customwidget;
 
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.Window;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
 import gwt.material.design.client.constants.InputType;
 import gwt.material.design.client.constants.TextAlign;
@@ -116,22 +117,25 @@ public class NRCWidget extends MaterialRow{
             if( v.length() < 10) return;
             
             String no = v.substring( 0, v.indexOf("/"));
-            String tsp = v.substring( v.indexOf("/") - 1, v.indexOf("("));
-            String type = v.substring( v.indexOf("(") - 1, v.indexOf(")"));
-            String number = v.substring( v.indexOf(")") - 1 );
-
+            String tsp = v.substring( v.indexOf("/") + 1, v.indexOf("("));
+            String type = v.substring( v.indexOf("(") + 1, v.indexOf(")"));
+            String number = v.substring( v.indexOf(")") + 1, v.length() );
+Window.alert("Value=" + v +", NO=" + no+", tsp=" + tsp +", type=" + type+", num=" + number);
             java.util.List<String> noItems = new java.util.ArrayList<>();
             noItems.add( no );
-            cboNo.setValues( noItems, true );
+            cboNo.setSingleValue(no, true);
+            //cboNo.setValues( noItems, true );
             
             java.util.List<String> tspItems = new java.util.ArrayList<>();
             tspItems.add( tsp );
-            cboTSP.setValues( tspItems, false );
+            cboTSP.setSingleValue(tsp, true);
+            //cboTSP.setValues( tspItems, false );
             
             java.util.List<String> typeItems = new java.util.ArrayList<>();
             typeItems.add( type );
-            cboType.setValues( typeItems, false );
-            txtNumber.setText( number );
+            cboType.setSingleValue( type, true );
+            //cboType.setValues( typeItems, false );
+            txtNumber.setValue( number );//.setText( number );
             
         }catch(Exception ex){}
     }

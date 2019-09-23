@@ -5,6 +5,7 @@ package com.falconit.joyform.client.application.profile.personal;
 import com.falconit.joyform.client.application.form.util.Field;
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.form.util.FormCRUD;
+import com.falconit.joyform.client.application.form.util.WidgetGenerator;
 import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.place.NameTokens;
@@ -21,10 +22,12 @@ import gwt.material.design.client.constants.IconSize;
 import gwt.material.design.client.constants.IconType;
 import gwt.material.design.client.constants.ImageType;
 import gwt.material.design.client.constants.WavesType;
+import gwt.material.design.client.ui.MaterialButton;
 import gwt.material.design.client.ui.MaterialCollapsible;
 import gwt.material.design.client.ui.MaterialCollapsibleBody;
 import gwt.material.design.client.ui.MaterialCollapsibleHeader;
 import gwt.material.design.client.ui.MaterialCollapsibleItem;
+import gwt.material.design.client.ui.MaterialColumn;
 import gwt.material.design.client.ui.MaterialLabel;
 import gwt.material.design.client.ui.MaterialLink;
 import gwt.material.design.client.ui.MaterialLoader;
@@ -32,6 +35,8 @@ import gwt.material.design.client.ui.MaterialPanel;
 import gwt.material.design.client.ui.MaterialRow;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 
 
@@ -86,7 +91,7 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
             lnkedit.setId(""+ i );
             header.add( lnkedit );
             lnkedit.addClickHandler(handler ->{
-                
+                edit( lnkedit.getId() );
             });
             
             item.add( body[i] );
@@ -107,7 +112,6 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
     private void edit( String id ){
         
         int intID = Integer.parseInt( id );
-        coll.setActive( intID + 1 );
         
         String group = "profile";
         switch (intID) {
@@ -145,14 +149,80 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
                 break;
         }
         
-        body[intID].clear();
-        for( Field field : myForm.getChild( ) ){
-            if( field.getCategory( ).equals( group )){
-                
+        body[ intID ].clear();
+        //WidgetGenerator generator = new WidgetGenerator();
+        
+        MaterialPanel panel = new MaterialPanel();
+        panel.setMarginTop(20);
+        panel.setShadow(1);
+        body[ intID ].add( panel );
+        myForm.render( panel );
+        /*
+        for( Field parent : myForm.getChild( ) ){
+            if( parent.getCategory( ).equals( group )){
+                try {
+                    MaterialRow row = generator.getWidget( parent, 0 );
+                    for( Field field : parent.getChildren() ){
+                        int colSize = 12 / parent.getChildren( ).size( );
+                        MaterialColumn child = new MaterialColumn( );
+                        child.setId( field.getId( ) );
+                        child.setTitle( field.getLabel().get(Constants.LANGUAGE) );
+                        child.setGrid("l" + colSize+" m" + colSize+" s12");
+                        row.add( child );
+                        generator.generate( child, field, 0, Form.DISPLAY_MODE_FILL_UP );
+                    }
+                    panel.add( row );
+                    
+                } catch (Exception ex) {
+                    Window.alert( ex.getMessage() );
+                }
             }
         }
-    }
+        */
         
+        MaterialButton btnupdate = new MaterialButton();
+        btnupdate.setText("Update");
+        btnupdate.setIconType(IconType.UPDATE);
+        btnupdate.setBackgroundColor(Color.TEAL);
+        btnupdate.setTextColor(Color.WHITE);
+        panel.add(btnupdate);
+        btnupdate.addClickHandler(handler ->{
+            //bindBack( );
+            display( );
+        });
+        
+        MaterialButton btnclose = new MaterialButton();
+        btnclose.setText("Cancel");
+        btnclose.setIconType(IconType.CANCEL);
+        btnclose.setBackgroundColor(Color.TEAL);
+        btnclose.setTextColor(Color.WHITE);
+        panel.add( btnclose );
+        btnclose.addClickHandler(handler ->{
+            
+            try{
+                Window.alert( "Rebuild size=" + myForm.getOutputDataForPerson().size());
+            }catch(Exception ex){ Window.alert(ex.getMessage());}
+            
+            display( );
+        });
+        
+        
+        coll.open( intID + 1 );
+    }
+    
+    private void bindBack( ){
+        for( Field parent : myForm.getChild( ) ){
+            //if( parent.getCategory( ).equals( group )){
+            try{
+                for( Field field : parent.getChildren() ){
+                    field.setValue( field.getBindValue("com.falconit.entity.Customer") [1] );
+                }
+            }catch(Exception ex){Window.alert(ex.getMessage()); break;}
+            
+            //}
+        }
+    }
+    
     private void getForm( ){
         
         MaterialLoader.loading( true );
@@ -174,6 +244,11 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
                 //Window.alert("form load size="+result.size());
                 if( !result.isEmpty() ){
                     myForm = result.get( 0 );
+                    
+                    try{
+                        myForm.bindWithTaskData(personMaps);
+                    }catch(Exception ex){Window.alert(ex.getMessage());}
+                    
                     display();
                 }
             }
@@ -224,9 +299,10 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
 
                 value.setText( "A photo helps personalize your account" );
             }else{
-                Object[] values = personMaps.get(field.getName());
-                if( values[1] != null )
-                    value.setText( values[1].toString() );
+                //Object[] values = personMaps.get(field.getName());
+                //if( values[1] != null )
+                if( field.getChildren().get(0).getValue() != null )
+                    value.setText( field.getChildren().get(0).getValue().toString() ); //values[1].toString()
                 else
                     value.setText( "" );
                 row.setBorderBottom("1px dotted #b2dfdb");
