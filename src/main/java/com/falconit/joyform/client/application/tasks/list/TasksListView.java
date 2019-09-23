@@ -4,6 +4,7 @@ package com.falconit.joyform.client.application.tasks.list;
 
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
 import com.falconit.joyform.client.application.util.Constants;
+import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.APIHelper;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
@@ -57,7 +58,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
     TasksListView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
         
-        table.getTableTitle().setText("Inbox");
+        table.getTableTitle().setText( "Inbox" );
         /*
         table.addColumn(new WidgetColumn<java.util.Map<String, Object[]>, MaterialImage>() {
             @Override
@@ -130,11 +131,11 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
         table.addColumn(new TextColumn<java.util.Map<String, Object[]>>() {
             @Override
             public Comparator<? super RowComponent<java.util.Map<String, Object[]>>> sortComparator() {
-                return (o1, o2) -> o1.getData().get("task-container-id")[1].toString().compareToIgnoreCase(o2.getData().get("task-container-id")[1].toString());
+                return (o1, o2) -> o1.getData().get("task-proc-def-id")[1].toString().compareToIgnoreCase(o2.getData().get("task-proc-def-id")[1].toString());
             }
             @Override
             public String getValue(java.util.Map<String, Object[]> object) {
-                return object.get("task-container-id")[1].toString();
+                return object.get("task-proc-def-id")[1].toString();
             }
         }, "Apps");
         
@@ -307,8 +308,16 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                         try {
                             java.util.Map<String, Object[]> taskMap = new ObjectConverter().fromJSON( task, false, false );
                             String cid = taskMap.get("task-container-id")[1].toString();
-                            if( Constants.containerFilter.contains( cid )){
-                                lstTasks.add( taskMap );
+                            if( !Constants.containerFilter.contains( cid )){
+                                String userName = CookieHelper.getMyCookie( Constants.COOKIE_USER_NAME );
+                                String userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
+                                
+                                
+                                String actualOwner = taskMap.get("task-actual-owner")[1] != null ? taskMap.get("task-actual-owner")[1].toString() : "";
+                                String createdBy = taskMap.get("task-created-by")[1] !=null ? taskMap.get("task-created-by")[1].toString() : "";
+                                if( ( !actualOwner.isEmpty() && actualOwner.equals( userId +"-" + userName )) 
+                                        || (!createdBy.isEmpty() && createdBy.equals(userId +"-" + userName)))
+                                    lstTasks.add( taskMap );
                             }
                             
                             //filter with user
@@ -349,7 +358,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
         helper.tasksList( 
                 //new String[]{APIHelper.STATUS_READY,APIHelper.STATUS_RESERVED, APIHelper.STATUS_INPROGRESS },
                 arrStatus,
-                0, 200, null, null, true);
+                0, 1000, null, null, true);
         //helper.query( Constants.containerId, "355");
     }
     

@@ -5,8 +5,10 @@ package com.falconit.joyform.client.application.home.dashboard;
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.form.util.FormCRUD;
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
+import com.falconit.joyform.client.application.tasks.list.TasksListView;
 import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.CookieHelper;
+import com.falconit.joyform.client.application.util.jbpmclient.APIHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.api.ContainerManager;
 import com.falconit.joyform.client.application.util.jbpmclient.api.ContainerManager.ContainerManagerListener;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessByContainer;
@@ -42,6 +44,8 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DashboardView extends NavigatedView implements DashboardPresenter.MyView {
     interface Binder extends UiBinder<Widget, DashboardView> {
@@ -51,7 +55,7 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
     //MaterialRow appsholder;
     
     @UiField
-    MaterialLabel txtapps, txtworkflow, txtform;
+    MaterialLabel txtapps, txtworkflow, txtform, txtprogress, txtcompleted;
     
     private java.util.List<Object[]> lstProjects, lstProcesses;
     private List<Form> lstForms;
@@ -63,6 +67,7 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
         loadProjects();
         loadProcesses();
         loadForms();
+        loadNoti();
         //processMappings();
         //processVariables();
     }
@@ -294,6 +299,81 @@ public class DashboardView extends NavigatedView implements DashboardPresenter.M
         });
         reader.read(container, taskId);
         */
+    }
+   
+        private void loadNoti(){
+            
+        MaterialLoader.loading( true );
+        APIHelper helper = new APIHelper();
+        helper.setListener(new APIHelper.APIHelperListener() {
+            @Override
+            public void success(String result) {
+                
+                MaterialLoader.loading( false );
+                
+                JSONObject jsonOnlineUser = JSONParser.parseStrict( result ).isObject();
+                JSONArray tasks = jsonOnlineUser.get("task-summary").isArray();
+                if( tasks == null || tasks.size() == 0 ){
+                    
+                }else{
+                    int progressCount = 0;
+                    int completedCount = 0;
+                    for( int i=0; i < tasks.size(); i++){
+                        JSONObject task = tasks.get(i).isObject();
+                        
+                        try {
+                            java.util.Map<String, Object[]> taskMap = new ObjectConverter().fromJSON( task, false, false );
+                            String cid = taskMap.get("task-container-id")[1].toString();
+                            if( !Constants.containerFilter.contains( cid )){
+                                String userName = CookieHelper.getMyCookie( Constants.COOKIE_USER_NAME );
+                                String userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
+                                
+                                
+                                String actualOwner = taskMap.get("task-actual-owner")[1] != null ? taskMap.get("task-actual-owner")[1].toString() : "";
+                                String createdBy = taskMap.get("task-created-by")[1] !=null ? taskMap.get("task-created-by")[1].toString() : "";
+                                if( ( !actualOwner.isEmpty() && actualOwner.equals( userId +"-" + userName )) 
+                                        || (!createdBy.isEmpty() && createdBy.equals(userId +"-" + userName))){
+                                    
+                                    String status = taskMap.get("task-status")[1].toString();
+                                    if( status.equalsIgnoreCase(APIHelper.STATUS_CREATED) 
+                                            || status.equalsIgnoreCase(APIHelper.STATUS_READY)
+                                            || status.equalsIgnoreCase(APIHelper.STATUS_INPROGRESS)
+                                            || status.equalsIgnoreCase(APIHelper.STATUS_RESERVED)){
+                                        progressCount++;
+                                    }else if( status.equalsIgnoreCase(APIHelper.STATUS_COMPLETED) ){
+                                        completedCount++;
+                                    }
+                                }
+                            }
+                            //12 tasks in progress, 108 tasks completed
+                            txtprogress.setText( progressCount +" task" +( progressCount>1 ? "s in progress" : " in progress" ) );
+                            txtcompleted.setText( completedCount +" task" +( completedCount>1 ? "s completed" : " completed" ) );
+                            
+                            //Window.alert("Task id = "+taskMap.get("task-id")[1].toString() +", Created on=" + (long)taskMap.get("task-created-on")[1]);
+                        } catch (Exception ex) {
+                            Window.alert(ex.getMessage());
+                            Logger.getLogger(TasksListView.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    
+                }
+            }
+
+            @Override
+            public void fail(String message, int stage) {
+              Window.alert( message );
+              MaterialLoader.loading( false );
+            }
+        });
+        String arrStatus[] = new String[]{ APIHelper.STATUS_CREATED, APIHelper.STATUS_READY, 
+            APIHelper.STATUS_INPROGRESS, APIHelper.STATUS_RESERVED, APIHelper.STATUS_COMPLETED };
+
+        
+        helper.tasksList( 
+                //new String[]{APIHelper.STATUS_READY,APIHelper.STATUS_RESERVED, APIHelper.STATUS_INPROGRESS },
+                arrStatus,
+                0, 1000, null, null, true);
+        //helper.query( Constants.containerId, "355");
     }
     
   /*  

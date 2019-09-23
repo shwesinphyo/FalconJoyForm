@@ -55,8 +55,6 @@ public class MyAppsView extends NavigatedView implements MyAppsPresenter.MyView 
             @Override
             public void success(String result) {
                 
-                MaterialLoader.loading( false );
-                
                 JSONObject jsonOnlineUser = JSONParser.parseStrict( result ).isObject();
                 JSONArray tasks = jsonOnlineUser.get("processes").isArray();
                 if( tasks == null || tasks.size() == 0 ){
@@ -80,7 +78,9 @@ public class MyAppsView extends NavigatedView implements MyAppsPresenter.MyView 
                             Window.alert( ex.getMessage() );
                         }
                     }
+                    
                 }
+                MaterialLoader.loading( false );
             }
 
             @Override

@@ -80,8 +80,8 @@
            <m:MaterialColumn grid="l4">
             <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
              <m:MaterialCardContent>
-              <m:MaterialCardTitle text="Task invite" iconType="FORWARD" iconPosition="RIGHT"/>
-              <m:MaterialLabel text="Assign by names or groups" />
+              <m:MaterialCardTitle text="Task invitation" iconType="FORWARD" iconPosition="RIGHT"/>
+              <m:MaterialLabel text="By names or by groups" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
               <m:MaterialLink href="#taskassign" text="Create" iconType="ASSIGNMENT_IND" textColor="TEAL"/>
@@ -93,7 +93,7 @@
             <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
              <m:MaterialCardContent>
               <m:MaterialCardTitle text="Tasks in progress" iconType="POLL" iconPosition="RIGHT"/>
-              <m:MaterialLabel text="12 tasks in progress" />
+              <m:MaterialLabel text="12 tasks in progress" ui:field="txtprogress" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
               <m:MaterialLink href="#tasklist" text="Open" iconType="OPEN_IN_NEW" textColor="TEAL"/>
@@ -105,7 +105,7 @@
             <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
              <m:MaterialCardContent>
               <m:MaterialCardTitle text="Tasks completed" iconType="DONE_ALL" iconPosition="RIGHT"/>
-              <m:MaterialLabel text="108 tasks completed" />
+              <m:MaterialLabel text="108 tasks completed" ui:field="txtcompleted" />
              </m:MaterialCardContent>
              <m:MaterialCardAction>
               <m:MaterialLink href="#tasklist" text="Open" iconType="OPEN_IN_NEW" textColor="TEAL"/>

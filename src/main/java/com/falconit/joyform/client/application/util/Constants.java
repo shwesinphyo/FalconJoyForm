@@ -39,8 +39,8 @@ public class Constants {
     public static final String COOKIE_USER_ROLES = "roles";
     
     static{
-        containerFilter.add("DevTest_1.0.0-SNAPSHOT");
-        containerFilter.add("automation_1.0.0-SNAPSHOT");
+        containerFilter.add("zayattv_1.0.1-SNAPSHOT");
+        containerFilter.add("MeXtra_1.0.0-SNAPSHOT");
     }
     
     static{

@@ -39,8 +39,11 @@
             <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
              <m:MaterialCardContent>
                 <m:MaterialRow marginBottom="0">   
-                    <ma:webp.MaterialWebpImage grid="l4 m4 s4" fallbackExtension="png" url="http://cdn.onlinewebfonts.com/svg/img_208869.png" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
+                    <m:MaterialIcon iconType="ACCOUNT_BOX" iconSize="LARGE" textColor="GREY"  float="LEFT" marginRight="20"/>
+                    
                     <!--
+                    <ma:webp.MaterialWebpImage grid="l4 m4 s4" fallbackExtension="png" url="http://cdn.onlinewebfonts.com/svg/img_208869.png" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
+                    
                     <ma:webp.MaterialWebpImage grid="l4 m4 s4" fallbackExtension="png" url="https://cdn3.iconfinder.com/data/icons/flat-rounded-7/50/617-512.png" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
                     -->
                     <m:MaterialCardTitle text="Personal information" />
@@ -58,7 +61,10 @@
             <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
              <m:MaterialCardContent>
                 <m:MaterialRow marginBottom="0">
+                    <m:MaterialIcon iconType="APPS" iconSize="LARGE" textColor="GREY"  float="LEFT" marginRight="20" />
+                    <!--
                     <ma:webp.MaterialWebpImage grid="l4 m4 s4" fallbackExtension="png" url="https://icon-library.net/images/apps-icon-png/apps-icon-png-20.jpg" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
+                    -->
                     <m:MaterialCardTitle text="Apps center" />
                     <m:MaterialLabel text="Single ID form service and workflow management" />
                 </m:MaterialRow>
@@ -73,7 +79,10 @@
             <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
              <m:MaterialCardContent>
                 <m:MaterialRow marginBottom="0">
+                    <m:MaterialIcon iconType="SECURITY" iconSize="LARGE" textColor="GREY"  float="LEFT" marginRight="20"/>
+                    <!--
                     <ma:webp.MaterialWebpImage marginBottom="20" grid="l4 m4 s4" fallbackExtension="png" url="https://image21.net/103/security_png/security_png_16.png" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
+                    -->
                     <m:MaterialCardTitle text="Security" />
                     <m:MaterialLabel text="Protect your account, falconIT care your login devices, location, 2 factor authentications" />
                 </m:MaterialRow>
@@ -89,8 +98,11 @@
             <m:MaterialCard backgroundColor="GREY_LIGHTEN_3" shadow="0">
              <m:MaterialCardContent>
                 <m:MaterialRow marginBottom="0">
-                    <ma:webp.MaterialWebpImage grid="l4 m4 s4" fallbackExtension="png" url="https://www.educationalmeasures.com/hs-fs/hubfs/04-user-privacy.png?width=500&amp;name=04-user-privacy.png" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
                     
+                    <m:MaterialIcon iconType="BEENHERE" iconSize="LARGE" textColor="GREY"  float="LEFT" marginRight="20"/>
+                    <!--
+                    <ma:webp.MaterialWebpImage grid="l4 m4 s4" fallbackExtension="png" url="https://www.educationalmeasures.com/hs-fs/hubfs/04-user-privacy.png?width=500&amp;name=04-user-privacy.png" maxWidth="150" maxHeight="150" float="LEFT" marginRight="20"/>
+                    -->
                     <m:MaterialCardTitle text="Privacy" />
                     <m:MaterialLabel text="This step-by-step guide helps you choose the privacy settings that are right for you" />
                 </m:MaterialRow>

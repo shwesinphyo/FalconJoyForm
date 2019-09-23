@@ -10,6 +10,7 @@ import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessByContainer;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -17,6 +18,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import gwt.material.design.addins.client.emptystate.MaterialEmptyState;
 import gwt.material.design.client.constants.Color;
 import gwt.material.design.client.constants.IconPosition;
 import gwt.material.design.client.constants.IconType;
@@ -30,6 +32,8 @@ import gwt.material.design.client.ui.MaterialLink;
 import gwt.material.design.client.ui.MaterialLoader;
 import gwt.material.design.client.ui.MaterialRow;
 import gwt.material.design.client.ui.MaterialSwitch;
+import gwt.material.design.client.ui.MaterialTextArea;
+import gwt.material.design.client.ui.MaterialToast;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -42,6 +46,7 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
 
     @UiField
     MaterialRow appsholder;
+
     
     private List<java.util.Map<String, Object[]>> lstTasks = new ArrayList<>();
             
@@ -54,7 +59,7 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
 
         
     private void loadForms( ){
-        
+         MaterialLoader.loading( true );
         FormCRUD crud = new FormCRUD();
         crud.setListener( new FormCRUD.CRUDListener(){
             @Override
@@ -70,13 +75,19 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
             public void success( List<Form> result ) {
                 if( !result.isEmpty( ) ){
                     
-                    for( Form form : result )
+                    for( Form form : result ){
                         createProcess ( form );
+                    }
+                    
+                    MaterialLoader.loading( false );
+                }else{
+                    MaterialLoader.loading( false );
                 }
             }
 
             @Override
             public void fail(String message) {
+                MaterialLoader.loading( false );
             }
 
             @Override
@@ -134,16 +145,9 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
             onOff.setOnLabel("Share");
             onOff.setOffLabel("Only me");
             onOff.setMarginTop(15);
+            onOff.setValue( (form.getStatus() == 1) );
             content.add( onOff );
             
-            MaterialCardAction actions = new MaterialCardAction();
-            card.add(actions);
-            
-            MaterialLink link = new MaterialLink( );
-            actions.add( link );
-            link.setText( "Form link" );
-            link.setIconType( IconType.ATTACHMENT );
-            link.setTextColor(Color.TEAL);
             String shareLink = 
                 "?container=" + form.getContainer()
                 + "&process=" + form.getProcess()
@@ -153,116 +157,45 @@ public class PrivateAppsView extends NavigatedView implements PrivateAppsPresent
                 + "&ownerId=" + form.getOwner()
                 + "&owner=" + CookieHelper.getMyCookie( Constants.COOKIE_USER_NAME )
                 + "#taskdisplay";
-            link.setHref( shareLink );
             
-            
-            MaterialLink lnkuse = new MaterialLink( );
-            actions.add( lnkuse );
-            lnkuse.setText( "Edit" );
-            lnkuse.setTextColor( Color.TEAL );
-            lnkuse.setIconType( IconType.EDIT );
-            lnkuse.setHref(
-                "?container=" + form.getContainer()
-                + "&process=" + form.getProcess()
-                + "&taskId=" + form.getTask()
-                + "#formediting" );
-           
-            
-        }catch(Exception ex){}
-    }
-
-    
-    private void load(){
-        lstTasks.clear();
-        MaterialLoader.loading( true );
-        
-        ProcessByContainer helper = new ProcessByContainer();
-        helper.setListener(new ProcessByContainer.ProcessByContainerListener() {
-            @Override
-            public void success(String result) {
-                
-                MaterialLoader.loading( false );
-                
-                JSONObject jsonOnlineUser = JSONParser.parseStrict( result ).isObject();
-                JSONArray tasks = jsonOnlineUser.get("processes").isArray();
-                if( tasks == null || tasks.size() == 0 ){
-                    
-                }else{
-                    for( int i=0; i < tasks.size(); i++){
-                        JSONObject task = tasks.get(i).isObject();
-                        
-                        try {
-                            java.util.Map<String, Object[]> taskMap = new ObjectConverter().fromJSON( task, false, false );
-                            createProcess( taskMap );
-                            lstTasks.add( taskMap );
-                        } catch (Exception ex) {
-                            Window.alert(ex.getMessage());
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void fail(String message, int stage) {
-              Window.alert( message );
-              MaterialLoader.loading( false );
-            }
-        });
-
-        helper.processesList( Constants.containerFilter.get(1) , 0, 200, true );//"DevTest_1.0.0-SNAPSHOT"
-    }
-    
-    private void createProcess( java.util.Map<String, Object[]> taskMap ){
-        try{
-            MaterialColumn col = new MaterialColumn();
-            col.setGrid("l4 m4 s12");
-            appsholder.add(col);
-            
-            MaterialCard card = new MaterialCard( );
-            card.setBackgroundColor( Color.GREY_LIGHTEN_3 );
-            card.setShadow(0);
-            col.add( card );
-            
-            MaterialCardContent content = new MaterialCardContent();
-            card.add( content );
-            //content.setTextColor(Color.WHITE);
-            
-            MaterialCardTitle title = new MaterialCardTitle();
-            content.add( title );
-            title.setIconType( IconType.APPS );
-            title.setIconPosition( IconPosition.RIGHT );
-            title.setText( taskMap.get("process-name")[1].toString() );
-            
-            MaterialLabel label = new MaterialLabel( );
-            content.add( label );
-            label.setText("Version: "+taskMap.get("process-version")[1].toString());
+            MaterialTextArea txtlink = new MaterialTextArea();
+            txtlink.setText( GWT.getHostPageBaseURL() + shareLink );
+            //txtlink.setReadOnly( true );
+            txtlink.setResizeRule(MaterialTextArea.ResizeRule.FOCUS);
+            txtlink.setSelectionRange(0, txtlink.getText().length());
+            txtlink.setVisible( false );
+            content.add( txtlink );
+             
             
             MaterialCardAction actions = new MaterialCardAction();
             card.add(actions);
             
             MaterialLink link = new MaterialLink( );
             actions.add( link );
-            link.setText( "Share" );
-            link.setIconType( IconType.CONTENT_COPY );
-            link.setTextColor(Color.TEAL);
-            link.setHref(
-                "?container=" + taskMap.get("container-id")[1].toString()
-                + "&process=" + taskMap.get("process-id")[1].toString()
-                + "&title=" + taskMap.get("process-name")[1].toString()
-                + "&taskName=" + Form.TASK_NAME_START_UP
-                + "&display=" + TaskDisplayView.DISPLAY_START_UP
-                + "#taskdisplay" );
+            link.setText( "Form link" );
+            link.setTooltip("Copy form link");
+            link.setIconType( IconType.ATTACHMENT );
+            link.setTextColor(Color.TEAL );
+            //link.setHref( shareLink );
+            link.addClickHandler(handler ->{
+                txtlink.setVisible( !txtlink.isVisible() );
+                MaterialToast.fireToast("Copied to clipboard", "rounded");
+                copy( shareLink);
+            });
+            
             
             MaterialLink lnkuse = new MaterialLink( );
             actions.add( lnkuse );
             lnkuse.setText( "Edit" );
             lnkuse.setTextColor( Color.TEAL );
             lnkuse.setIconType( IconType.EDIT );
+            
             lnkuse.setHref(
-                "?container=" + taskMap.get("container-id")[1].toString()
-                + "&process=" + taskMap.get("process-id")[1].toString()
-                + "&title=" + taskMap.get("process-name")[1].toString()
+                "?container=" + form.getContainer()
+                + "&process=" + form.getProcess()
+                + "&taskId=" + form.getTask()
                 + "#formediting" );
+           
             
         }catch(Exception ex){}
     }

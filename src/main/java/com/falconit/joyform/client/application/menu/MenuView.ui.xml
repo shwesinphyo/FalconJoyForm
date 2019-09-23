@@ -69,11 +69,13 @@
 			<m:MaterialNavBar ui:field="navBar" width="100%" backgroundColor="BLUE" activates="sideBar" textColor="WHITE">
                             <m:MaterialNavBrand paddingLeft="60" text="falconIT" />
 				<m:MaterialLink ui:field="btnSearch" iconType="SEARCH" iconColor="WHITE" float="RIGHT"/>
-				<ma:combobox.MaterialComboBox ui:field="comboThemes" textColor="WHITE" label="Select Theme" marginRight="12" width="120px" float="RIGHT" visible="true"/>
-                                <m:MaterialLink float="RIGHT" iconType="ACCOUNT_CIRCLE" marginLeft="7" marginRight="7" tooltip="Account" textColor="WHITE" waves="LIGHT" ui:field="account" />
+				
+                                <ma:combobox.MaterialComboBox ui:field="comboThemes" textColor="WHITE" label="Select Theme" marginRight="12" width="120px" float="RIGHT" visible="false"/>
+                                
+                                <m:MaterialLink ui:field="account" visible="true" float="RIGHT" iconType="ACCOUNT_CIRCLE" marginLeft="7" marginRight="7" tooltip="Account" textColor="WHITE" waves="LIGHT" />
                                 <!--
                                 <m:MaterialLink float="RIGHT" iconType="NOTIFICATIONS_ACTIVE" marginRight="30" tooltip="Notifications" textColor="WHITE" waves="LIGHT" ui:field="notifications" iconPosition="NONE" >
-                                    <m:MaterialBadge backgroundColor="RED" text="6" textColor="WHITE" />
+                                    <m:MaterialBadge backgroundColor="RED" text="6" textColor="WHITE"  activates="dp-5" />
                                 </m:MaterialLink>
                                 -->
 			</m:MaterialNavBar>
@@ -83,6 +85,13 @@
 			</m:MaterialNavBar>
 		</m:MaterialHeader>
 
+        <!-- Account Dropdown 
+           <m:MaterialDropDown activator="dp-5" constrainWidth="false">
+            <m:MaterialLink text="Profile" textColor="BLACK" iconType="EDIT" targetHistoryToken="{tokens.getPersonal}"/>
+            <m:MaterialLink ui:field="lnkLogout" text="Logout" textColor="BLACK" iconType="EXIT_TO_APP" />
+           </m:MaterialDropDown>
+           -->
+        
 		<m:MaterialSideNavPush ui:field="sideNav" m:id="sideBar" width="300" textColor="WHITE" withHeader="true" allowBodyScroll="true" showOnAttach="false" >
                     <!--
                     <m.html:ListItem waves="DEFAULT" paddingBottom="22">
@@ -105,14 +114,16 @@
 			</m:MaterialCollapsible>
 
                         <!-- for end users -->
+                        <!--
                         <m.html:ListItem waves="DEFAULT">
 				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" iconPosition="LEFT" textColor="WHITE" iconType="NOTIFICATIONS_ACTIVE" text="Notifications" separator="true" layoutPosition="RELATIVE">
-                                        <m:MaterialBadge backgroundColor="RED" text="10" textColor="WHITE" />
+                                        <m:MaterialBadge ui:field="badgenoti" backgroundColor="TEAL" text="0" textColor="WHITE" />
                                 </m:MaterialLink>
 			</m.html:ListItem>
+                        -->
                         <m.html:ListItem waves="DEFAULT">
 				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" textColor="WHITE" iconPosition="LEFT" iconType="INBOX" text="Task inbox" separator="true" layoutPosition="RELATIVE">
-                                        <m:MaterialBadge backgroundColor="RED" text="6 actives" textColor="WHITE" />
+                                        <m:MaterialBadge ui:field="badgeinbox" backgroundColor="TEAL" text="0 active" textColor="WHITE" />
                                 </m:MaterialLink>
 			</m.html:ListItem>
                         <m.html:ListItem waves="DEFAULT">
@@ -120,11 +131,14 @@
 			</m.html:ListItem>
                         
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getPrivateapps}" textColor="WHITE" iconPosition="LEFT" iconType="COLLECTIONS" text="Public Apps" separator="true" />       
+				<m:MaterialLink targetHistoryToken="{tokens.getWelcome}" textColor="WHITE" iconPosition="LEFT" iconType="SECURITY" text="Security" separator="true" />       
 			</m.html:ListItem>
                         
                         <m.html:ListItem waves="DEFAULT">
-				<m:MaterialLink targetHistoryToken="{tokens.getTasklist}" textColor="WHITE" iconPosition="LEFT" iconType="POLL" text="Analytics" separator="true" />       
+				<m:MaterialLink targetHistoryToken="{tokens.getWelcome}" textColor="WHITE" iconPosition="LEFT" iconType="BEENHERE" text="Privacy" separator="true" />       
+			</m.html:ListItem>
+                        <m.html:ListItem waves="DEFAULT">
+				<m:MaterialLink targetHistoryToken="{tokens.getWelcome}" textColor="WHITE" iconPosition="LEFT" iconType="POLL" text="Analytics" separator="true" />       
 			</m.html:ListItem>
 <!--
 			<m:MaterialCollapsible>

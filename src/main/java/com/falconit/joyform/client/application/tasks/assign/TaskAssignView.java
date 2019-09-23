@@ -55,6 +55,7 @@ public class TaskAssignView extends NavigatedView implements TaskAssignPresenter
             
     private void loadForms( ){
         
+        MaterialLoader.loading( true );
         FormCRUD crud = new FormCRUD();
         crud.setListener( new FormCRUD.CRUDListener(){
             @Override
@@ -70,13 +71,19 @@ public class TaskAssignView extends NavigatedView implements TaskAssignPresenter
             public void success( List<Form> result ) {
                 if( !result.isEmpty( ) ){
                     
-                    for( Form form : result )
+                    for( Form form : result ){
                         createProcess ( form );
+                    }
+                    
+                    MaterialLoader.loading( false );
+                }else{
+                    MaterialLoader.loading( false );
                 }
             }
 
             @Override
             public void fail(String message) {
+                MaterialLoader.loading( false );
             }
 
             @Override

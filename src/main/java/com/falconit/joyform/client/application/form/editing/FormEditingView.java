@@ -321,7 +321,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                         for( Object[] o : lstProjects ){
                             java.util.Map<String, Object[]> map = (java.util.Map<String, Object[]>) o[1];
                             String cid = map.get("container-id")[1].toString();
-                            if( Constants.containerFilter.contains( cid )){
+                            if( !Constants.containerFilter.contains( cid )){
                                 cbocontainer.addItem( cid.substring( 0, cid.indexOf("_")), cid);
                             }
                         }
