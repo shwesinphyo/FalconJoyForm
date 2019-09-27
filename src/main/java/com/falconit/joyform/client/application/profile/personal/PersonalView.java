@@ -10,6 +10,7 @@ import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.place.NameTokens;
 import com.falconit.joyform.client.ui.NavigatedView;
+import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -155,7 +156,12 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
         MaterialPanel panel = new MaterialPanel();
         panel.setMarginTop(20);
         panel.setShadow(1);
-        body[ intID ].add( panel );
+        panel.setPaddingTop(20);
+        panel.setPaddingBottom(20);
+        holder.clear();
+        holder.add( panel );
+        
+        myForm.setItemDisplay(Form.ITEMS_DISPLAY_CATEGORIZE);
         myForm.render( panel );
         /*
         for( Field parent : myForm.getChild( ) ){
@@ -186,8 +192,12 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
         btnupdate.setBackgroundColor(Color.TEAL);
         btnupdate.setTextColor(Color.WHITE);
         panel.add(btnupdate);
+        btnupdate.setMargin(20);
         btnupdate.addClickHandler(handler ->{
-            //bindBack( );
+                        
+            try{
+               updatePerson( );
+            }catch(Exception ex){ Window.alert(ex.getMessage());}
             display( );
         });
         
@@ -197,30 +207,13 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
         btnclose.setBackgroundColor(Color.TEAL);
         btnclose.setTextColor(Color.WHITE);
         panel.add( btnclose );
+        btnupdate.setMargin(20);
         btnclose.addClickHandler(handler ->{
-            
-            try{
-                Window.alert( "Rebuild size=" + myForm.getOutputDataForPerson().size());
-            }catch(Exception ex){ Window.alert(ex.getMessage());}
-            
             display( );
         });
         
         
         coll.open( intID + 1 );
-    }
-    
-    private void bindBack( ){
-        for( Field parent : myForm.getChild( ) ){
-            //if( parent.getCategory( ).equals( group )){
-            try{
-                for( Field field : parent.getChildren() ){
-                    field.setValue( field.getBindValue("com.falconit.entity.Customer") [1] );
-                }
-            }catch(Exception ex){Window.alert(ex.getMessage()); break;}
-            
-            //}
-        }
     }
     
     private void getForm( ){
@@ -268,6 +261,9 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
 
     private void display(){
         
+        holder.clear();
+        holder.add( coll );
+        
         for ( int i =0; i < body.length; i++){
             body[i].clear();
         }
@@ -287,6 +283,7 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
             row.add( value );
 
             if( field.getName().equals("photo")){
+                
                 MaterialWebpImage photo = new MaterialWebpImage();
                 row.add(photo);
                 photo.setGrid("l2 m2 s4");
@@ -295,7 +292,11 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
                 photo.setMaxWidth("150px");
                 photo.setMaxHeight("150px");
                 photo.setType(ImageType.CIRCLE);
-                photo.setUrl("https://p7.hiclipart.com/preview/535/466/472/google-account-microsoft-account-login-email-gmail-email.jpg");
+                if( field.getChildren().get(0).getValue() != null 
+                        && !field.getChildren().get(0).getValue().toString().isEmpty()){
+                    photo.setUrl( field.getChildren().get(0).getValue().toString() );
+                }else
+                    photo.setUrl("https://p7.hiclipart.com/preview/535/466/472/google-account-microsoft-account-login-email-gmail-email.jpg");
 
                 value.setText( "A photo helps personalize your account" );
             }else{
@@ -358,7 +359,6 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
             public void success(Map<String, Object[]> result) {
                 MaterialLoader.loading( false );
                 personMaps = result;
-                Window.alert("Size=" + result.size() +", ID=" + customerId);
                 getForm();
             }
 
@@ -369,6 +369,53 @@ public class PersonalView extends NavigatedView implements PersonalPresenter.MyV
         });
         
         crud.get( customerId );
+    }
+    
+        
+    private void updatePerson( ){
+        if( CookieHelper.getMyCookie(Constants.COOKIE_USER_PERSON_ID) == null ){
+            History.newItem( NameTokens.login );
+            return;
+        }
+        try {
+            MaterialLoader.loading( true );
+            PersonCRUD crud = new PersonCRUD();
+            crud.setListener(new PersonCRUD.CRUDListener(){
+                @Override
+                public void success(String result) {
+                    MaterialLoader.loading( false );
+                    try {
+                        myForm.bindWithTaskData(personMaps);
+                    } catch (Exception ex) {
+                        Logger.getLogger(PersonalView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //Window.alert( "Result = " + result );
+                }
+                
+                @Override
+                public void fail(String message) {
+                    MaterialLoader.loading( false );
+                    Window.alert( "Result = " + message );
+                }
+                
+                @Override
+                public void fqdn(Map<String, Object[]> maps) {}
+                
+                @Override
+                public void success(Map<String, Object[]> result) { }
+                
+                @Override
+                public void success(List<Map<String, Object[]>> result) { }
+            });
+            
+            personMaps = myForm.getOutputDataForPerson();
+            personMaps.put( "id",  new Object[] { ObjectConverter.TYPE_NUMBER, CookieHelper.getMyCookie(Constants.COOKIE_USER_PERSON_ID) } );
+            personMaps.put( "status",  new Object[] { ObjectConverter.TYPE_NUMBER, 1 } );
+            //CookieHelper.setMyCookie( Constants.COOKIE_USER_PERSON_ID, cid );//customerId, new Object[] { ObjectConverter.TYPE_NUMBER, value };
+            crud.saveUpdate( personMaps, false );
+        } catch (Exception ex) {
+            Window.alert(ex.getMessage());
+        }
     }
 
 }

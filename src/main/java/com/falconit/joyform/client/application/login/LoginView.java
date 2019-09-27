@@ -155,7 +155,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
                     
                     CookieHelper.setMyCookie( Constants.COOKIE_USER_NAME, name );
                     CookieHelper.setMyCookie( Constants.COOKIE_USER_ID, id );
-                    CookieHelper.setMyCookie( Constants.COOKIE_USER_PERSON_ID, cid );
+                    CookieHelper.setMyCookie( Constants.COOKIE_USER_PERSON_ID, cid );//customerId
                     CookieHelper.setMyCookie( Constants.COOKIE_USER_ROLES, roles );
                     CookieHelper.setMyCookie( Constants.COOKIE_USER_CREDENTIAL, txtpassword.getText( ) + "" );
                     History.newItem( NameTokens.welcome );

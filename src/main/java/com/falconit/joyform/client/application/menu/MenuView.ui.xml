@@ -72,7 +72,7 @@
 				
                                 <ma:combobox.MaterialComboBox ui:field="comboThemes" textColor="WHITE" label="Select Theme" marginRight="12" width="120px" float="RIGHT" visible="false"/>
                                 
-                                <m:MaterialLink ui:field="logout" visible="false" float="RIGHT" iconType="EXIT_TO_APP" marginLeft="7" marginRight="7" tooltip="Account" textColor="WHITE" waves="LIGHT" />
+                                <m:MaterialLink ui:field="logout" visible="false" float="RIGHT" iconType="EXIT_TO_APP" marginLeft="7" marginRight="7" tooltip="Logout" textColor="WHITE" waves="LIGHT" />
                                 <m:MaterialLink ui:field="account" visible="false" float="RIGHT" targetHistoryToken="{tokens.getPersonal}" iconType="ACCOUNT_CIRCLE" marginLeft="7" marginRight="7" tooltip="Account" textColor="WHITE" waves="LIGHT" />
                                 
                                 <!--

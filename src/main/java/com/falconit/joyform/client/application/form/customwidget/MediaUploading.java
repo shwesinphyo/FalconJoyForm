@@ -68,7 +68,7 @@ public class MediaUploading extends MaterialRow{
         
         MaterialAnchorButton btnupload = new MaterialAnchorButton( );
         btnupload.setType( ButtonType.FLOATING );
-        btnupload.setBackgroundColor( Color.GREEN );
+        btnupload.setBackgroundColor( Color.TEAL );
         btnupload.setIconType( IconType.CLOUD_UPLOAD );
         btnupload.setSize( ButtonSize.MEDIUM );
         btnupload.setTooltip("Upload");
@@ -84,7 +84,7 @@ public class MediaUploading extends MaterialRow{
 
         MaterialAnchorButton btnpreview = new MaterialAnchorButton( );
         btnpreview.setType( ButtonType.FLOATING );
-        btnpreview.setBackgroundColor( Color.GREEN );
+        btnpreview.setBackgroundColor( Color.TEAL );
         btnpreview.setIconType( IconType.PHOTO_ALBUM );
         btnpreview.setSize( ButtonSize.MEDIUM );
         btnpreview.setTooltip("Preview");

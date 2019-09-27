@@ -5,6 +5,7 @@ package com.falconit.joyform.client.application.tasks.display;
 import com.falconit.joyform.client.application.form.util.Field;
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.form.util.FormCRUD;
+import com.falconit.joyform.client.application.profile.personal.PersonCRUD;
 import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.api.process.ProcessesVariablesMapping;
@@ -442,7 +443,13 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                     form.setDraggable( false );
                     
                     txtTitleReply.setTitle(form.getName());
-                    form.render( fillup );
+                    if( CookieHelper.getMyCookie( Constants.COOKIE_USER_PERSON_ID ) != null ){
+                        long customerId = Long.parseLong(CookieHelper.getMyCookie(Constants.COOKIE_USER_PERSON_ID));
+                        getPerson( customerId );
+                    }else{
+                        form.render( fillup );
+                    }
+                    
                     solveFQDN( form.getFqdn() );
                 }else{
                     tab.remove( out );
@@ -461,6 +468,43 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         });
         
         crud.getBy( container, process, taskName, ownerId );
+    }
+    
+          
+    private void getPerson( long customerId ){
+        MaterialLoader.loading( true );
+        PersonCRUD crud = new PersonCRUD();
+        crud.setListener(new PersonCRUD.CRUDListener(){
+            @Override
+            public void success(String result) {
+                //Window.alert( "Result = " + result );
+            }
+
+            @Override
+            public void fail(String message) {
+                MaterialLoader.loading( false );
+                Window.alert( "Result = " + message );
+            }
+
+            @Override
+            public void fqdn(Map<String, Object[]> maps) {}
+
+            @Override
+            public void success(Map<String, Object[]> result) {
+                MaterialLoader.loading( false );
+                try {
+                    form.bindWithTaskData( result );
+                } catch (Exception ex) {  }
+                form.render( fillup );
+            }
+
+            @Override
+            public void success(List<Map<String, Object[]>> result) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        
+        crud.get( customerId );
     }
     
     @UiHandler("btnsend")
