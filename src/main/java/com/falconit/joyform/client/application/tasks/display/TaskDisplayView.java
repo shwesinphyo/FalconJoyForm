@@ -146,6 +146,8 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                 + "&process=" + process
                 + "&title=" + title
                 + "&taskName=" + title
+                + "&owner=" + owner
+                + "&ownerId=" + ownerId
                 + "&display=" + TaskDisplayView.DISPLAY_START_UP
                 + "#login" );
             return;
@@ -192,6 +194,8 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                 + "&process=" + process 
                 + "&taskName=" + newTaskName 
                 + "&display=" + TaskDisplayView.DISPLAY_PROCESS
+                + "&owner=" + owner
+                + "&ownerId=" + ownerId
                 + "#taskdisplay" );
             
         /*
@@ -264,8 +268,8 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
         startup.setLayoutPosition(Style.Position.ABSOLUTE);
         startup.setVisibility(Style.Visibility.HIDDEN);
         
-        TaskInputDataReader reader = new TaskInputDataReader();
-        reader.setListener(new TaskInputDataReaderListener(){
+        TaskInputDataReader reader = new TaskInputDataReader( );
+        reader.setListener(new TaskInputDataReaderListener( ){
             @Override
             public void result(String taskName, String nodeName, String Skippable, String actor, Map<String, Object[]> maps) {
                 //Window.alert("Task name=" + taskName + ", Node name=" + nodeName+", size=" + maps.size());
@@ -277,7 +281,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                         getForm( container, process, task );
                     }else {
                         for( java.util.Map.Entry<String, Object[]> entry : maps.entrySet() ){
-                            if( entry.getValue()[0].toString().equals( ObjectConverter.TYPE_OBJECT ) ){
+                            if( entry.getValue()[0].toString( ).equals( ObjectConverter.TYPE_OBJECT ) ){
                                 String fqdn = entry.getKey();
                                 outputTaskMappings(  container,  process );
                                 found = true;
@@ -296,7 +300,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                     Window.alert("No input data");
                     //in.setVisible( false ); // auto commit here
                     tab.remove( in );
-                    tab.setTabIndex(0);
+                    tab.setTabIndex( 0 );
                 }
                 MaterialLoader.loading( false );
             }
@@ -306,7 +310,7 @@ public class TaskDisplayView extends NavigatedView implements TaskDisplayPresent
                 MaterialLoader.loading( false );
             }
         });
-        reader.read(container, taskId);
+        reader.read( container, taskId );
     }
        
     private void outputTaskMappings( String container, String processId ){

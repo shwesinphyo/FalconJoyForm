@@ -1112,7 +1112,7 @@ public class FormEditingView extends ViewImpl implements FormEditingPresenter.My
                 if( !result.isEmpty() ){
                     MaterialLoader.loading( false );
                     //myForm = result.get( 0 );
-                    myForm.setId(result.get( 0 ).getId() );
+                    myForm.setId( null );
                     myForm.setName(result.get( 0 ).getName());
                     myForm.setContainer(result.get( 0 ).getContainer());
                     myForm.setProcess(result.get( 0 ).getProcess());

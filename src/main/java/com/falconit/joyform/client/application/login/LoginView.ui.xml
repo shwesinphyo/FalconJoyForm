@@ -25,7 +25,7 @@
     <ui:with field='res' type='com.falconit.joyform.client.resources.MaterialResources' />
     <ui:style>
         .panel{
-            background: url("https://img.freepik.com/free-vector/marketing-automation-background_23-2148003882.jpg?size=338&amp;ext=jpg");
+            <!-- background: url("https://img.freepik.com/free-vector/marketing-automation-background_23-2148003882.jpg?size=338&amp;ext=jpg"); -->
             background-size: 100%;
             padding: 0px !important;
             padding-top: 40% !important;

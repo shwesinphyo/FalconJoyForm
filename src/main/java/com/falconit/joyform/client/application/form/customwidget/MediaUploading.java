@@ -6,7 +6,7 @@
 package com.falconit.joyform.client.application.form.customwidget;
 
 
-import com.google.gwt.user.client.Window;
+//import com.google.gwt.user.client.Window;
 import gwt.material.design.addins.client.cropper.constants.Type;
 import gwt.material.design.addins.client.cropper.MaterialImageCropper;
 import gwt.material.design.addins.client.fileuploader.MaterialFileUploader;
@@ -36,7 +36,7 @@ import gwt.material.design.client.ui.MaterialTextBox;
  */
 public class MediaUploading extends MaterialRow{
     
-    public static final String BASED_URL = "http://localhost:8090/autofacecentral/";
+    public static final String BASED_URL = "http://theburmapeople.com:8090/autofacecentral/";//http://localhost:8090/autofacecentral/";
     public static final String UPLOAD_FILE_PATH = "form-service/";
     public static final String FILE_TYPE_DOC = "doc";
     public static final String FILE_TYPE_IMAGE = "img";
@@ -229,7 +229,7 @@ public class MediaUploading extends MaterialRow{
         uploader.addSuccessHandler(new SuccessEvent.SuccessHandler<UploadFile>() {
             @Override
             public void onSuccess(SuccessEvent<UploadFile> event) {
-                Window.alert( "Body="+ event.getResponse().getBody() );
+                //Window.alert( "Body="+ event.getResponse().getBody() );
                 if( type.equals(FILE_TYPE_FACIAL) ) {
                    if( event.getResponse().getBody().equals("OK")){
 

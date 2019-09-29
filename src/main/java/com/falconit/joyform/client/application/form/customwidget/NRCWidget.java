@@ -7,7 +7,6 @@ package com.falconit.joyform.client.application.form.customwidget;
 
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.user.client.Window;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
 import gwt.material.design.client.constants.InputType;
 import gwt.material.design.client.constants.TextAlign;

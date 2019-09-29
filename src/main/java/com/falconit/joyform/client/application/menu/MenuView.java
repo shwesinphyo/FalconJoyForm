@@ -46,8 +46,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-import gwt.material.design.client.constants.Color;
-import gwt.material.design.client.data.ListDataSource;
 import gwt.material.design.client.ui.MaterialBadge;
 import gwt.material.design.client.ui.MaterialLink;
 import gwt.material.design.client.ui.MaterialLoader;
@@ -292,13 +290,14 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
     
         
     @UiHandler("logout")
-    void onLogout(ClickEvent e){
+    void onLogout( ClickEvent e ){
         CookieHelper.setMyCookie( Constants.COOKIE_USER_NAME, null );
         CookieHelper.setMyCookie( Constants.COOKIE_USER_ID, null );
         CookieHelper.setMyCookie( Constants.COOKIE_USER_PERSON_ID, null );
         CookieHelper.setMyCookie( Constants.COOKIE_USER_ROLES, null );
         CookieHelper.setMyCookie( Constants.COOKIE_USER_CREDENTIAL, null );
         History.newItem( NameTokens.login );
+        Window.Location.reload( );
     }
     
         

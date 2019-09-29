@@ -66,7 +66,7 @@ public class WelcomeView extends NavigatedView implements WelcomePresenter.MyVie
                 sb.append( first[1]!=null ? first[1].toString() : "" );
                 sb.append(middle[1]!=null ? " " + middle[1].toString() : "" );
                 sb.append(last[1]!=null ? " " + last[1].toString() : "" );
-                txtname.setTitle(sb.toString());
+                txtname.setTitle("Welcome "+sb.toString());
                 
                 Object[] photoValue = result.get("photo");
                 if( photoValue[1] != null && !photoValue[1].toString().isEmpty()){
