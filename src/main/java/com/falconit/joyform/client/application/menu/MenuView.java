@@ -35,9 +35,20 @@ import gwt.material.design.client.ui.MaterialNavBar;
 import gwt.material.design.client.ui.MaterialSearch;
 import gwt.material.design.client.ui.MaterialSideNavPush;
 import com.falconit.joyform.client.ThemeManager;
+import com.falconit.joyform.client.application.tasks.list.TasksListView;
+import com.falconit.joyform.client.application.util.Constants;
 import com.falconit.joyform.client.application.util.CookieHelper;
+import com.falconit.joyform.client.application.util.jbpmclient.APIHelper;
 import com.falconit.joyform.client.place.NameTokens;
+import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import gwt.material.design.client.ui.MaterialBadge;
+import gwt.material.design.client.ui.MaterialLink;
+import gwt.material.design.client.ui.MaterialLoader;
 import gwt.material.design.themes.amber.ThemeAmber;
 import gwt.material.design.themes.blue.ThemeBlue;
 import gwt.material.design.themes.brown.ThemeBrown;
@@ -53,6 +64,8 @@ import gwt.material.design.themes.yellow.ThemeYellow;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresenter.MyView {
 
@@ -67,6 +80,8 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
     @UiField MaterialSideNavPush sideNav;
     @UiField MaterialSearch txtSearch;
     @UiField MaterialComboBox<ThemeLoader.ThemeBundle> comboThemes;
+    @UiField MaterialBadge badgeinbox;
+    @UiField MaterialLink account, logout;
 
     @Inject
     MenuView(Binder uiBinder) {
@@ -101,8 +116,13 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
         });
         sideNav.addClosedHandler(event -> {getUiHandlers().setContentPush();});
 
-        initThemes();
-        initSearches();
+        initThemes( );
+        initSearches( );
+        if( CookieHelper.getMyCookie( Constants.COOKIE_USER_ID ) != null ){
+            account.setVisible(true);
+            logout.setVisible(true);
+            loadNoti( );
+        }
     }
 
     private void initSearches() {
@@ -237,12 +257,17 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
 
     protected void initThemes() {
         ThemeManager.initialize();
+        ThemeManager.register(sideNav );
         ThemeManager.register(navBar, ThemeManager.DARKER_SHADE);
         buildThemeList();
+        ThemeManager.loadTheme( ThemeGrey.INSTANCE );
+        
+        
         comboThemes.setSingleValue(ThemeManager.getBundle());
         comboThemes.addValueChangeHandler(event -> {
             ThemeManager.loadTheme(comboThemes.getSingleValue());
         });
+        
     }
 
     protected void buildThemeList() {
@@ -262,4 +287,90 @@ class MenuView extends ViewWithUiHandlers<MenuUiHandlers> implements MenuPresent
     void onSearch(ClickEvent e){
         txtSearch.open();
     }
+    
+        
+    @UiHandler("logout")
+    void onLogout( ClickEvent e ){
+        CookieHelper.setMyCookie( Constants.COOKIE_USER_NAME, null );
+        CookieHelper.setMyCookie( Constants.COOKIE_USER_ID, null );
+        CookieHelper.setMyCookie( Constants.COOKIE_USER_PERSON_ID, null );
+        CookieHelper.setMyCookie( Constants.COOKIE_USER_ROLES, null );
+        CookieHelper.setMyCookie( Constants.COOKIE_USER_CREDENTIAL, null );
+        History.newItem( NameTokens.login );
+        Window.Location.reload( );
+    }
+    
+        
+    private void loadNoti(){
+            
+        MaterialLoader.loading( true );
+        APIHelper helper = new APIHelper();
+        helper.setListener(new APIHelper.APIHelperListener() {
+            @Override
+            public void success(String result) {
+                
+                MaterialLoader.loading( false );
+                
+                JSONObject jsonOnlineUser = JSONParser.parseStrict( result ).isObject();
+                JSONArray tasks = jsonOnlineUser.get("task-summary").isArray();
+                if( tasks == null || tasks.size() == 0 ){
+                    
+                }else{
+                    int notiCount = 0;
+                    for( int i=0; i < tasks.size(); i++){
+                        JSONObject task = tasks.get(i).isObject();
+                        
+                        try {
+                            java.util.Map<String, Object[]> taskMap = new ObjectConverter().fromJSON( task, false, false );
+                            String cid = taskMap.get("task-container-id")[1].toString();
+                            if( !Constants.containerFilter.contains( cid )){
+                                String userName = CookieHelper.getMyCookie( Constants.COOKIE_USER_NAME );
+                                String userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
+                                
+                                
+                                String actualOwner = taskMap.get("task-actual-owner")[1] != null ? taskMap.get("task-actual-owner")[1].toString() : "";
+                                String createdBy = taskMap.get("task-created-by")[1] !=null ? taskMap.get("task-created-by")[1].toString() : "";
+                                if( ( !actualOwner.isEmpty() && actualOwner.equals( userId +"-" + userName )) 
+                                        || (!createdBy.isEmpty() && createdBy.equals(userId +"-" + userName))){
+                                    
+                                    String status = taskMap.get("task-status")[1].toString();
+                                    if( status.equalsIgnoreCase(APIHelper.STATUS_CREATED) 
+                                            || status.equalsIgnoreCase(APIHelper.STATUS_READY)
+                                            || status.equalsIgnoreCase(APIHelper.STATUS_INPROGRESS)
+                                            || status.equalsIgnoreCase(APIHelper.STATUS_RESERVED)){
+                                        notiCount++;
+                                    }
+                                }
+                            }
+                            badgeinbox.setText(notiCount +" active" +( notiCount>1 ? "s" : "" ) );
+                            //filter with user
+                            //"task-actual-owner": "wbadmin",
+                            //"task-created-by": "wbadmin",
+                            
+                            //Window.alert("Task id = "+taskMap.get("task-id")[1].toString() +", Created on=" + (long)taskMap.get("task-created-on")[1]);
+                        } catch (Exception ex) {
+                            Window.alert(ex.getMessage());
+                            Logger.getLogger(TasksListView.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    
+                }
+            }
+
+            @Override
+            public void fail(String message, int stage) {
+              Window.alert( message );
+              MaterialLoader.loading( false );
+            }
+        });
+        String arrStatus[] = new String[]{ APIHelper.STATUS_CREATED, APIHelper.STATUS_READY, APIHelper.STATUS_INPROGRESS, APIHelper.STATUS_RESERVED };
+
+        
+        helper.tasksList( 
+                //new String[]{APIHelper.STATUS_READY,APIHelper.STATUS_RESERVED, APIHelper.STATUS_INPROGRESS },
+                arrStatus,
+                0, 1000, null, null, true);
+        //helper.query( Constants.containerId, "355");
+    }
+    
 }

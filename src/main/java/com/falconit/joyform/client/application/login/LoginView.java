@@ -25,18 +25,11 @@ import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.HumanTaskHelper;
 import com.falconit.joyform.client.application.validators.EmailValidator;
 import com.falconit.joyform.client.application.validators.MobileValidator;
-import com.falconit.joyform.shared.entity.Users;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
@@ -56,6 +49,8 @@ import gwt.material.design.incubator.client.loadingstate.AppLoadingState;
 import gwt.material.design.incubator.client.loadingstate.constants.State;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+
 
 public class LoginView extends ViewImpl implements LoginPresenter.MyView {
     public interface Binder extends UiBinder<Widget, LoginView> {
@@ -88,19 +83,19 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
         // third action
         txtusername.addKeyUpHandler(new KeyUpHandler(){
             @Override
-            public void onKeyUp(KeyUpEvent event) {
-                if( txtusername.getText().trim().isEmpty()) return;
+            public void onKeyUp( KeyUpEvent event ) {
+                if( txtusername.getText().trim().isEmpty() ) return;
                 
-                for( char c : txtusername.getText().trim().toCharArray()){
+                for( char c : txtusername.getText().trim( ).toCharArray() ){
                     if( !Character.isDigit(c) ){
-                        txtusername.removeValidator(mobileValidator);
+                        txtusername.removeValidator( mobileValidator );
                         txtusername.addValidator( emailValidator );
                         return;
                     }
                 }
                 
                 txtusername.removeValidator(emailValidator);
-                txtusername.addValidator( mobileValidator );
+                txtusername.addValidator( mobileValidator ); 
             }
         });
         //second action
@@ -147,25 +142,23 @@ public class LoginView extends ViewImpl implements LoginPresenter.MyView {
                 String message = jsonOnlineUser.get("message").isString().stringValue();
                 if( message.equalsIgnoreCase("Success")){
                     JSONObject users = jsonOnlineUser.get("user").isObject();
-                    JSONObject user = users.get( "com.falconit.loyaltymanagement.entity.User" ).isObject();
+                    JSONObject user = users.get( "com.falconit.automation.entity.User" ).isObject();
                     
                     try {
                         userMap = new ObjectConverter().fromJSON(user, false, false);
-                        //Window.alert( "Created size=" + userMap.size());
-                        
-                        //Window.alert( new ObjectConverter().toJSON(userMap).toString() );
-                        
                         String name = userMap.get("username")[1].toString();
                         String id = userMap.get("id")[1].toString();
-                        String outletId = userMap.get("outletId")[1].toString();
+                        String cid = userMap.get("customerId")[1].toString();
+                        String roles = userMap.get("roles")[1].toString();
                         
                     appLoadingState.setState( State.SUCCESS, "Successfully logged in", "Welcome " + name );
                     
-                    CookieHelper.setMyCookie( "un", name );
-                    CookieHelper.setMyCookie( "uid", id );
-                    CookieHelper.setMyCookie( "oid", outletId );
-                    CookieHelper.setMyCookie( "cdt", txtpassword.getText( ) + "" );
-                    History.newItem( NameTokens.charts );
+                    CookieHelper.setMyCookie( Constants.COOKIE_USER_NAME, name );
+                    CookieHelper.setMyCookie( Constants.COOKIE_USER_ID, id );
+                    CookieHelper.setMyCookie( Constants.COOKIE_USER_PERSON_ID, cid );//customerId
+                    CookieHelper.setMyCookie( Constants.COOKIE_USER_ROLES, roles );
+                    CookieHelper.setMyCookie( Constants.COOKIE_USER_CREDENTIAL, txtpassword.getText( ) + "" );
+                    History.newItem( NameTokens.welcome );
                     } catch (Exception ex) {
                         Window.alert( "Error " + ex.getMessage());
                         Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);

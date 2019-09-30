@@ -65,3 +65,24 @@ public class ProcessByContainer {
         this.listener = listener;
     }
 }
+
+/*
+{
+  "processes": [
+    {
+      "associatedEntities": null,
+      "serviceTasks": null,
+      "processVariables": null,
+      "reusableSubProcesses": null,
+      "nodes": null,
+      "timers": null,
+      "process-id": "Leave-Request",
+      "process-name": "Leave-Request",
+      "process-version": "1.0",
+      "package": "org.jbpm",
+      "container-id": "DevTest_1.0.0-SNAPSHOT",
+      "dynamic": false
+    }
+  ]
+}
+*/

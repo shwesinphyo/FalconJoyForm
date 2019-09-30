@@ -21,6 +21,7 @@ package com.falconit.joyform.client.application.form;
  */
 
 
+import com.falconit.joyform.client.application.form.editing.FormEditingModule;
 import com.falconit.joyform.client.application.form.editor.FormEditorModule;
 import com.google.gwt.inject.client.AbstractGinModule;
 
@@ -32,5 +33,6 @@ public class FormModule extends AbstractGinModule {
     @Override
     protected void configure() {
         install(new FormEditorModule());//
+        install(new FormEditingModule());//
     }
 }

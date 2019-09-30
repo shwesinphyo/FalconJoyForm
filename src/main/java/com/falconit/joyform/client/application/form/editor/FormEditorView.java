@@ -21,6 +21,7 @@ package com.falconit.joyform.client.application.form.editor;
  */
 
 import com.falconit.joyform.client.application.form.util.Field;
+import static com.falconit.joyform.client.application.form.util.Field.JSON_FIELD_LABEL;
 import com.falconit.joyform.client.application.form.util.Form;
 import com.falconit.joyform.client.application.form.util.FormCRUD;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,6 +35,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
 import gwt.material.design.client.ui.*;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import java.util.logging.Level;
@@ -96,7 +98,16 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
             public void onDeleteClick(Field field, int index) {
                 MaterialToast.fireToast("Click on Delete button " + field.getName()+", index=" + index );
             }
+
+            @Override
+            public void onUpClick(Field field, int index) {
+            }
+
+            @Override
+            public void onDownClick(Field field, int index) {
+            }
         });
+        
         myForm.setName("Leave Approved");
         
         myForm.setContainer("DevTest_1.0.0-SNAPSHOT");
@@ -146,34 +157,46 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
     private void addTestItem( String type, String id, 
             String name, String label, String placeHolder ){
         
-        if( type.equals(Field.WIDGET_COMBO_BOX)){
-            // Combo box testing
-            Field f = new Field( id, label, name );
+        if( type.equals(Field.WIDGET_COMBO_BOX) 
+                || type.equals(Field.WIDGET_RADIO_GROUP) ){
             
-            Field child = new Field( id, label, name );
-            child.setWidgetType( Field.WIDGET_COMBO_BOX );
+            java.util.Map<String,String> labelLang = new java.util.HashMap<>();
+            labelLang.put( "en", label );
+            // Combo box testing
+            Field f = new Field( id, labelLang, name );
+            
+            Field child = new Field( id, labelLang, name );
+            child.setWidgetType( type );
 
             child.setPlaceHolder( placeHolder );
-            child.setLabel( label );
+            child.setLabel( labelLang );
 
-            child.setValue( "value 3" );// default selection
+            if( type.equals(Field.WIDGET_COMBO_BOX))
+                child.setValue( "value 3" );// default selection
+            else
+                child.setValue( "Item value 3" );// default selection
             f.getChildren().add( child );
 
             // Items
             String comboData[] = new String[]{"value 1","value 2","value 3","value 4","value 5","value 6","value 7"};
             for( String s : comboData){
-                Field comboItem = new Field();
+                Field comboItem = new Field( );
                 comboItem.setValue( s );
-                comboItem.setLabel("Item " + s);
+                java.util.Map<String,String> labelItems = new java.util.HashMap<>();
+                labelItems.put( "en", "Item " + s );
+                comboItem.setLabel( labelItems );
                 child.getChildren().add( comboItem );
             }
             lstItem.add( f );
         }else{
-            Field f = new Field( id, label, name );
-            Field child = new Field( id, label, name );
+            java.util.Map<String,String> labelLang = new java.util.HashMap<>();
+            labelLang.put( "en", label );
+            
+            Field f = new Field( id, labelLang, name );
+            Field child = new Field( id, labelLang, name );
             child.setWidgetType( type );
             child.setPlaceHolder( label );
-            child.setLabel( label );
+            child.setLabel( labelLang );
             //child.setReadOnly( true );
             
             f.getChildren().add( child );
@@ -202,7 +225,7 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
     @UiHandler("btnSave")
     void onSave(ClickEvent e) {
         try {
-            saveForm();
+            //saveForm();
         } catch (Exception ex) {
             Window.alert( ex.getMessage() );
         }
@@ -242,8 +265,14 @@ public class FormEditorView extends ViewImpl implements FormEditorPresenter.MyVi
             public void fail(String message) {
                 Window.alert( "Result = " + message );
             }
+
+            @Override
+            public void fqdn(Map<String, Object[]> maps) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
         });
         
         crud.saveUpdate( myForm, true );
     }
+
 }

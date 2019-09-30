@@ -1,0 +1,74 @@
+<!--
+  #%L
+  GwtMaterial
+  %%
+  Copyright (C) 2015 - 2016 GwtMaterialDesign
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:m="urn:import:gwt.material.design.client.ui"
+             xmlns:ma="urn:import:gwt.material.design.addins.client"
+             xmlns:incubator="urn:import:gwt.material.design.incubator.client">
+
+    <ui:with field='res' type='com.falconit.joyform.client.resources.MaterialResources' />
+    <ui:style>
+        .panel{
+            background: url("https://img.freepik.com/free-vector/marketing-automation-background_23-2148003882.jpg?size=338&amp;ext=jpg");
+            background-size: 100%;
+            padding: 0px !important;
+            padding-top: 40% !important;
+          }
+          .fieldPanel{
+            background: white;
+            padding: 6%;
+          }
+          .imgProfile{
+            margin-top: -120px;
+            width: 40%;
+            <!-- margin-left: 30%; -->
+            border: 5px solid #fff;
+          }
+          .rowAction{
+            margin-top: 20px;
+          }
+          .login_demo{
+            padding: 5%;
+          }
+    </ui:style>
+    
+    <g:HTMLPanel addStyleNames="center-align">
+        <m:MaterialRow backgroundColor="GREY_LIGHTEN_4" addStyleNames="{style.login_demo}" shadow="0">
+        <m:MaterialColumn grid="s12 m8 l6" offset="l3" >
+         <m:MaterialPanel shadow="1" addStyleNames="{style.panel}" overflow="HIDDEN">
+            <incubator:loadingstate.AppLoadingState ui:field="appLoadingState" backgroundColor="WHITE"/>
+          <m:MaterialPanel addStyleNames="{style.fieldPanel}" ui:field="target" visible="true">
+           <m:MaterialImage url="https://falconbreeze.com/wp-content/uploads/2019/05/falconBREEZE_icon.png" type="CIRCLE" addStyleNames="{style.imgProfile} z-depth-1"/>
+           <m:MaterialTextBox ui:field="txtusername" placeholder="Email / Mobile" allowBlank="false" autoValidate="true"/>
+           <m:MaterialTextBox ui:field="txtpassword" type="PASSWORD" placeholder="Password" allowBlank="false" autoValidate="true" />
+           <m:MaterialTextBox ui:field="txtconfirmpassword" type="PASSWORD" placeholder="Confirm password" allowBlank="false" autoValidate="true" />
+           <m:MaterialButton ui:field="btnRegister" waves="LIGHT" text="Register" width="100%" textColor="WHITE" backgroundColor="TEAL"/>
+          </m:MaterialPanel>
+                    
+          <m:MaterialPanel addStyleNames="{style.fieldPanel}" ui:field="verify" visible="false">
+           <m:MaterialImage url="https://falconbreeze.com/wp-content/uploads/2019/05/falconBREEZE_icon.png" type="CIRCLE" addStyleNames="{style.imgProfile} z-depth-1"/>
+           <m:MaterialLabel text="You will received 6 digits code and enter here" marginTop="10" />
+           <m:MaterialTextBox ui:field="txtverify" textAlign="CENTER" placeholder="Verification code" allowBlank="false" autoValidate="true"/>
+           <m:MaterialButton ui:field="btnVerify" waves="LIGHT" text="Verify" width="100%" textColor="WHITE" backgroundColor="TEAL"/>
+          </m:MaterialPanel>
+         </m:MaterialPanel>
+        </m:MaterialColumn>
+       </m:MaterialRow>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -28,12 +28,11 @@ public class FormCRUD {
     public void saveUpdate( Form form, boolean isSave ){
         try{
             
-            if( isSave)
+            if( isSave )
                 form.setId( null );
             java.util.Map<String, Object[]> maps = fillData( form );
-            Window.alert("Fill ok");
+            
             JSONObject json = new ObjectConverter().toJSON( maps );
-            Window.alert("Convert ok");
             
             HumanTaskHelper helper = new HumanTaskHelper();
             helper.setListener(new HumanTaskHelper.HumanTaskHelperListener() {
@@ -71,14 +70,12 @@ public class FormCRUD {
             JSONObject obj = new JSONObject();
             if( isSave ){
                 obj.put("action", new JSONString( "create" ));
-            }
-            else{
+            } else{
                 obj.put("action", new JSONString( "update" ));
             }
             
             obj.put("object", objForm);
-
-            Window.alert( obj.toString( ) );
+          
             helper.startInstances( Constants.formProcessId, obj.toString( ) );
         }catch(Exception ex){ex.printStackTrace();}
     }
@@ -88,16 +85,20 @@ public class FormCRUD {
      * @param contaner  container name
      */
     public void getBy(String contaner ){
-        getBy( contaner, null, null, -1, 0 );
+        getBy( contaner, null, null, -1, 0, null );
     }
     
+        
+    public void getBy( long ownerId ){
+        getBy( null, null, null, -1, 0, ownerId+"" );
+    }
     /**
      * Extract with container name and process name
      * @param contaner container name
      * @param process process name
      */
     public void getBy(String contaner, String process){
-        getBy( contaner, process, null, -1, 0 );
+        getBy( contaner, process, null, -1, 0, null );
     }
     
     /**
@@ -106,8 +107,14 @@ public class FormCRUD {
      * @param process process name
      * @param task task name
      */
+   
     public void getBy(String contaner, String process, String task ){
-        getBy( contaner, process, task, -1, 0 );
+        getBy( contaner, process, task, -1, 0, null );
+    }
+    
+        
+    public void getBy(String contaner, String process, String task, String ownerId ){
+        getBy( contaner, process, task, -1, 0, ownerId );
     }
     
     /**
@@ -118,8 +125,8 @@ public class FormCRUD {
      * @param first offset value
      * @param max limit value
      */
-    public void getBy(String contaner, String process, String task, int first, int max  ){
-        java.util.List<Form> lst = new java.util.ArrayList<>();
+    public void getBy(String contaner, String process, String task, int first, int max, String ownerId  ){
+        java.util.List<Form> lst = new java.util.ArrayList<>( );
         
         try{
             HumanTaskHelper helper = new HumanTaskHelper();
@@ -140,7 +147,7 @@ public class FormCRUD {
                                 if( objForm != null ){
                                     listener.success("Success");
                                     
-                                    //Window.alert("Result=" + objForm.toString());
+                                    //Window.alert(objForm.toString());///////////////
                                     java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
                                     //Window.alert("Map size=" + maps.size());
                                     lst.add( getFormBack( maps ) );
@@ -151,9 +158,9 @@ public class FormCRUD {
                                 listener.fail( ex.getMessage() );
                             }
                         }
-                        
-                        listener.success( lst );
                     }
+                        
+                    listener.success( lst );
                 }
 
                 @Override
@@ -179,6 +186,14 @@ public class FormCRUD {
                 sb.append( " AND f.task='" + task + "'" );
             }
             
+            if( ownerId != null && !ownerId.isEmpty() ){
+                if( sb.toString().contains("where"))
+                    sb.append( " AND f.owner=" + ownerId + "" );
+                else
+                    sb.append( " where f.owner=" + ownerId + "" );
+            }
+            
+            //sb.append( " WHERE f.status=1" );
             obj.put("query", new JSONString( sb.toString() ));
             
             if( max > 0)
@@ -247,7 +262,8 @@ public class FormCRUD {
             helper.startInstances( Constants.formProcessId, obj.toString( ) );
         }catch(Exception ex){ex.printStackTrace();}
     }
-      
+    
+    
     public void get( long formId ){
         try{
             
@@ -335,6 +351,7 @@ public class FormCRUD {
             
             maps.put( Form.JSON_FORM_FQDN, new Object[] { ObjectConverter.TYPE_STRING, form.getFqdn()} );
             
+            maps.put( Form.JSON_FORM_OWNER, new Object[] { ObjectConverter.TYPE_NUMBER, form.getOwner()} );
         
         }catch(Exception ex){}
         
@@ -369,7 +386,9 @@ public class FormCRUD {
             form.setActors( ((String) maps.get( Form.JSON_FORM_PERMISSION_ACTORS )[1]).split(",") );
             form.setGroups( ((String) maps.get( Form.JSON_FORM_PERMISSION_GROUPS )[1]).split(",") );
             form.setStatus( Integer.parseInt( maps.get( Form.JSON_FORM_STATUS )[1].toString()) );
-            //Window.alert( maps.get( Form.JSON_FORM_STATUS )[1].toString() );
+            form.setOwner( Long.parseLong( maps.get( Form.JSON_FORM_OWNER)[1].toString()));
+            
+//Window.alert( maps.get( Form.JSON_FORM_STATUS )[1].toString() );
             
             //Window.alert("Attributes OK");
             form.fromJSON( JSONParser.parseStrict( (String) maps.get( Form.JSON_FORM_DATA )[1] ).isObject() );
@@ -380,11 +399,62 @@ public class FormCRUD {
         return form;
     }
     
+    
+        
+    public void solveFQDN( String query, String fqdn  ){
+        
+        try{
+            HumanTaskHelper helper = new HumanTaskHelper();
+            helper.setListener(new HumanTaskHelper.HumanTaskHelperListener() {
+                @Override
+                public void success(String result) {
+
+                    JSONObject jsonOnlineUser = JSONParser.parseStrict( result ).isObject();
+                    JSONArray groups = jsonOnlineUser.get("results").isArray();
+                    
+                    if( groups != null && groups.size() > 0 ){
+                                            
+                        for( int i=0; i < groups.size(); i++){
+                            
+                            JSONObject obj = groups.get(i).isObject();
+                            JSONObject objForm = obj.get( fqdn ).isObject();
+                            try {
+                                if( objForm != null ){
+                                    listener.success("Success");
+                                    java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( objForm, false, false );
+                                    listener.fqdn( maps );
+                                }else{
+                                    listener.fail( "Failed to get" );
+                                }
+                            } catch (Exception ex) {
+                                listener.fail( ex.getMessage() );
+                            }
+                        }
+                        
+                    }
+                }
+
+                @Override
+                public void fail(String message, int stage) {
+                    listener.fail( message );
+                }
+            });
+
+            JSONObject obj = new JSONObject();
+            obj.put("action", new JSONString( "query" ));
+            obj.put("query", new JSONString( query ));
+
+            helper.startInstances( Constants.formProcessId, obj.toString( ) );
+        }catch(Exception ex){ex.printStackTrace();}
+    }
+     
+    
     public interface CRUDListener{
         public void success(String result);
         public void success(Form result);
         public void success(java.util.List<Form> result);
         public void fail( String message);
+        public void fqdn( java.util.Map<String, Object[]> maps );
     }
     
     private CRUDListener listener;

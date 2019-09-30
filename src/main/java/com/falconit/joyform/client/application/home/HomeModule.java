@@ -24,6 +24,8 @@ package com.falconit.joyform.client.application.home;
 
 
 import com.falconit.joyform.client.application.home.dashboard.DashboardModule;
+import com.falconit.joyform.client.application.home.myapps.MyAppsModule;
+import com.falconit.joyform.client.application.home.welcome.WelcomeModule;
 import com.google.gwt.inject.client.AbstractGinModule;
 
 
@@ -35,5 +37,7 @@ public class HomeModule extends AbstractGinModule {
     @Override
     protected void configure( ) {
         install(new DashboardModule());//
+        install(new WelcomeModule());//
+        install(new MyAppsModule());//
     }
 }

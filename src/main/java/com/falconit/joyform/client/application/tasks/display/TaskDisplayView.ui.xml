@@ -27,7 +27,7 @@
 
         <m:MaterialRow>
          
-        <m:MaterialRow ui:field="startup" grid="l8 m10 s12" offset="l2 m1" addStyleNames="code" marginTop="15">
+        <m:MaterialRow ui:field="startup" grid="l10 m10 s12" offset="l1 m1" marginTop="15" shadow="0">
             <m:MaterialTitle ui:field="txtTitle" textColor="BLACK" textAlign="CENTER" marginTop="15"/>
             <m:MaterialPanel ui:field="formHolder">
             </m:MaterialPanel>
@@ -36,49 +36,55 @@
             </m:MaterialRow>
         </m:MaterialRow>
                      
-        <m:MaterialRow ui:field="processing" marginTop="15">
-            <m:MaterialColumn grid="l8 m10 s12" offset="l2 m1">
-            <m:MaterialTab ui:field="tab" shadow="1" type="ICON" indicatorColor="TEAL_DARKEN_3">
-              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="in">
+        <m:MaterialRow ui:field="processing" marginTop="15" >
+            <m:MaterialColumn grid="l10 m10 s12" offset="l1 m1" shadow="0">
+            <m:MaterialTab ui:field="tab" marginLeft="0" paddingLeft="0" shadow="0" type="ICON" indicatorColor="TEAL" >
+              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="in" marginLeft="0" paddingLeft="0"  >
                 <m:MaterialLink iconType="INPUT" text="Input data" href="#tabReceived" textColor="WHITE"/>
               </m:MaterialTabItem>
-              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="out">
+              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="out" marginLeft="0" paddingLeft="0" >
                 <m:MaterialLink iconType="SEND" text="Reply" href="#tabReply" textColor="WHITE"/>
               </m:MaterialTabItem>
-              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="comment">
+              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="comment" marginLeft="0" paddingLeft="0" >
                   <m:MaterialLink iconType="COMMENT" text="Comments" href="#tabComment" textColor="WHITE">
                   </m:MaterialLink>
               </m:MaterialTabItem>
-              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="foward" visible="false">
+              <m:MaterialTabItem waves="YELLOW" grid="s4" ui:field="foward" visible="false" marginLeft="0" paddingLeft="0" >
                   <m:MaterialLink iconType="FORWARD" text="Forward" href="#tabForward" textColor="WHITE">
                   </m:MaterialLink>
               </m:MaterialTabItem>
             </m:MaterialTab>
           </m:MaterialColumn>
                     
-          <m:MaterialColumn m:id="tabReceived" grid="l8 m10 s12" offset="l2 m1">
-            <m:MaterialRow ui:field="holder" addStyleNames="code" >
-            </m:MaterialRow>
+          <m:MaterialColumn m:id="tabReceived" paddingTop="15" grid="l10 m10 s12" offset="l1 m1" shadow="0" border="2px solid #eeeeee">
+              <m:MaterialRow shadow="0">
+              <m:MaterialPanel ui:field="holder" shadow="0">
+            </m:MaterialPanel>
+                <m:MaterialRow>
+                    <m:MaterialButton ui:field="btnreceivedOK" backgroundColor="TEAL" visible="false" text="OK" waves="LIGHT" textColor="WHITE" iconType="SEND" iconPosition="LEFT"/>
+                </m:MaterialRow>
+              </m:MaterialRow>
+            
           </m:MaterialColumn>
                       
-          <m:MaterialColumn m:id="tabReply" grid="l8 m10 s12" offset="l2 m1">
-              <m:MaterialRow addStyleNames="code">
+          <m:MaterialColumn m:id="tabReply" grid="l10 m10 s12" offset="l1 m1" shadow="0" border="1px solid #eeeeee">
+              <m:MaterialRow shadow="0">
                 <m:MaterialTitle ui:field="txtTitleReply" textColor="BLACK" textAlign="CENTER" marginTop="15"/>
-                <m:MaterialPanel ui:field="fillup">
+                <m:MaterialPanel ui:field="fillup" shadow="0">
                 </m:MaterialPanel>
                 <m:MaterialRow>
-                    <m:MaterialButton ui:field="btnreply" text="Complete" waves="LIGHT" textColor="WHITE" iconType="SEND" iconPosition="LEFT"/>
+                    <m:MaterialButton ui:field="btnreply" text="Complete" waves="LIGHT" backgroundColor="TEAL" textColor="WHITE" iconType="SEND" iconPosition="LEFT"/>
                 </m:MaterialRow>
             </m:MaterialRow>
           </m:MaterialColumn>
                       
-          <m:MaterialColumn m:id="tabComment" grid="l8 m10 s12" offset="l2 m1">
-            <m:MaterialRow ui:field="comments" addStyleNames="code" >
+          <m:MaterialColumn m:id="tabComment" grid="l10 m10 s12" offset="l1 m1" shadow="0" border="1px solid #eeeeee">
+            <m:MaterialRow ui:field="comments" addStyleNames="code"  shadow="0">
             </m:MaterialRow>
           </m:MaterialColumn>
                       
-          <m:MaterialColumn m:id="tabForward" grid="l8 m10 s12" offset="l2 m1">
-            <m:MaterialRow ui:field="forwards" addStyleNames="code" >
+          <m:MaterialColumn m:id="tabForward" grid="l10 m10 s12" offset="l1 m1" shadow="0">
+            <m:MaterialRow ui:field="forwards" addStyleNames="code"  shadow="0">
             </m:MaterialRow>
           </m:MaterialColumn>
           

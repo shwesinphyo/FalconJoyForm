@@ -31,8 +31,8 @@ public class TaskComplete {
         builder.setHeader( "Content-Type", Constants.contentType );
         builder.setHeader( "Authorization", Constants.credentials );
 
-        Window.alert("URL=" + url + "containers/" + containerId + "/tasks/" + taskId + "/states/released");
-        Window.alert("Body= " + body);
+        //Window.alert("URL=" + url + "containers/" + containerId + "/tasks/" + taskId + "/states/released");
+        //Window.alert("Body= " + body);
         try {
           Request request = builder.sendRequest( null, new RequestCallback() {
             public void onError(Request request, Throwable exception) {

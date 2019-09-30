@@ -24,12 +24,12 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:combobox="urn:import:gwt.material.design.addins.client.combobox"
              xmlns:m.table="urn:import:gwt.material.design.client.ui.table">
-    <m:MaterialRow>
-            <m:MaterialRow ui:field="channels" grid="l12 m12 s12">
+    <m:MaterialRow shadow="0">
+            <m:MaterialRow shadow="0" grid="l12 m12 s12">
                 <m:MaterialTitle title="My Apps" textColor="BLACK" />
             </m:MaterialRow>
     
-        <m:MaterialRow ui:field="appsholder" grid="s12">
+        <m:MaterialRow ui:field="appsholder" grid="s12" shadow="0">
 
         </m:MaterialRow>
     </m:MaterialRow>

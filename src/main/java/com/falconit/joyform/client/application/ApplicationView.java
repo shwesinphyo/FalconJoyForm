@@ -21,24 +21,21 @@ package com.falconit.joyform.client.application;
  */
 
 
-import com.google.gwt.event.dom.client.ClickEvent;
+
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import gwt.material.design.client.ui.*;
-import gwt.material.design.client.ui.animate.MaterialAnimation;
-import gwt.material.design.client.ui.animate.Transition;
 import com.falconit.joyform.client.ThemeManager;
-import com.falconit.joyform.client.ui.InstallBannerFallbackOverlay;
+import com.falconit.joyform.client.place.NameTokens;
 
 import javax.inject.Inject;
 import java.util.Date;
 
 import static com.google.gwt.i18n.client.DateTimeFormat.getFormat;
+import com.google.gwt.user.client.History;
 
 public class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
     public interface Binder extends UiBinder<Widget, ApplicationView> {
@@ -71,9 +68,6 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
 */
     @UiField
     MaterialLabel footerCopyRightLabel;
-  
-    @UiField
-    InstallBannerFallbackOverlay installAppOverlay;
 
     @Inject
     ApplicationView(Binder uiBinder) {
@@ -97,11 +91,34 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
     @Override
     protected void onAttach() {
         super.onAttach();
-
-        ThemeManager.register(footer);
+        
+                
+        String value = com.google.gwt.user.client.Window.Location.getParameter("menu");
+        if( value != null && value.equalsIgnoreCase("no")){
+            if( menu.getWidget(0) instanceof MaterialPanel){
+                //Window.alert("Panel");
+                 if( ((MaterialPanel)menu.getWidget(0)).getWidget(1) instanceof MaterialSideNavPush){
+                     //Window.alert("MaterialSideNavPush");
+                     ((MaterialSideNavPush)((MaterialPanel)menu.getWidget(0)).getWidget(1)).setShowOnAttach(false);
+                 }
+            }
+            menu.setVisible( false );
+            footer.setVisible(false);
+        }else{
+            ((MaterialSideNavPush)((MaterialPanel)menu.getWidget(0)).getWidget(1)).setShowOnAttach( true );
+            ((MaterialSideNavPush)((MaterialPanel)menu.getWidget(0)).getWidget(1)).show();
+        }
+        
+        //ThemeManager.register(footer);
         ThemeManager.register(footerCopyRight, ThemeManager.DARKER_SHADE);
         ThemeManager.initialize();
 
+        try{
+            if( History.getToken().equals(NameTokens.formediting)){
+                footer.setVisible(false);
+            }
+        }catch(Exception ex){}
+        
         /*
         chipJava.getElement().getStyle().setCursor(Style.Cursor.POINTER);
         chipJava.addClickHandler(clickEvent -> {
@@ -130,7 +147,7 @@ public class ApplicationView extends ViewImpl implements ApplicationPresenter.My
 */
         //ThemeManager.register(titlePanel);
 
-        footerCopyRightLabel.setText("© " + getFormat("yyyy").format(new Date()) + " Copyright Falcon Breeze International" );
+        footerCopyRightLabel.setText("© " + getFormat("yyyy").format(new Date()) + " Copyright falconIT" );
     }
 
 /*    

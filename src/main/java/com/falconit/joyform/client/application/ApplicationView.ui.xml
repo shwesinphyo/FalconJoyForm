@@ -21,8 +21,7 @@
        xmlns:g="urn:import:com.google.gwt.user.client.ui"
        xmlns:m="urn:import:gwt.material.design.client.ui"
        xmlns:m.html="urn:import:gwt.material.design.client.ui.html"
-       xmlns:ma="urn:import:gwt.material.design.addins.client"
-       xmlns:demo="urn:import:com.falconit.joyform.client.ui">
+       xmlns:ma="urn:import:gwt.material.design.addins.client" >
 
     <ui:with field="i18n" type="com.falconit.joyform.client.resources.MyLang"/>
   <ui:with field="tokens" type="com.falconit.joyform.client.place.NameTokens"/>
@@ -77,29 +76,21 @@
       </m:MaterialPanel>
     </m:MaterialContainer>
 
-    <demo:InstallBannerFallbackOverlay ui:field="installAppOverlay"/>
-
-    <m:MaterialFooter ui:field="footer" addStyleNames="{style.footer}">
-     
-        <m:MaterialRow>
-
+    <m:MaterialFooter ui:field="footer" textAlign="CENTER" backgroundColor="WHITE" textColor="WHITE"> <!--  addStyleNames="{style.footer}" -->
+    
+        <m:MaterialRow backgroundColor="WHITE" textColor="WHITE">
         <m:MaterialColumn grid="s12 m6 l6">
           <m:MaterialTitle textColor="WHITE" title="Join us"
                            description="TEL: +95 1 230 5530, SALES: +95 9 440 400 123, GENERAL: INFO@FALCONBREEZE.COM"/>
-          <m:MaterialAnchorButton href="https://www.falconbreeze.com/" target="_blank" text="CHAT" waves="LIGHT" textColor="WHITE"/>
+          <m:MaterialAnchorButton visible="false" href="https://www.falconbreeze.com/" target="_blank" text="CHAT" waves="LIGHT" textColor="WHITE"/>
         </m:MaterialColumn>
         <m:MaterialColumn grid="s12 m6 l6">
           <m:MaterialTitle textColor="WHITE" title="Address"
                            description="A1-407 HIGHWAY COMPLEX, HANTHAWADDY ROAD, KAMAYUT TOWNSHIP, YANGON, MYANMAR"/>
-          <m:MaterialAnchorButton href="https://www.falconbreeze.com/" target="_blank" text="Visit" waves="LIGHT" textColor="WHITE"/>
-          <!--
-          <m:MaterialTooltip text="Visit our Community" position="RIGHT">
-            <ma:webp.MaterialWebpImage ui:field="imgGPlus" url="https://gwtmaterialdesign.github.io/gwt-material-demo/images/gplus.webp" fallbackExtension="png" addStyleNames="{style.gplus}"/>
-          </m:MaterialTooltip>
-          -->
+          <m:MaterialAnchorButton visible="false" href="https://www.falconbreeze.com/" target="_blank" text="Visit" waves="LIGHT" textColor="WHITE"/>
         </m:MaterialColumn>
       </m:MaterialRow>
-
+    
       <m:MaterialFooterCopyright ui:field="footerCopyRight" addStyleNames="footer-copyright">
         <m:MaterialLabel ui:field="footerCopyRightLabel"/>
       </m:MaterialFooterCopyright>

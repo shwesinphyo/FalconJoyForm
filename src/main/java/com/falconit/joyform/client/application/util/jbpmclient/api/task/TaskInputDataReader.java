@@ -51,7 +51,8 @@ public class TaskInputDataReader {
                   JSONObject result = JSONParser.parseStrict( response.getText() ).isObject();
                   try {
                       java.util.Map<String, Object[]> maps = new ObjectConverter().fromJSON( result, true, true );
-                      listener.result( 
+                      if( maps.get("Comment") != null) maps.remove("Comment");
+                      listener.result(
                               maps.get("TaskName") != null ? maps.remove("TaskName")[1].toString(): null, 
                               maps.get("NodeName") != null ? maps.remove("NodeName")[1].toString() : null, 
                               maps.get("Skippable") != null ? maps.remove("Skippable")[1].toString() : null,

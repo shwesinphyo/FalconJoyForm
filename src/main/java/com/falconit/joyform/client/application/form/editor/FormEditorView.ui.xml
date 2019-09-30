@@ -36,9 +36,12 @@
                     <m:html.Option value="textarea" text="Text area"/>
                     <m:html.Option value="textboxrich" text="Rich text box"/>
                     <m:html.Option value="textboxnumber" text="Number box"/>
+                    <m:html.Option value="rating" text="Rating"/>
                     <m:html.Option value="checkbox" text="Check box"/>
+                    <m:html.Option value="switch" text="Switch"/>
                     <m:html.Option value="combo" text="Combo box"/>
                     <m:html.Option value="datetime" text="Date time"/>
+                    <m:html.Option value="radiogroup" text="Radio buttons"/>
                </combobox:MaterialComboBox>
                <m:MaterialButton ui:field="btnAdd" text="Add" textColor="WHITE" waves="DEFAULT"/>
             </m:MaterialRow>

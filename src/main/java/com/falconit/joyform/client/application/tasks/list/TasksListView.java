@@ -3,9 +3,10 @@ package com.falconit.joyform.client.application.tasks.list;
 
 
 import com.falconit.joyform.client.application.tasks.display.TaskDisplayView;
+import com.falconit.joyform.client.application.util.Constants;
+import com.falconit.joyform.client.application.util.CookieHelper;
 import com.falconit.joyform.client.application.util.jbpmclient.APIHelper;
-import com.falconit.joyform.client.application.util.jbpmclient.api.task.TaskInputDataReader;
-import com.falconit.joyform.client.application.util.jbpmclient.api.task.TaskInputDataReader.TaskInputDataReaderListener;
+import com.falconit.joyform.client.place.NameTokens;
 import com.falconit.joyform.client.ui.NavigatedView;
 import com.falconit.joyform.shared.jsonconvert.ObjectConverter;
 import com.google.gwt.core.client.GWT;
@@ -16,6 +17,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import gwt.material.design.addins.client.combobox.MaterialComboBox;
@@ -36,7 +38,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,13 +54,18 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
     private ListDataSource<java.util.Map<String, Object[]>> dataSource;
     
     private List<java.util.Map<String, Object[]>> lstTasks = new ArrayList<>();
+    
 
 
     @Inject
     TasksListView(Binder uiBinder) {
         initWidget( uiBinder.createAndBindUi(this) );
         
-        table.getTableTitle().setText("Inbox");
+        if( CookieHelper.getMyCookie( Constants.COOKIE_USER_ID ) == null ){
+            History.newItem( NameTokens.login );
+        }
+        
+        table.getTableTitle().setText( "Inbox" );
         /*
         table.addColumn(new WidgetColumn<java.util.Map<String, Object[]>, MaterialImage>() {
             @Override
@@ -128,7 +134,18 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                 return object.get("task-priority")[1].toString();
             }
         }, "Priority");
-     
+             
+        table.addColumn(new TextColumn<java.util.Map<String, Object[]>>() {
+            @Override
+            public Comparator<? super RowComponent<java.util.Map<String, Object[]>>> sortComparator() {
+                return (o1, o2) -> o1.getData().get("task-proc-def-id")[1].toString().compareToIgnoreCase(o2.getData().get("task-proc-def-id")[1].toString());
+            }
+            @Override
+            public String getValue(java.util.Map<String, Object[]> object) {
+                return object.get("task-proc-def-id")[1].toString();
+            }
+        }, "Apps");
+        
         table.addColumn(new WidgetColumn<java.util.Map<String, Object[]>, MaterialBadge>() {
             @Override
             public TextAlign textAlign() {
@@ -266,10 +283,16 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
         });
         
         java.util.List<String> selectedItems = new java.util.ArrayList<>();
-        selectedItems.add( APIHelper.STATUS_READY );
-        selectedItems.add( APIHelper.STATUS_RESERVED );
-        selectedItems.add( APIHelper.STATUS_INPROGRESS );
+        String filter = com.google.gwt.user.client.Window.Location.getParameter( "filter" );
+        if( filter != null ){
+            selectedItems.add( APIHelper.STATUS_COMPLETED );
+        }else{
+            selectedItems.add( APIHelper.STATUS_READY );
+            selectedItems.add( APIHelper.STATUS_RESERVED );
+            selectedItems.add( APIHelper.STATUS_INPROGRESS );
+        }
         cbostatus.setValues(selectedItems, true);
+        
         cbostatus.addValueChangeHandler( handler ->{
             load( );
         });
@@ -297,7 +320,23 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                         
                         try {
                             java.util.Map<String, Object[]> taskMap = new ObjectConverter().fromJSON( task, false, false );
-                            lstTasks.add( taskMap );
+                            String cid = taskMap.get("task-container-id")[1].toString();
+                            if( !Constants.containerFilter.contains( cid )){
+                                String userName = CookieHelper.getMyCookie( Constants.COOKIE_USER_NAME );
+                                String userId =CookieHelper.getMyCookie( Constants.COOKIE_USER_ID );
+                                
+                                
+                                String actualOwner = taskMap.get("task-actual-owner")[1] != null ? taskMap.get("task-actual-owner")[1].toString() : "";
+                                String createdBy = taskMap.get("task-created-by")[1] !=null ? taskMap.get("task-created-by")[1].toString() : "";
+                                if( ( !actualOwner.isEmpty() && actualOwner.equals( userId +"-" + userName )) 
+                                        || (!createdBy.isEmpty() && createdBy.equals(userId +"-" + userName)))
+                                    lstTasks.add( taskMap );
+                            }
+                            
+                            //filter with user
+                            //"task-actual-owner": "wbadmin",
+                            //"task-created-by": "wbadmin",
+                            
                             //Window.alert("Task id = "+taskMap.get("task-id")[1].toString() +", Created on=" + (long)taskMap.get("task-created-on")[1]);
                         } catch (Exception ex) {
                             Window.alert(ex.getMessage());
@@ -305,7 +344,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
                         }
                     }
                     
-                    pager.setLimit(20);
+                    pager.setLimit( 20 );
                     dataSource = new ListDataSource<>();
                     dataSource.add(0, lstTasks );
                     pager.setTable(table);
@@ -332,7 +371,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
         helper.tasksList( 
                 //new String[]{APIHelper.STATUS_READY,APIHelper.STATUS_RESERVED, APIHelper.STATUS_INPROGRESS },
                 arrStatus,
-                0, 20, null, null, true);
+                0, 1000, null, null, true);
         //helper.query( Constants.containerId, "355");
     }
     
@@ -345,7 +384,7 @@ public class TasksListView extends NavigatedView implements TasksListPresenter.M
         
         Window.Location.assign( "?container=" + container 
                 + "&taskId=" + taskId 
-                + "&process" + processId 
+                + "&process=" + processId 
                 + "&taskName=" + taskName 
                 + "&display=" + TaskDisplayView.DISPLAY_PROCESS
                 + "#taskdisplay" );
